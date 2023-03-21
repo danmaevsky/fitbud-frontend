@@ -72,8 +72,8 @@ function ExerciseSearchList(props) {
     let { searchResults } = props;
     return (
         <ul id="exercise-search-results-list">
-            {searchResults.map((searchResults) => (
-                <ExerciseSearchResult response={searchResults} />
+            {searchResults.map((searchResults, index) => (
+                <ExerciseSearchResult response={searchResults} key={`exercise-search-result-${index}`} />
             ))}
             <li id="exercise-search-refine-message">
                 <h4>Didn't find what you were looking for? Consider refining your search!</h4>

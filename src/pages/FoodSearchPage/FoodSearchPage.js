@@ -55,8 +55,8 @@ function FoodSearchList(props) {
     let { searchResults } = props;
     return (
         <ul id="food-search-results-list">
-            {searchResults.map((searchResults) => (
-                <FoodSearchResult response={searchResults} />
+            {searchResults.map((searchResults, index) => (
+                <FoodSearchResult response={searchResults} key={`food-search-result-${index}`} />
             ))}
             <li id="food-search-refine-message">
                 <h4>Didn't find what you were looking for? Consider refining your search!</h4>
