@@ -6,10 +6,14 @@ import { useNavigate } from "react-router-dom";
 export default function FoodSearchPage() {
     const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${searchText}`)
-            .then((res) => res.json())
+            .then((res) => {
+                setSearchStatus(res.status);
+                return res.json();
+            })
             .then((json) => setSearchResults(json));
     };
     const inputOnKeydown = (e) => {
@@ -39,11 +43,25 @@ export default function FoodSearchPage() {
                 </button>
             </div>
             <div id="food-search-island">
-                <ul id="food-search-results-list">
-                    {searchResults.length > 0 ? searchResults.map((res) => <FoodSearchResult response={res} />) : null}
-                </ul>
+                <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
+                {searchResults.length > 0 ? <FoodSearchList searchResults={searchResults} /> : null}
+                {searchStatus !== 200 ? <h3>404 Not Found. Search came back empty!</h3> : null}
             </div>
         </div>
+    );
+}
+
+function FoodSearchList(props) {
+    let { searchResults } = props;
+    return (
+        <ul id="food-search-results-list">
+            {searchResults.map((searchResults) => (
+                <FoodSearchResult response={searchResults} />
+            ))}
+            <li id="food-search-refine-message">
+                <h4>Didn't find what you were looking for? Consider refining your search!</h4>
+            </li>
+        </ul>
     );
 }
 

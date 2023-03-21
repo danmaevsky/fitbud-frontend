@@ -21,18 +21,19 @@
     align-items: center;
     background-color: white;
     border-radius: 20px;
+    border: 0.2rem solid var(--default-primary-border);
 }
 
 #exercise-search-page-searchbox input {
     font-size: 1rem;
     outline: none;
-    padding: 1rem;
+    padding: 0;
+    margin-left: 1.5rem;
     min-width: 13.125rem;
     width: 30vw;
     max-width: 35rem;
-    height: 0.5rem;
+    height: 2rem;
     border: none;
-    border-radius: 20px;
     background-color: white;
 }
 
@@ -57,7 +58,7 @@
 }
 
 #exercise-search-page-searchbox:focus-within {
-    border: 0.1rem solid var(--default-primary-blue);
+    border: 0.2rem solid var(--default-primary-blue);
 }
 
 #exercise-search-page-choices {
@@ -111,7 +112,6 @@
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     border-radius: 1rem;
     padding-left: 3vw;
@@ -172,6 +172,24 @@
     font-size: 0.75rem;
 }
 
+#exercise-search-island-number {
+    padding: 0;
+    margin: 0;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+    color: var(--default-secondary-text);
+}
+
+#exercise-search-island #exercise-search-refine-message {
+    cursor: default;
+    text-align: center;
+    background-color: white;
+}
+#exercise-search-island #exercise-search-refine-message:hover {
+    filter: none;
+}
+
 #exercise-search-page-round-background-decoration {
     position: absolute;
     z-index: 0;
@@ -219,16 +237,12 @@
     }
     #exercise-search-page-searchbox input {
         font-size: 1.5rem;
-        padding: 1rem;
         min-width: 13.125rem;
-        width: 70vw;
+        width: 60vw;
         max-width: 35rem;
         height: 2rem;
-        border: none;
-        border-radius: 3rem;
-        background-color: white;
     }
-    
+
     #exercise-search-page-searchbox button {
         margin-right: 1rem;
         height: 3rem;
@@ -246,7 +260,7 @@
     #exercise-search-island ul li h4 {
         font-size: 1.125rem;
     }
-    
+
     #exercise-search-island ul li p {
         font-size: 0.875rem;
     }

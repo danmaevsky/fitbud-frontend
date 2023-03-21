@@ -7,10 +7,14 @@ export default function ExerciseSearchPage() {
     const [searchText, setSearchText] = useState("");
     const [exerciseType, setExerciseType] = useState("cardio");
     const [searchResults, setSearchResults] = useState([]);
+    const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/${exerciseType}/?search=${searchText}`)
-            .then((res) => res.json())
+            .then((res) => {
+                setSearchStatus(res.status);
+                return res.json();
+            })
             .then((json) => setSearchResults(json));
     };
     const inputOnKeydown = (e) => {
@@ -56,11 +60,25 @@ export default function ExerciseSearchPage() {
                 </button>
             </div>
             <div id="exercise-search-island">
-                <ul id="exercise-search-results-list">
-                    {searchResults.length > 0 ? searchResults.map((res) => <ExerciseSearchResult response={res} />) : null}
-                </ul>
+                <p id="exercise-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
+                {searchResults.length > 0 ? <ExerciseSearchList searchResults={searchResults} /> : null}
+                {searchStatus !== 200 ? <h3>404 Not Found. Search came back empty!</h3> : null}
             </div>
         </div>
+    );
+}
+
+function ExerciseSearchList(props) {
+    let { searchResults } = props;
+    return (
+        <ul id="exercise-search-results-list">
+            {searchResults.map((searchResults) => (
+                <ExerciseSearchResult response={searchResults} />
+            ))}
+            <li id="exercise-search-refine-message">
+                <h4>Didn't find what you were looking for? Consider refining your search!</h4>
+            </li>
+        </ul>
     );
 }
 
