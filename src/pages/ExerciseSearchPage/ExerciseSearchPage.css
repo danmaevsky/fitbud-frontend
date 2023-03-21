@@ -12,6 +12,9 @@
 }
 #exercise-search-page-searchbox {
     position: inherit;
+    box-sizing: border-box;
+    height: 2.75rem;
+    width: auto;
     z-index: 1;
     display: flex;
     margin-bottom: 1rem;
@@ -19,7 +22,10 @@
     background-color: white;
     border-radius: 20px;
 }
+
 #exercise-search-page-searchbox input {
+    font-size: 1rem;
+    outline: none;
     padding: 1rem;
     min-width: 13.125rem;
     width: 30vw;
@@ -34,7 +40,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
     right: 0;
     margin-right: 1rem;
     height: 2rem;
@@ -49,6 +54,10 @@
 }
 #exercise-search-page-searchbox button img {
     height: 1rem;
+}
+
+#exercise-search-page-searchbox:focus-within {
+    border: 0.1rem solid var(--default-primary-blue);
 }
 
 #exercise-search-page-choices {
@@ -200,5 +209,45 @@
     }
     #exercise-search-page-round-background-decoration {
         max-height: 30vh;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #exercise-search-page-searchbox {
+        height: 4.25rem;
+        border-radius: 3rem;
+    }
+    #exercise-search-page-searchbox input {
+        font-size: 1.5rem;
+        padding: 1rem;
+        min-width: 13.125rem;
+        width: 70vw;
+        max-width: 35rem;
+        height: 2rem;
+        border: none;
+        border-radius: 3rem;
+        background-color: white;
+    }
+    
+    #exercise-search-page-searchbox button {
+        margin-right: 1rem;
+        height: 3rem;
+        width: 3rem;
+    }
+
+    #exercise-search-page-searchbox button img {
+        height: 1.5rem;
+    }
+
+    #exercise-search-island {
+        width: 70vw;
+    }
+
+    #exercise-search-island ul li h4 {
+        font-size: 1.125rem;
+    }
+    
+    #exercise-search-island ul li p {
+        font-size: 0.875rem;
     }
 }

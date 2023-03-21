@@ -12,6 +12,9 @@
 }
 #food-search-page-searchbox {
     position: inherit;
+    box-sizing: border-box;
+    height: 2.75rem;
+    width: auto;
     z-index: 1;
     display: flex;
     margin-bottom: 1rem;
@@ -20,6 +23,8 @@
     border-radius: 20px;
 }
 #food-search-page-searchbox input {
+    font-size: 1rem;
+    outline: none;
     padding: 1rem;
     min-width: 13.125rem;
     width: 30vw;
@@ -31,7 +36,9 @@
 }
 
 #food-search-page-searchbox button {
-    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     right: 0;
     margin-right: 1rem;
     height: 2rem;
@@ -41,14 +48,21 @@
     border: none;
     border-radius: 50%;
 }
+
 #food-search-page-searchbox button:hover {
     background-color: var(--default-primary-background);
 }
+
 #food-search-page-searchbox button img {
     height: 1rem;
 }
 
+#food-search-page-searchbox:focus-within {
+    border: 0.1rem solid var(--default-primary-blue);
+}
+
 #food-search-island {
+    backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
     flex-direction: column;
@@ -143,12 +157,52 @@
 
 @media screen and (max-width: 800px) {
     #food-search-page-body input {
-        width: 50vw;
+        width: 55vw;
     }
     #food-search-island {
         width: 60vw;
     }
     #food-search-page-round-background-decoration {
         max-height: 30vh;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #food-search-page-searchbox {
+        height: 4.25rem;
+        border-radius: 3rem;
+    }
+    #food-search-page-searchbox input {
+        font-size: 1.5rem;
+        padding: 1rem;
+        min-width: 13.125rem;
+        width: 70vw;
+        max-width: 35rem;
+        height: 2rem;
+        border: none;
+        border-radius: 3rem;
+        background-color: white;
+    }
+
+    #food-search-page-searchbox button {
+        margin-right: 1rem;
+        height: 3rem;
+        width: 3rem;
+    }
+
+    #food-search-page-searchbox button img {
+        height: 1.5rem;
+    }
+
+    #food-search-island {
+        width: 70vw;
+    }
+
+    #food-search-island ul li h4 {
+        font-size: 1.125rem;
+    }
+    
+    #food-search-island ul li p {
+        font-size: 0.875rem;
     }
 }
