@@ -1,13 +1,37 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+    /* General Use Colors */
+    --default-primary-blue: #1956ff;
+    --default-secondary-blue: #4d86ff;
+    --default-secondary-blue-hover: #7ca4fc;
+    --default-tertiary-blue: #284687;
+    --default-primary-background: #f1f1f1;
+    --default-secondary-background: #b4b4b4;
+    --default-primary-border: #cccccc;
+    --default-primary-text: black;
+    --default-secondary-text: #757575;
+    /* Specific Colors */
+    --food-primary-green: #32be62;
+    --food-secondary-green: #6ed893;
+    --food-tertiary-green: #007127;
+    --exercise-primary-red: #e62e2e;
+    --exercise-secondary-red: #e64d4d;
+    --exercise-tertiary-red: #8b1414;
+    --profile-primary-purple: #8947d8;
+    --profile-secondary-purple: #c681ff;
+    --profile-tertiary-purple: #560e93;
+}
+
+body,
+input,
+textarea,
+button {
+    margin: 0;
+    font-family: "Arial Rounded MT", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }

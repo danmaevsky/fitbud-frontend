@@ -1,0 +1,155 @@
+#login-page-body {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--default-primary-background);
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    height: 60rem;
+    max-height: 90vh;
+}
+
+#login-island {
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+    background-color: white;
+    min-width: 15rem;
+    width: 10vw;
+    max-width: 20rem;
+    min-height: 20rem;
+    height: 25rem;
+    max-height: 40vh;
+}
+
+#login-island h2 {
+    padding: 0;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+#login-island hr {
+    padding: 0;
+    margin: 0;
+    margin-top: -10%;
+    width: 10vw;
+    min-width: 12rem;
+}
+
+#login-island-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+#login-island-form input {
+    padding: 1rem;
+    width: 50ch;
+    height: 0.5rem;
+    max-width: 12rem;
+    border: solid 1px;
+    border-color: var(--default-primary-border);
+    border-radius: 5px;
+}
+
+#login-island-form p {
+    font-size: 0.75rem;
+    margin-top: -5%;
+}
+
+#login-island-form button {
+    transition: background-color 0.1s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: content-box;
+    padding: 1rem;
+    margin-top: -10%;
+    width: 50ch;
+    height: 0.5rem;
+    max-width: 12rem;
+    border: solid 1px;
+    border-color: var(--default-primary-border);
+    border-radius: 5px;
+    background-color: var(--default-secondary-blue);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#login-island-form button:hover {
+    background-color: var(--default-secondary-blue-hover);
+}
+
+#login-island a {
+    transition: background-color 0.1s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: content-box;
+    padding: 1rem;
+    margin-top: -10%;
+    width: 50ch;
+    height: 0.5rem;
+    max-width: 12rem;
+    border: solid 1px;
+    border-color: var(--default-primary-border);
+    border-radius: 5px;
+    background-color: var(--default-secondary-blue);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#login-island a:hover {
+    background-color: var(--default-secondary-blue-hover);
+}
+
+#login-page-round-background-decoration {
+    position: absolute;
+    bottom: 70%;
+    background-color: var(--default-primary-blue);
+    height: 100rem;
+    max-height: 80vh;
+    width: 250rem;
+    max-width: 200vw;
+    border-radius: 50%;
+}
+
+#login-page-bottom-top-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 15vh;
+    background-color: var(--default-secondary-blue);
+}
+
+#login-page-bottom-bot-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 6vh;
+    background-color: var(--default-tertiary-blue);
+}
+
+@media screen and (max-width: 800px) {
+    #login-island {
+        width: 60vw;
+    }
+    #login-page-round-background-decoration {
+        max-height: 30vh;
+    }
+}

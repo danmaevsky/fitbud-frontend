@@ -2,28 +2,30 @@
     display: flex
     flex-direction: column
     align-items: center
-    gap: 10vh
+    gap: 10rem
 
 #html5qr-code-full-region
     height: 50vh
-    width: 50vh
+    width: 80vw
 
 #barcode-demo
-    margin-left: 10vw
+    margin-left: 0
     align-self: flex-start
+    p
+        font-size: 1rem
 
 
 #demo-page-searches
     display: flex
     flex-direction: row
-    gap: 8vw
+    gap: 8rem
     .search-demo
         position: relative
         display: flex
         flex-direction: column
-        align-items: flex-start
+        align-items: center
         width: 40vw
-        height: 90vh
+        height: 30rem
         background-color: #f1f1f1
         border-radius: 0.5vh
         form
@@ -33,54 +35,70 @@
         h2
             align-self: center
         .demo-page-search-box
-            width: 15vw
+            width: 30vw
             align-self: center
             display: flex
             align-items: center
+            gap: 1rem
             input
-                width: 13vw
+                width: 30vw
                 height: 3vh
             button
+                border-radius: 5px
                 height: 3vh
-                width: 3vh
         .search-demo-results
-            width: 35vw
+            background-color: #fc6565
+            border-radius: 8px
+            padding: 1rem
+            height: 20rem
+            width: 30vw
             list-style-type: none
             overflow: auto
             overflow-x: hidden
+
         .search-demo-page-buttons
             position: absolute
             bottom: 1vh
 
     .search-demo-food
+        .search-demo-results
+            background-color: #e9ffea
         h2
             color: #27c200
 
     .search-demo-exercise
+        .search-demo-results
+            background-color: #e9f0ff
         h2
             color: #0099ff
 
     .demo-page-search-result
         transition: background-color 0.2s
+        border-radius: 5px
         margin-bottom: 5vh
         cursor: pointer
+        padding: 1rem
         div
-            padding: 1vh
             margin: 0
             display: flex
             flex-direction: column
             align-items: flex-start
             gap: 1vh
             h5
+                font-size: 1rem
                 font-weight: 600
-                font-size: 2vh
                 padding: 0
                 margin: 0
                 text-align: left
             p
+                font-size: 0.8rem
                 padding: 0
                 margin: 0
-                font-size: 1.5vh
+
+        .demo-page-search-result-additional-info
+            li
+                font-size: .75rem
+                text-align: left
     .demo-page-search-result:hover
         transition: background-color 0.2s
         background-color: white
@@ -90,6 +108,29 @@
     flex-direction: row
     gap: 8vw
 #demo-page-row3
-display: flex
-flex-direction: row
-gap: 8vw
+    display: flex
+    flex-direction: row
+    gap: 8vw
+
+@media (max-width: 800px)
+    html
+        font-size: 12px
+    #demo-page-searches
+        flex-direction: column
+        .search-demo
+            width: 100vw
+            height: 30rem
+            .demo-page-search-box
+                width: 70vw
+                align-self: center
+                display: flex
+                align-items: center
+                input
+                    width: 60vw
+                    height: 3vh
+                button
+                    height: 3vh
+    h2
+        font-size: 2rem
+    h5
+        font-size: 1.25rem

@@ -1,0 +1,39 @@
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    min-height: 5vh;
+}
+
+#navbar h1 {
+    padding: 1rem;
+    margin: 0;
+    /* background-color: gray; */
+}
+
+#navbar ul {
+    margin: 0;
+    display: flex;
+    list-style: none;
+}
+
+#navbar ul a {
+    transition: background-color 0.1s;
+    padding: 1rem;
+}
+
+#navbar ul a:hover {
+    background-color: #c7c7c7;
+    padding: 1rem;
+}
+
+#navbar li {
+    display: inline-flex;
+    align-items: center;
+    /* background-color: gray; */
+}
+
+#navbar a {
+    text-decoration: none;
+    color: black;
+}
