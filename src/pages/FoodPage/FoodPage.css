@@ -1,19 +1,83 @@
+#food-page-body {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--default-primary-background);
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    height: 60rem;
+    max-height: 90vh;
+}
+
+#food-island {
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 40rem;
+    min-height: 20vh;
+    height: 30rem;
+    max-height: 50vh;
+}
+
+#food-island-back-arrow {
+    align-self: flex-start;
+    font-weight: 700;
+    margin-top: -1.5vh;
+    margin-left: 1vw;
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--default-primary-text);
+}
+
+#food-island-back-arrow img {
+    height: 1rem;
+    width: 1rem;
+}
+
 #food-info {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
-
 #food-info h3 {
     padding: 0;
     margin: 0;
 }
-
 #food-info p {
     color: var(--default-secondary-text);
 }
 
-#food-info h5 {
+#food-info-macros {
+    display: flex;
+    gap: 2rem;
+}
+#food-info-macros h5 {
     font-size: 1rem;
+}
+
+#food-info-macro-fat {
+    color: var(--food-info-color-fat);
+}
+#food-info-macro-carb {
+    color: var(--food-info-color-carb);
+}
+#food-info-macro-protein {
+    color: var(--food-info-color-protein);
 }
 
 #macro-circle {
@@ -21,13 +85,11 @@
     display: flex;
     justify-content: center;
 }
-
 #macro-circle h4 {
     font-size: 1.25rem;
     padding: 0;
     margin: 0;
 }
-
 #macro-circle div {
     z-index: 1;
     padding: 0;
@@ -36,13 +98,54 @@
     align-self: center;
     justify-self: center;
 }
-
 #macro-circle canvas {
     position: absolute;
 }
 
+#food-page-round-background-decoration {
+    position: absolute;
+    z-index: 0;
+    bottom: 70%;
+    background-color: var(--food-primary-green);
+    height: 100rem;
+    max-height: 80vh;
+    width: 250rem;
+    max-width: 200vw;
+    border-radius: 50%;
+}
+
+#food-page-bottom-top-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 15vh;
+    background-color: var(--food-secondary-green);
+}
+
+#food-page-bottom-bot-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 6vh;
+    background-color: var(--food-tertiary-green);
+}
+
 @media screen and (max-width: 800px) {
+    #food-island {
+        width: 60vw;
+    }
+
     #macro-circle h4 {
         font-size: 1.5rem;
+    }
+
+    #food-page-round-background-decoration {
+        max-height: 30vh;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #food-island {
+        width: 70vw;
     }
 }

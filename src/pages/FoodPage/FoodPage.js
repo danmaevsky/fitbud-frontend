@@ -1,6 +1,7 @@
 import "./FoodPage.css";
+import backArrow from "assets/back-arrow.svg";
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
 
 export default function FoodPage() {
@@ -18,11 +19,17 @@ export default function FoodPage() {
             .then((json) => setFoodResponse(json));
     }, []);
     return (
-        <div id="food-search-page-body">
-            <div id="food-search-page-round-background-decoration"></div>
-            <div id="food-search-page-bottom-top-banner-background-decoration"></div>
-            <div id="food-search-page-bottom-bot-banner-background-decoration"></div>
-            <div id="food-search-island">{responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "ERROR!!!"}</div>
+        <div id="food-page-body">
+            <div id="food-page-round-background-decoration"></div>
+            <div id="food-page-bottom-top-banner-background-decoration"></div>
+            <div id="food-page-bottom-bot-banner-background-decoration"></div>
+            <div id="food-island">
+                <Link to={"/food"} id="food-island-back-arrow">
+                    <img src={backArrow} />
+                    Go Back
+                </Link>
+                {responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "ERROR!!!"}
+            </div>
         </div>
     );
 }
@@ -41,9 +48,11 @@ function FoodInfo(props) {
             <h3>{foodName}</h3>
             <p>{brand}</p>
             <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
-            <h5>Protein: {nutrients.protein}g</h5>
-            <h5>Carbs: {nutrients.totalCarb}g</h5>
-            <h5>Fat: {nutrients.totalFat}g</h5>
+            <div id="food-info-macros">
+                <h5 id="food-info-macro-fat">Fat: {nutrients.totalFat}g</h5>
+                <h5 id="food-info-macro-carb">Carbs: {nutrients.totalCarb}g</h5>
+                <h5 id="food-info-macro-protein">Protein: {nutrients.protein}g</h5>
+            </div>
             <p></p>
         </div>
     );

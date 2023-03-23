@@ -2,10 +2,11 @@ import magnifyingGlass from "assets/magnifying-glass.svg";
 import "./FoodSearchPage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useSessionStorage from "hooks/useSessionStorage";
 
 export default function FoodSearchPage() {
-    const [searchText, setSearchText] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
+    const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {

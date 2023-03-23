@@ -10,6 +10,7 @@
     height: 60rem;
     max-height: 90vh;
 }
+
 #food-search-page-searchbox {
     position: inherit;
     box-sizing: border-box;
@@ -35,7 +36,6 @@
     border: none;
     background-color: white;
 }
-
 #food-search-page-searchbox button {
     display: inline-flex;
     align-items: center;
@@ -49,15 +49,12 @@
     border: none;
     border-radius: 50%;
 }
-
 #food-search-page-searchbox button:hover {
     background-color: var(--default-primary-background);
 }
-
 #food-search-page-searchbox button img {
     height: 1rem;
 }
-
 #food-search-page-searchbox:focus-within {
     border: 0.2rem solid var(--default-primary-blue);
 }

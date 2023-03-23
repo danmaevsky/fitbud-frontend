@@ -19,6 +19,9 @@
     --profile-primary-purple: #8947d8;
     --profile-secondary-purple: #c681ff;
     --profile-tertiary-purple: #560e93;
+    --food-info-color-fat: #ffc300;
+    --food-info-color-carb: #2bb6ff;
+    --food-info-color-protein: #e5007a;
 }
 
 body,
