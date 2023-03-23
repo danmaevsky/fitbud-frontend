@@ -2,11 +2,12 @@ import magnifyingGlass from "assets/magnifying-glass.svg";
 import "./ExerciseSearchPage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useSessionStorage from "hooks/useSessionStorage";
 
 export default function ExerciseSearchPage() {
-    const [searchText, setSearchText] = useState("");
-    const [exerciseType, setExerciseType] = useState("cardio");
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchText, setSearchText] = useSessionStorage("ExerciseSearchPageText", "");
+    const [exerciseType, setExerciseType] = useSessionStorage("ExerciseSearchPageType", "cardio");
+    const [searchResults, setSearchResults] = useSessionStorage("ExerciseSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {

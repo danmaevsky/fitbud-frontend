@@ -46,6 +46,7 @@ function clearExerciseSearchPageState(location) {
     }
     if (location.pathname !== "/exercise") {
         window.sessionStorage.removeItem("ExerciseSearchPageText");
+        window.sessionStorage.removeItem("ExerciseSearchPageType");
         window.sessionStorage.removeItem("ExerciseSearchPageResults");
     }
 }
