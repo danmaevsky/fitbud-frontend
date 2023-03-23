@@ -1,0 +1,48 @@
+#food-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#food-info h3 {
+    padding: 0;
+    margin: 0;
+}
+
+#food-info p {
+    color: var(--default-secondary-text);
+}
+
+#food-info h5 {
+    font-size: 1rem;
+}
+
+#macro-circle {
+    position: inherit;
+    display: flex;
+    justify-content: center;
+}
+
+#macro-circle h4 {
+    font-size: 1.25rem;
+    padding: 0;
+    margin: 0;
+}
+
+#macro-circle div {
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    top: 50%;
+    align-self: center;
+    justify-self: center;
+}
+
+#macro-circle canvas {
+    position: absolute;
+}
+
+@media screen and (max-width: 800px) {
+    #macro-circle h4 {
+        font-size: 1.5rem;
+    }
+}

@@ -130,9 +130,6 @@
 }
 
 @media (max-width: 800px) {
-  html {
-    font-size: 12px;
-  }
   #demo-page-searches {
     flex-direction: column;
   }
