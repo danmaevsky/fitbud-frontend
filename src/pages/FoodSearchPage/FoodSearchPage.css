@@ -173,7 +173,7 @@
 
 @media screen and (max-width: 800px) {
     #food-search-page-body input {
-        width: 55vw;
+        width: 50vw;
     }
     #food-search-island {
         width: 60vw;
