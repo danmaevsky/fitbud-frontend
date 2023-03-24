@@ -56,7 +56,7 @@ export default function BarcodeScanPage() {
                         elementId={"barcode-scanner"}
                         setShowHelp={setShowHelp}
                         setShowInputField={setShowInputField}
-                        onSuccess={() => fetchResults}
+                        onSuccess={fetchResults}
                     />
                 ) : null}
                 {showHelp ? <p>Having trouble? Try aligning the barcode with the left edge of the box!</p> : null}
