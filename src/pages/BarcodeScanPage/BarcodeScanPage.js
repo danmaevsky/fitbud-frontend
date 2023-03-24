@@ -14,6 +14,15 @@ export default function BarcodeScanPage() {
     const [barcodeResponse, setBarcodeResponse] = useState(null);
     const [barcodeStatus, setBarcodeStatus] = useState(200);
 
+    const fetchResults = (decodedText, decodedResult) => {
+        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?barcode=${decodedText}`)
+            .then((res) => {
+                setBarcodeStatus(res.status);
+                return res.json();
+            })
+            .then((json) => setBarcodeResponse(json));
+    };
+
     useEffect(() => {
         if (barcodeResponse) {
             if (barcodeStatus !== 200) {
@@ -47,7 +56,7 @@ export default function BarcodeScanPage() {
                         elementId={"barcode-scanner"}
                         setShowHelp={setShowHelp}
                         setShowInputField={setShowInputField}
-                        onSuccess={() => {}}
+                        onSuccess={() => fetchResults}
                     />
                 ) : null}
                 {showHelp ? <p>Having trouble? Try aligning the barcode with the left edge of the box!</p> : null}
@@ -59,7 +68,7 @@ export default function BarcodeScanPage() {
 }
 
 function BarcodeScanner(props) {
-    const { elementId, setShowHelp, setShowInputField } = props;
+    const { elementId, setShowHelp, setShowInputField, onSuccess } = props;
     const windowDims = useWindowDimensions();
     const [devices, setDevices] = useState([]);
     let html5QrCode;
@@ -80,7 +89,7 @@ function BarcodeScanner(props) {
                         },
                         aspectRatio: aspectRatio,
                     },
-                    () => "Hello World",
+                    onSuccess,
                     () => "Goodbye World"
                 );
                 setTimeout(() => setShowHelp(true), 5000);
