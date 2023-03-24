@@ -63,7 +63,7 @@ export default function ExerciseSearchPage() {
             <div id="exercise-search-island">
                 <p id="exercise-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
                 {searchResults.length > 0 ? <ExerciseSearchList searchResults={searchResults} /> : null}
-                {searchStatus !== 200 ? <h3>404 Not Found. Search came back empty!</h3> : null}
+                {searchStatus !== 200 ? <h3>Search came back empty! Consider refining your search.</h3> : null}
             </div>
         </div>
     );

@@ -1,10 +1,12 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
+import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
 import "./FoodSearchPage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
 export default function FoodSearchPage() {
+    const navigate = useNavigate();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useState(200);
@@ -42,11 +44,14 @@ export default function FoodSearchPage() {
                 <button id="food-search-page-searchbox-button" onClick={fetchResults}>
                     <img src={magnifyingGlass} />
                 </button>
+                <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
+                    <img src={barcodeScannerIcon} />
+                </button>
             </div>
             <div id="food-search-island">
                 <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
                 {searchResults.length > 0 ? <FoodSearchList searchResults={searchResults} /> : null}
-                {searchStatus !== 200 ? <h3>404 Not Found. Search came back empty!</h3> : null}
+                {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
             </div>
         </div>
     );
@@ -71,7 +76,7 @@ function FoodSearchResult(props) {
     name = ProcessFoodName(name);
     let brand = brandName ? ToTitleCase(brandName) : brandOwner ? ToTitleCase(brandOwner) : null;
 
-    const navigate = useNavigate("/food/" + _id);
+    const navigate = useNavigate();
 
     const resultOnClick = () => {
         navigate("/food/" + _id);

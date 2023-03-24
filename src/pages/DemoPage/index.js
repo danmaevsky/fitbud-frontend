@@ -159,7 +159,13 @@ function BarcodeDemo(props) {
         <div id="barcode-demo">
             {barcodeResponse && barcodeResponseStatus === 200 && <SearchResult type="food" result={barcodeResponse} />}
             <p>Scanned Code: {barcodeText}</p>
-            <Html5QrcodePlugin qrCodeSuccessCallback={onBarcodeScan} qrbox={{ height: 150, width: 300 }} disableFlip={false} fps={10} />
+            <Html5QrcodePlugin
+                qrCodeSuccessCallback={onBarcodeScan}
+                qrbox={{ height: 150, width: 300 }}
+                disableFlip={false}
+                fps={10}
+                showZoomSliderIfSupported={true}
+            />
         </div>
     );
 }

@@ -24,7 +24,7 @@ export default function FoodPage() {
             <div id="food-page-bottom-top-banner-background-decoration"></div>
             <div id="food-page-bottom-bot-banner-background-decoration"></div>
             <div id="food-island">
-                <Link to={"/food"} id="food-island-back-arrow">
+                <Link to={-1} id="food-island-back-arrow">
                     <img src={backArrow} />
                     Go Back
                 </Link>

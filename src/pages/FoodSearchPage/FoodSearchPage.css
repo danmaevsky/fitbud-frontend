@@ -14,25 +14,25 @@
 #food-search-page-searchbox {
     position: inherit;
     box-sizing: border-box;
-    height: 2.75rem;
+    height: 3.75rem;
     width: auto;
     z-index: 1;
     display: flex;
     margin-bottom: 1rem;
     align-items: center;
     background-color: white;
-    border-radius: 20px;
+    border-radius: 30px;
     border: 0.2rem solid var(--default-primary-border);
 }
 #food-search-page-searchbox input {
-    font-size: 1rem;
+    font-size: 1.125rem;
     outline: none;
     padding: 0;
     margin-left: 1.5rem;
     min-width: 13.125rem;
     width: 30vw;
     max-width: 35rem;
-    height: 2rem;
+    height: 3rem;
     border: none;
     background-color: white;
 }
@@ -42,8 +42,8 @@
     justify-content: center;
     right: 0;
     margin-right: 1rem;
-    height: 2rem;
-    width: 2rem;
+    height: 2.5rem;
+    width: 2.5rem;
     cursor: pointer;
     background-color: white;
     border: none;
@@ -53,7 +53,7 @@
     background-color: var(--default-primary-background);
 }
 #food-search-page-searchbox button img {
-    height: 1rem;
+    height: 1.5rem;
 }
 #food-search-page-searchbox:focus-within {
     border: 0.2rem solid var(--default-primary-blue);
@@ -191,7 +191,7 @@
     #food-search-page-searchbox input {
         font-size: 1.5rem;
         min-width: 13.125rem;
-        width: 60vw;
+        width: 50vw;
         max-width: 35rem;
         height: 2rem;
         border: none;
