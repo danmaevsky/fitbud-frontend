@@ -17,7 +17,6 @@ function App() {
             <Navbar />
             <div className="body">
                 <Routes>
-                    <Route path="/demo" element={<DemoPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/food" element={<FoodSearchPage />} />
                     <Route path="/food/:foodId" element={<FoodPage />} />

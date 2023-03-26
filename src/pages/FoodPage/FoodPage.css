@@ -26,9 +26,9 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 40rem;
-    min-height: 20vh;
-    height: 30rem;
-    max-height: 50vh;
+    min-height: 30vh;
+    height: 50rem;
+    max-height: 75vh;
 }
 
 #food-island-back-arrow {
@@ -133,6 +133,7 @@
 @media screen and (max-width: 800px) {
     #food-island {
         width: 60vw;
+        max-height: 60vh;
     }
 
     #macro-circle h4 {
@@ -147,5 +148,6 @@
 @media screen and (max-width: 500px) {
     #food-island {
         width: 70vw;
+        max-height: 60vh;
     }
 }

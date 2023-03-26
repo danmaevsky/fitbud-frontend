@@ -1,5 +1,6 @@
 import "./FoodPage.css";
 import backArrow from "assets/back-arrow.svg";
+import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
@@ -36,12 +37,17 @@ export default function FoodPage() {
 
 function FoodInfo(props) {
     const { foodResponse } = props;
-    const [metricQuantity, setMetricQuantity] = useState(foodResponse.servingQuantity);
-    const [servingUnit, setServingUnit] = useState(foodResponse.servingQuanityUnit);
+
+    const defaultMetricQuantity = foodResponse.servingQuantity ? foodResponse.servingQuantity : 100;
+    const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
+
+    const [metricQuantity, setMetricQuantity] = useState(defaultMetricQuantity);
+    const [numServings, setNumServings] = useState(1);
+    const defaultUnitRounding = metricQuantity === foodResponse.servingQuantity;
 
     let foodName = ProcessFoodName(foodResponse.name);
     let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
-    let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity);
+    let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
 
     return (
         <div id="food-info">
@@ -53,6 +59,13 @@ function FoodInfo(props) {
                 <h5 id="food-info-macro-carb">Carbs: {nutrients.totalCarb}g</h5>
                 <h5 id="food-info-macro-protein">Protein: {nutrients.protein}g</h5>
             </div>
+            <SelectServingSize
+                householdServingName={foodResponse.servingName}
+                defaultServingQuantity={defaultMetricQuantity}
+                defaultMetricUnit={defaultMetricUnit}
+                setMetricQuantity={setMetricQuantity}
+                setNumServings={setNumServings}
+            />
             <p></p>
         </div>
     );
@@ -60,6 +73,75 @@ function FoodInfo(props) {
 
 function FoodMoreInfo(props) {
     const { nutrients } = props;
+}
+
+function SelectServingSize(props) {
+    // needs to understand if food is measured in grams or milliliters by default
+    // needs to preserve the default unit from the database
+    // needs to create a range of appropriate units
+    const { householdServingName, defaultServingQuantity, defaultMetricUnit, setMetricQuantity, setNumServings } = props;
+
+    const [numText, setNumText] = useState(1);
+
+    let units = {};
+    let defaultUnitName = `${defaultServingQuantity} ${ProcessUnit(defaultMetricUnit)}`;
+    if (householdServingName) {
+        defaultUnitName += ` (${ToTitleCase(householdServingName)})`;
+    }
+    units[defaultUnitName] = defaultServingQuantity;
+
+    if (defaultMetricUnit === "g") {
+        units = {
+            ...units,
+            "1 g": 1,
+            "1 kg": 1000,
+            "1 oz": 28,
+            "1 lb": 28 * 16,
+        };
+    } else if (defaultMetricUnit === "ml") {
+        units = {
+            ...units,
+            "1 mL": 1,
+            "1 L": 1000,
+            "1 tsp": 4.92892,
+            "1 tbsp": 14.7868,
+            "1 fl oz": 29.5735,
+            "1 cup": 236.588,
+        };
+    }
+
+    const inputOnChange = (e) => {
+        setNumText(e.target.value);
+        let n = Number(e.target.value);
+        if (n > 0 && n < 10001) {
+            setNumServings(n);
+        }
+    };
+
+    const inputOnBlur = () => {
+        if (numText < 1) {
+            setNumText(1);
+            setNumServings(1);
+            return;
+        } else if (numText > 10000) {
+            setNumText(10000);
+            setNumServings(10000);
+            return;
+        }
+        setNumServings(numText);
+        return;
+    };
+
+    const onUnitSelect = (selection) => {
+        setMetricQuantity(units[selection]);
+    };
+
+    return (
+        <div>
+            <input type="number" value={numText} onChange={inputOnChange} onBlur={inputOnBlur} />
+            <DropdownMenu options={Object.keys(units)} listItemClass="food-serving-dropdown-item" onSelect={onUnitSelect} />
+        </div>
+    );
 }
 
 function MacroCircle(props) {
@@ -87,7 +169,7 @@ function MacroCircle(props) {
         Some responsiveness needs to be done here because its HTML Canvas. Not ideal but oh well
     */
     // @media basically
-    let elemWidth = Math.max(windowDims.width / 8, windowDims.height / 8);
+    let elemWidth = Math.max(windowDims.width / 6, windowDims.height / 6);
     elemWidth = Math.min(125, elemWidth);
     let elemHeight = elemWidth;
 
@@ -166,6 +248,11 @@ function MacroCircle(props) {
 /* Utility Functions */
 // Food Utilities
 function ToTitleCase(x) {
+    /* 
+    Very useful function for converting aNy sTriNG into Title Case, where only the first letter of every
+    word is capitalized. The API sends back everything in uppercase letters, so it's the job of the client
+    to figure out how best to display everything
+    */
     x = x
         .toLowerCase()
         .split(" ")
@@ -185,6 +272,11 @@ function ToTitleCase(x) {
     return x;
 }
 function GetPhrases(s, ans, offset) {
+    /*
+    Magic T(n) = O(n^3) recursive function. Splits a string into "phrases", which is a combination of consecutive words
+    in a string. This function is super useful for trimming off some of the extra repeated information that comes in a food's
+    name, like "Salt & Pepper Cashews, Salt & Pepper"
+    */
     ans = ans ? ans : {};
     let j = offset ? offset : 0;
     let k = offset ? offset : 0;
@@ -238,6 +330,7 @@ function GetPhrases(s, ans, offset) {
 }
 
 function MultiDimIncludes(arr, val) {
+    // Multidimensional Array version of .includes() that is good enough for my purposes
     for (let i = 0; i < arr.length; i++) {
         let temp = true;
         for (let j = 0; j < arr[i].length; j++) {
@@ -251,6 +344,10 @@ function MultiDimIncludes(arr, val) {
 }
 
 function ProcessFoodName(x) {
+    /*
+    Actual Function that will strip the extra information from the names of foods as well as call ToTitleCase to
+    standardize the way that food names are displayed
+    */
     let phrases = GetPhrases(x);
     // console.log(phrases);
     let maxKey = "";
@@ -291,12 +388,25 @@ function ProcessUnit(unit) {
     return unit;
 }
 
-function ProcessNutritionalContents(nutritionalContents, metricQuantity) {
+function ProcessNutritionalContents(nutritionalContents, metricQuantity, numServings, defaultUnitRounding) {
+    /*
+    This function is used for processing nutrients and rounding them appropriately according the serving size.
+    If the serving size is the same as what came from the database i.e. the same as on a nutrition label,
+    it would look better if the calories were rounded to the nearest 5 and the macros were rounded to the 
+    nearest 1. That is the purpose of passing in "defaultUnitRounding"
+    */
+    let precision = defaultUnitRounding ? 0 : 1;
     let nutrients = {};
     Object.keys(nutritionalContents).forEach((key) => {
-        nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity).toFixed(1));
+        if (key === "kcal") return (nutrients[key] = Number((nutritionalContents[key] / 100) * metricQuantity));
+        nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity * numServings).toFixed(precision));
     });
     console.log(nutrients);
+    nutrients.kcal = defaultUnitRounding ? RoundToNearestFive(nutrients.kcal) * numServings : nutrients.kcal * numServings;
     nutrients.kcal = nutrients.kcal.toFixed(0);
     return nutrients;
+}
+
+function RoundToNearestFive(n) {
+    return Math.round(n / 5) * 5;
 }
