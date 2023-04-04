@@ -11,7 +11,7 @@ export default function ExerciseSearchPage() {
     const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {
-        fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/${exerciseType}/?search=${searchText}`)
+        fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/${exerciseType}/?search=${encodeURIComponent(searchText)}`)
             .then((res) => {
                 setSearchStatus(res.status);
                 return res.json();
