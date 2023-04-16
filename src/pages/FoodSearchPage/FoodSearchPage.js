@@ -33,6 +33,9 @@ export default function FoodSearchPage() {
             <div id="food-search-page-bottom-top-banner-background-decoration"></div>
             <div id="food-search-page-bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
+                <button id="food-search-page-searchbox-button" onClick={fetchResults}>
+                    <img src={magnifyingGlass} />
+                </button>
                 <input
                     id="food-search-page-searchbox-input"
                     type="text"
@@ -41,12 +44,15 @@ export default function FoodSearchPage() {
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={inputOnKeydown}
                 ></input>
-                <button id="food-search-page-searchbox-button" onClick={fetchResults}>
-                    <img src={magnifyingGlass} />
-                </button>
-                <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
-                    <img src={barcodeScannerIcon} />
-                </button>
+                {searchText !== "" ? (
+                    <button id="food-search-page-cleartext-button" onClick={() => setSearchText("")}>
+                        X
+                    </button>
+                ) : (
+                    <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
+                        <img src={barcodeScannerIcon} />
+                    </button>
+                )}
             </div>
             <div id="food-search-island">
                 <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>

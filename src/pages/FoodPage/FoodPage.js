@@ -55,9 +55,19 @@ function FoodInfo(props) {
             <p>{brand}</p>
             <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
             <div id="food-info-macros">
-                <h5 id="food-info-macro-fat">Fat: {nutrients.totalFat}g</h5>
-                <h5 id="food-info-macro-carb">Carbs: {nutrients.totalCarb}g</h5>
-                <h5 id="food-info-macro-protein">Protein: {nutrients.protein}g</h5>
+                <h5 id="food-info-macro-fat">
+                    Fat:
+                    <br />
+                    {nutrients.totalFat}g
+                </h5>
+                <h5 id="food-info-macro-carb">
+                    Carbs: <br />
+                    {nutrients.totalCarb}g
+                </h5>
+                <h5 id="food-info-macro-protein">
+                    Protein: <br />
+                    {nutrients.protein}g
+                </h5>
             </div>
             <SelectServingSize
                 householdServingName={foodResponse.servingName}
