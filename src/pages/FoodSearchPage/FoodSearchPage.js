@@ -12,7 +12,7 @@ export default function FoodSearchPage() {
     const [searchStatus, setSearchStatus] = useState(200);
 
     const fetchResults = () => {
-        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${searchText}`)
+        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
             .then((res) => {
                 setSearchStatus(res.status);
                 return res.json();

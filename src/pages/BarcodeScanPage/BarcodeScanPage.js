@@ -15,7 +15,7 @@ export default function BarcodeScanPage() {
     const [barcodeStatus, setBarcodeStatus] = useState(200);
 
     const fetchResults = (decodedText, decodedResult) => {
-        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?barcode=${decodedText}`)
+        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?barcode=${encodeURIComponent(decodedText)}`)
             .then((res) => {
                 setBarcodeStatus(res.status);
                 return res.json();
