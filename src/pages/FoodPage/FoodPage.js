@@ -137,9 +137,15 @@ function SelectServingSize(props) {
     };
 
     return (
-        <div>
-            <input type="number" value={numText} onChange={inputOnChange} onBlur={inputOnBlur} />
-            <DropdownMenu options={Object.keys(units)} listItemClass="food-serving-dropdown-item" onSelect={onUnitSelect} />
+        <div id="food-page-serving-selector">
+            <div id="food-page-serving-size-selector">
+                <p>Serving Size:</p>
+                <DropdownMenu options={Object.keys(units)} listItemClass="food-serving-dropdown-item" onSelect={onUnitSelect} />
+            </div>
+            <div id="food-page-num-serving-selector">
+                <p>Number of Servings:</p>
+                <input type="number" inputMode="decimal" value={numText} onChange={inputOnChange} onBlur={inputOnBlur} />
+            </div>
         </div>
     );
 }
@@ -169,7 +175,7 @@ function MacroCircle(props) {
         Some responsiveness needs to be done here because its HTML Canvas. Not ideal but oh well
     */
     // @media basically
-    let elemWidth = Math.max(windowDims.width / 6, windowDims.height / 6);
+    let elemWidth = Math.max(windowDims.width / 5, windowDims.height / 5);
     elemWidth = Math.min(125, elemWidth);
     let elemHeight = elemWidth;
 
@@ -401,9 +407,10 @@ function ProcessNutritionalContents(nutritionalContents, metricQuantity, numServ
         if (key === "kcal") return (nutrients[key] = Number((nutritionalContents[key] / 100) * metricQuantity));
         nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity * numServings).toFixed(precision));
     });
+
     console.log(nutrients);
     nutrients.kcal = defaultUnitRounding ? RoundToNearestFive(nutrients.kcal) * numServings : nutrients.kcal * numServings;
-    nutrients.kcal = nutrients.kcal.toFixed(0);
+    nutrients.kcal = nutrients.kcal > 25_000 ? nutrients.kcal.toExponential(2) : nutrients.kcal.toFixed(0);
     return nutrients;
 }
 
