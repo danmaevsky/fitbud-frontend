@@ -2,7 +2,7 @@ import magnifyingGlass from "assets/magnifying-glass.svg";
 import clearTextX from "assets/clear-text-x.svg";
 import "./ExerciseSearchPage.css";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
 export default function ExerciseSearchPage() {
@@ -35,7 +35,7 @@ export default function ExerciseSearchPage() {
             <div id="exercise-search-page-bottom-bot-banner-background-decoration"></div>
             <div id="exercise-search-page-searchbox">
                 <button id="exercise-search-page-searchbox-button" onClick={fetchResults}>
-                    <img src={magnifyingGlass} />
+                    <img src={magnifyingGlass} alt="magnifying glass icon" />
                 </button>
                 <input
                     id="exercise-search-page-searchbox-input"
@@ -54,7 +54,7 @@ export default function ExerciseSearchPage() {
                             setSearchText("");
                         }}
                     >
-                        <img src={clearTextX} />
+                        <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
                     <div id="exercise-search-page-searchbox-placecholder"></div>

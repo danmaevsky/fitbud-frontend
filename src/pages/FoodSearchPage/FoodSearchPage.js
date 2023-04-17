@@ -36,7 +36,7 @@ export default function FoodSearchPage() {
             <div id="food-search-page-bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
                 <button id="food-search-page-searchbox-button" onClick={fetchResults}>
-                    <img src={magnifyingGlass} />
+                    <img src={magnifyingGlass} alt="magnifying glass icon" />
                 </button>
                 <input
                     id="food-search-page-searchbox-input"
@@ -55,11 +55,11 @@ export default function FoodSearchPage() {
                             setSearchText("");
                         }}
                     >
-                        <img src={clearTextX} />
+                        <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
                     <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
-                        <img src={barcodeScannerIcon} />
+                        <img src={barcodeScannerIcon} alt="barcode scanner icon" />
                     </button>
                 )}
             </div>

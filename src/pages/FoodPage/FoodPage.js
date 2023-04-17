@@ -19,7 +19,7 @@ export default function FoodPage() {
                 return res.json();
             })
             .then((json) => setFoodResponse(json));
-    }, []);
+    }, [foodId]);
     return (
         <div id="food-page-body">
             <div id="food-page-round-background-decoration"></div>
@@ -27,7 +27,7 @@ export default function FoodPage() {
             <div id="food-page-bottom-bot-banner-background-decoration"></div>
             <div id="food-island">
                 <Link to={-1} id="food-island-back-arrow">
-                    <img src={backArrow} />
+                    <img src={backArrow} alt="back arrow" />
                     Go Back
                 </Link>
                 {responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "Loading..."}
@@ -85,7 +85,7 @@ function FoodInfo(props) {
                     <FoodMoreInfo processedNutrients={nutrients} />
                     <div id="food-info-show-less">
                         <button onClick={() => setShowMoreInfo(false)}>
-                            <img id="food-info-show-less-arrow" src={showMoreDownArrow} />
+                            <img id="food-info-show-less-arrow" src={showMoreDownArrow} alt="show less nutritional information icon" />
                         </button>
                     </div>
                 </>
@@ -93,7 +93,7 @@ function FoodInfo(props) {
                 <div id="food-info-show-more" onClick={() => setShowMoreInfo(true)}>
                     <h5>Show More Nutritional Information</h5>
                     <button>
-                        <img id="food-info-show-more-arrow" src={showMoreDownArrow} />
+                        <img id="food-info-show-more-arrow" src={showMoreDownArrow} alt="show more nutritional information icon" />
                     </button>
                 </div>
             )}
@@ -426,7 +426,7 @@ function MacroCircle(props) {
         } else {
             console.log("Curr undefined!");
         }
-    }, [windowDims]);
+    }, [windowDims, kcalComputed, protein, totalCarb, totalFat, elemHeight, elemWidth]);
     return (
         <div id="macro-circle" style={{ width: elemWidth, height: elemHeight }}>
             <canvas ref={canvas} style={{ width: elemWidth, height: elemHeight }}></canvas>
