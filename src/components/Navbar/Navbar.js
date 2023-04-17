@@ -5,9 +5,15 @@ function Navbar() {
     const location = useLocation();
     return (
         <nav id="navbar">
-            <a>
+            <Link
+                to="/"
+                onClick={() => {
+                    clearFoodSearchPageState(location);
+                    clearExerciseSearchPageState(location);
+                }}
+            >
                 <h1>fitBud.</h1>
-            </a>
+            </Link>
             <ul>
                 <li>
                     <Link to="/food" onClick={() => clearFoodSearchPageState(location)}>

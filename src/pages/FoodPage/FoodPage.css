@@ -56,6 +56,8 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 40rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 #food-info h3 {
     padding: 0;
@@ -87,9 +89,10 @@
 }
 
 #macro-circle {
-    position: inherit;
+    position: sticky;
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
 }
 #macro-circle h4 {
     font-size: 1.25rem;
@@ -111,10 +114,11 @@
 #food-page-serving-selector {
     display: flex;
     flex-direction: column;
-    align-self: flex-start;
+    gap: 1rem;
+    align-self: center;
     min-width: 15rem;
-    width: 40vw;
-    max-width: 40rem;
+    width: 38vw;
+    max-width: 38rem;
 }
 
 #food-page-serving-selector div {
@@ -122,9 +126,14 @@
 }
 
 #food-page-serving-selector p {
+    color: var(--default-primary-text);
     font-size: 1.125rem;
     font-weight: 700;
     text-align: left;
+    margin: 0;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
 }
 
 #food-page-serving-size-selector {
@@ -134,19 +143,25 @@
     z-index: 1;
 }
 
-#food-page-serving-size-selector p {
-    margin: 0;
-    height: 2rem;
-    display: inline-flex;
-    align-items: center;
-}
-
 #food-page-serving-size-selector .dropdown-menu-list {
-    display: flex;
-    flex-direction: column;
+    cursor: pointer;
+    font-size: 1.25rem;
+    /* font-family: "Varela Round"; */
+    color: black;
+    border: 1px solid gray;
+    background-color: white;
+    border-radius: 3px;
+    width: 8rem;
+    height: 2rem;
+    transition: filter 0.1s;
+}
+#food-page-serving-size-selector .dropdown-menu-list:hover {
+    transition: filter 0.1s;
+    filter: brightness(90%);
 }
 
 .food-serving-dropdown-item {
+    transition: filter 0.1s;
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -155,10 +170,85 @@
     width: 8rem;
     padding: 0.5rem;
     justify-content: flex-end;
+    font-size: 1.25rem;
+    border-radius: 3px;
 }
 
 .food-serving-dropdown-item:hover {
+    transition: filter 0.1s;
     filter: brightness(90%);
+}
+
+#food-page-num-serving-selector {
+    display: flex;
+    justify-content: space-between;
+    height: 2.5rem;
+}
+
+#food-page-num-serving-selector input {
+    text-align: right;
+    width: 6ch;
+    font-size: 1.35rem;
+    padding-right: 0.5rem;
+}
+
+#food-page-num-serving-selector input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+#food-page-num-serving-selector input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#food-info-show-more {
+    cursor: pointer;
+    padding-top: 3rem;
+    font-size: 1.25rem;
+    width: 15rem;
+}
+
+#food-page-more-info {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: left;
+    min-width: 15rem;
+    width: 38vw;
+    max-width: 38rem;
+}
+
+#food-page-more-info p {
+    color: var(--default-primary-text);
+    margin: 0;
+    padding: 0;
+}
+
+#food-page-more-info h5 {
+    color: var(--default-primary-text);
+    font-size: 1.125rem;
+}
+
+#food-page-more-info li {
+    display: inline-flex;
+    justify-content: space-between;
+    font-size: 1.125rem;
+    padding-bottom: 0.75rem;
+}
+
+#food-page-more-info li ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding-left: 1.5rem;
+}
+
+#food-page-more-info li ul li p {
+    color: var(--default-secondary-text);
 }
 
 #food-page-round-background-decoration {
@@ -205,11 +295,15 @@
     }
 
     #food-page-serving-selector {
-        width: 60vw;
+        width: 55vw;
     }
 
     #food-page-round-background-decoration {
         max-height: 30vh;
+    }
+
+    #food-page-more-info {
+        width: 55vw;
     }
 }
 
@@ -225,6 +319,10 @@
     }
 
     #food-page-serving-selector {
-        width: 70vw;
+        width: 65vw;
+    }
+
+    #food-page-more-info {
+        width: 65vw;
     }
 }

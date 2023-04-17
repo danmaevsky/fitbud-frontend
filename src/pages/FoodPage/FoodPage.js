@@ -36,6 +36,7 @@ export default function FoodPage() {
 }
 
 function FoodInfo(props) {
+    const [showMoreInfo, setShowMoreInfo] = useState(false);
     const { foodResponse } = props;
 
     const defaultMetricQuantity = foodResponse.servingQuantity ? foodResponse.servingQuantity : 100;
@@ -58,15 +59,17 @@ function FoodInfo(props) {
                 <h5 id="food-info-macro-fat">
                     Fat:
                     <br />
-                    {nutrients.totalFat}g
+                    {nutrients.totalFat} g
                 </h5>
                 <h5 id="food-info-macro-carb">
-                    Carbs: <br />
-                    {nutrients.totalCarb}g
+                    Carbs:
+                    <br />
+                    {nutrients.totalCarb} g
                 </h5>
                 <h5 id="food-info-macro-protein">
-                    Protein: <br />
-                    {nutrients.protein}g
+                    Protein:
+                    <br />
+                    {nutrients.protein} g
                 </h5>
             </div>
             <SelectServingSize
@@ -76,13 +79,165 @@ function FoodInfo(props) {
                 setMetricQuantity={setMetricQuantity}
                 setNumServings={setNumServings}
             />
-            <p></p>
+            {showMoreInfo ? (
+                <FoodMoreInfo processedNutrients={nutrients} />
+            ) : (
+                <h5 id="food-info-show-more" onClick={() => setShowMoreInfo(true)}>
+                    Show More Nutritional Information
+                </h5>
+            )}
         </div>
     );
 }
 
 function FoodMoreInfo(props) {
-    const { nutrients } = props;
+    const { processedNutrients } = props;
+
+    return (
+        <ul id="food-page-more-info">
+            <h5>Nutritional Content</h5>
+            <li>
+                <p>Calories:</p>
+                <p>{processedNutrients.kcal ? processedNutrients.kcal : "-"}</p>
+            </li>
+            <li>
+                <p>Total Fat:</p>
+                <p>{processedNutrients.totalFat ? processedNutrients.totalFat + "g" : "-"}</p>
+            </li>
+            <li>
+                <ul>
+                    <li>
+                        <p>Saturated Fat:</p>
+                        <p>{processedNutrients.saturatedFat ? processedNutrients.saturatedFat + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Trans Fat:</p>
+                        <p>{processedNutrients.transFat ? processedNutrients.transFat + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Polyunsaturated Fat:</p>
+                        <p>{processedNutrients.polyunsaturatedFat ? processedNutrients.polyunsaturatedFat + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Monounsaturated Fat:</p>
+                        <p>{processedNutrients.monounsaturatedFat ? processedNutrients.monounsaturatedFat + "g" : "-"}</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>Cholesterol:</p>
+                <p>{processedNutrients.cholesterol ? processedNutrients.cholesterol + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Sodium:</p>
+                <p>{processedNutrients.sodium ? processedNutrients.sodium + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Total Carbohydrates:</p>
+                <p>{processedNutrients.totalCarb ? processedNutrients.totalCarb + "g" : "-"}</p>
+            </li>
+            <li>
+                <ul>
+                    <li>
+                        <p>Dietary Fiber:</p>
+                        <p>{processedNutrients.dietaryFiber ? processedNutrients.dietaryFiber + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Total Sugars:</p>
+                        <p>{processedNutrients.totalSugar ? processedNutrients.totalSugar + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Added Sugars:</p>
+                        <p>{processedNutrients.addedSugar ? processedNutrients.addedSugar + "g" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Sugar Alcohols:</p>
+                        <p>{processedNutrients.sugarAlcohols ? processedNutrients.sugarAlcohols + "g" : "-"}</p>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>Protein:</p>
+                <p>{processedNutrients.protein ? processedNutrients.protein + "g" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin D:</p>
+                <p>{processedNutrients.vitaminD ? processedNutrients.vitaminD + "mcg" : "-"}</p>
+            </li>
+            <li>
+                <p>Calcium:</p>
+                <p>{processedNutrients.calcium ? processedNutrients.calcium + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Iron:</p>
+                <p>{processedNutrients.iron ? processedNutrients.iron + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Potassium:</p>
+                <p>{processedNutrients.potassium ? processedNutrients.potassium + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin A:</p>
+                <p>{processedNutrients.vitaminA ? processedNutrients.vitaminA + "mcg" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin C:</p>
+                <p>{processedNutrients.vitaminC ? processedNutrients.vitaminC + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin E:</p>
+                <p>{processedNutrients.vitaminE ? processedNutrients.vitaminE + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Thiamin:</p>
+                <p>{processedNutrients.thiamin ? processedNutrients.thiamin + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Riboflavin:</p>
+                <p>{processedNutrients.riboflavin ? processedNutrients.riboflavin + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Niacin:</p>
+                <p>{processedNutrients.niacin ? processedNutrients.niacin + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin B6:</p>
+                <p>{processedNutrients.vitaminB6 ? processedNutrients.vitaminB6 + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Folate:</p>
+                <p>{processedNutrients.folate ? processedNutrients.folate + "mcg" : "-"}</p>
+            </li>
+            <li>
+                <p>Vitamin B12:</p>
+                <p>{processedNutrients.vitaminB12 ? processedNutrients.vitaminB12 + "mcg" : "-"}</p>
+            </li>
+            <li>
+                <p>Biotin:</p>
+                <p>{processedNutrients.biotin ? processedNutrients.biotin + "mcg" : "-"}</p>
+            </li>
+            <li>
+                <p>Pantothenic Acid:</p>
+                <p>{processedNutrients.pantothenicAcid ? processedNutrients.pantothenicAcid + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Phosphorus:</p>
+                <p>{processedNutrients.phosphorus ? processedNutrients.phosphorus + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Iodine:</p>
+                <p>{processedNutrients.iodine ? processedNutrients.iodine + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Magnesium:</p>
+                <p>{processedNutrients.magnesium ? processedNutrients.magnesium + "mg" : "-"}</p>
+            </li>
+            <li>
+                <p>Selenium:</p>
+                <p>{processedNutrients.selenium ? processedNutrients.selenium + "mcg" : "-"}</p>
+            </li>
+        </ul>
+    );
 }
 
 function SelectServingSize(props) {
@@ -121,16 +276,16 @@ function SelectServingSize(props) {
     }
 
     const inputOnChange = (e) => {
-        setNumText(e.target.value);
         let n = Number(e.target.value);
+        setNumText(e.target.value);
         if (n > 0 && n < 10001) {
             setNumServings(n);
         }
     };
 
     const inputOnBlur = () => {
-        if (numText < 1) {
-            setNumText(1);
+        if (numText < 0) {
+            setNumText(0);
             setNumServings(1);
             return;
         } else if (numText > 10000) {
@@ -148,13 +303,20 @@ function SelectServingSize(props) {
 
     return (
         <div id="food-page-serving-selector">
+            <div id="food-page-num-serving-selector">
+                <p>Number of Servings:</p>
+                <input
+                    type="number"
+                    inputMode="decimal"
+                    value={numText}
+                    onClick={(e) => e.target.select()}
+                    onChange={inputOnChange}
+                    onBlur={inputOnBlur}
+                />
+            </div>
             <div id="food-page-serving-size-selector">
                 <p>Serving Size:</p>
                 <DropdownMenu options={Object.keys(units)} listItemClass="food-serving-dropdown-item" onSelect={onUnitSelect} />
-            </div>
-            <div id="food-page-num-serving-selector">
-                <p>Number of Servings:</p>
-                <input type="number" inputMode="decimal" value={numText} onChange={inputOnChange} onBlur={inputOnBlur} />
             </div>
         </div>
     );
