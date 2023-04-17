@@ -61,6 +61,20 @@
     border: 0.2rem solid var(--default-primary-blue);
 }
 
+#exercise-search-page-searchbox-placecholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+}
+
 #exercise-search-page-choices {
     z-index: 1;
     padding: 0.4rem;
@@ -251,6 +265,12 @@
 
     #exercise-search-page-searchbox button img {
         height: 1.5rem;
+    }
+
+    #exercise-search-page-searchbox-placecholder {
+        margin-right: 1rem;
+        height: 3rem;
+        width: 3rem;
     }
 
     #exercise-search-island {

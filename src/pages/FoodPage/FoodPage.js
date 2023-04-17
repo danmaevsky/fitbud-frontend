@@ -1,5 +1,6 @@
 import "./FoodPage.css";
 import backArrow from "assets/back-arrow.svg";
+import showMoreDownArrow from "assets/show-more-down-arrow.svg";
 import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -29,7 +30,7 @@ export default function FoodPage() {
                     <img src={backArrow} />
                     Go Back
                 </Link>
-                {responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "ERROR!!!"}
+                {responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "Loading..."}
             </div>
         </div>
     );
@@ -80,11 +81,21 @@ function FoodInfo(props) {
                 setNumServings={setNumServings}
             />
             {showMoreInfo ? (
-                <FoodMoreInfo processedNutrients={nutrients} />
+                <>
+                    <FoodMoreInfo processedNutrients={nutrients} />
+                    <div id="food-info-show-less">
+                        <button onClick={() => setShowMoreInfo(false)}>
+                            <img id="food-info-show-less-arrow" src={showMoreDownArrow} />
+                        </button>
+                    </div>
+                </>
             ) : (
-                <h5 id="food-info-show-more" onClick={() => setShowMoreInfo(true)}>
-                    Show More Nutritional Information
-                </h5>
+                <div id="food-info-show-more" onClick={() => setShowMoreInfo(true)}>
+                    <h5>Show More Nutritional Information</h5>
+                    <button>
+                        <img id="food-info-show-more-arrow" src={showMoreDownArrow} />
+                    </button>
+                </div>
             )}
         </div>
     );
@@ -177,64 +188,68 @@ function FoodMoreInfo(props) {
                 <p>{processedNutrients.potassium ? processedNutrients.potassium + "mg" : "-"}</p>
             </li>
             <li>
-                <p>Vitamin A:</p>
-                <p>{processedNutrients.vitaminA ? processedNutrients.vitaminA + "mcg" : "-"}</p>
-            </li>
-            <li>
-                <p>Vitamin C:</p>
-                <p>{processedNutrients.vitaminC ? processedNutrients.vitaminC + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Vitamin E:</p>
-                <p>{processedNutrients.vitaminE ? processedNutrients.vitaminE + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Thiamin:</p>
-                <p>{processedNutrients.thiamin ? processedNutrients.thiamin + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Riboflavin:</p>
-                <p>{processedNutrients.riboflavin ? processedNutrients.riboflavin + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Niacin:</p>
-                <p>{processedNutrients.niacin ? processedNutrients.niacin + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Vitamin B6:</p>
-                <p>{processedNutrients.vitaminB6 ? processedNutrients.vitaminB6 + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Folate:</p>
-                <p>{processedNutrients.folate ? processedNutrients.folate + "mcg" : "-"}</p>
-            </li>
-            <li>
-                <p>Vitamin B12:</p>
-                <p>{processedNutrients.vitaminB12 ? processedNutrients.vitaminB12 + "mcg" : "-"}</p>
-            </li>
-            <li>
-                <p>Biotin:</p>
-                <p>{processedNutrients.biotin ? processedNutrients.biotin + "mcg" : "-"}</p>
-            </li>
-            <li>
-                <p>Pantothenic Acid:</p>
-                <p>{processedNutrients.pantothenicAcid ? processedNutrients.pantothenicAcid + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Phosphorus:</p>
-                <p>{processedNutrients.phosphorus ? processedNutrients.phosphorus + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Iodine:</p>
-                <p>{processedNutrients.iodine ? processedNutrients.iodine + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Magnesium:</p>
-                <p>{processedNutrients.magnesium ? processedNutrients.magnesium + "mg" : "-"}</p>
-            </li>
-            <li>
-                <p>Selenium:</p>
-                <p>{processedNutrients.selenium ? processedNutrients.selenium + "mcg" : "-"}</p>
+                <ul>
+                    <li>
+                        <p>Vitamin A:</p>
+                        <p>{processedNutrients.vitaminA ? processedNutrients.vitaminA + "mcg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Vitamin C:</p>
+                        <p>{processedNutrients.vitaminC ? processedNutrients.vitaminC + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Vitamin E:</p>
+                        <p>{processedNutrients.vitaminE ? processedNutrients.vitaminE + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Thiamin:</p>
+                        <p>{processedNutrients.thiamin ? processedNutrients.thiamin + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Riboflavin:</p>
+                        <p>{processedNutrients.riboflavin ? processedNutrients.riboflavin + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Niacin:</p>
+                        <p>{processedNutrients.niacin ? processedNutrients.niacin + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Vitamin B6:</p>
+                        <p>{processedNutrients.vitaminB6 ? processedNutrients.vitaminB6 + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Folate:</p>
+                        <p>{processedNutrients.folate ? processedNutrients.folate + "mcg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Vitamin B12:</p>
+                        <p>{processedNutrients.vitaminB12 ? processedNutrients.vitaminB12 + "mcg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Biotin:</p>
+                        <p>{processedNutrients.biotin ? processedNutrients.biotin + "mcg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Pantothenic Acid:</p>
+                        <p>{processedNutrients.pantothenicAcid ? processedNutrients.pantothenicAcid + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Phosphorus:</p>
+                        <p>{processedNutrients.phosphorus ? processedNutrients.phosphorus + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Iodine:</p>
+                        <p>{processedNutrients.iodine ? processedNutrients.iodine + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Magnesium:</p>
+                        <p>{processedNutrients.magnesium ? processedNutrients.magnesium + "mg" : "-"}</p>
+                    </li>
+                    <li>
+                        <p>Selenium:</p>
+                        <p>{processedNutrients.selenium ? processedNutrients.selenium + "mcg" : "-"}</p>
+                    </li>
+                </ul>
             </li>
         </ul>
     );

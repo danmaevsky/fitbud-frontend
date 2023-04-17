@@ -1,6 +1,7 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
+import clearTextX from "assets/clear-text-x.svg";
 import "./ExerciseSearchPage.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
@@ -9,6 +10,7 @@ export default function ExerciseSearchPage() {
     const [exerciseType, setExerciseType] = useSessionStorage("ExerciseSearchPageType", "cardio");
     const [searchResults, setSearchResults] = useSessionStorage("ExerciseSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useState(200);
+    const searchBoxRef = useRef(null);
 
     const fetchResults = () => {
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/${exerciseType}/?search=${encodeURIComponent(searchText)}`)
@@ -42,10 +44,21 @@ export default function ExerciseSearchPage() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={inputOnKeydown}
+                    ref={searchBoxRef}
                 ></input>
-                <button id="food-search-page-cleartext-button" onClick={() => setSearchText("")}>
-                    X
-                </button>
+                {searchText ? (
+                    <button
+                        id="exercise-search-page-cleartext-button"
+                        onClick={() => {
+                            searchBoxRef.current.focus();
+                            setSearchText("");
+                        }}
+                    >
+                        <img src={clearTextX} />
+                    </button>
+                ) : (
+                    <div id="exercise-search-page-searchbox-placecholder"></div>
+                )}
             </div>
             <div id="exercise-search-page-choices">
                 <button

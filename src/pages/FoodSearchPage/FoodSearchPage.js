@@ -1,7 +1,8 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
 import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
+import clearTextX from "assets/clear-text-x.svg";
 import "./FoodSearchPage.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
@@ -10,6 +11,7 @@ export default function FoodSearchPage() {
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useState(200);
+    const searchBoxRef = useRef(null);
 
     const fetchResults = () => {
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
@@ -43,10 +45,17 @@ export default function FoodSearchPage() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={inputOnKeydown}
+                    ref={searchBoxRef}
                 ></input>
                 {searchText !== "" ? (
-                    <button id="food-search-page-cleartext-button" onClick={() => setSearchText("")}>
-                        X
+                    <button
+                        id="food-search-page-cleartext-button"
+                        onClick={() => {
+                            searchBoxRef.current.focus();
+                            setSearchText("");
+                        }}
+                    >
+                        <img src={clearTextX} />
                     </button>
                 ) : (
                     <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
