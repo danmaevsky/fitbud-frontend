@@ -11,15 +11,23 @@ export default function FoodPage() {
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
     useEffect(() => {
+        let resStatus;
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/${foodId}`, {
             method: "GET",
         })
             .then((res) => {
-                setResponseStatus(res.status);
+                resStatus = res.status;
                 return res.json();
             })
-            .then((json) => setFoodResponse(json));
+            .then((json) => {
+                setResponseStatus(resStatus);
+                setFoodResponse(json);
+            });
     }, [foodId]);
+
+    let renderFoodInfo = responseStatus === 200; // check if response code is good
+    renderFoodInfo = renderFoodInfo && foodResponse && foodId === foodResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
+
     return (
         <div id="food-page-body">
             <div id="food-page-round-background-decoration"></div>
@@ -30,7 +38,9 @@ export default function FoodPage() {
                     <img src={backArrow} alt="back arrow" />
                     Go Back
                 </Link>
-                {responseStatus === 200 && foodResponse ? <FoodInfo foodResponse={foodResponse} /> : "Loading..."}
+                {renderFoodInfo ? <FoodInfo foodResponse={foodResponse} /> : null}
+                {!foodResponse ? "Loading..." : null}
+                {responseStatus !== 200 ? "404. No foods matching this ID!" : null}
             </div>
         </div>
     );
@@ -424,7 +434,7 @@ function MacroCircle(props) {
                 ctx.stroke();
             }
         } else {
-            console.log("Curr undefined!");
+            // console.log("Curr undefined!");
         }
     }, [windowDims, kcalComputed, protein, totalCarb, totalFat, elemHeight, elemWidth]);
     return (
@@ -443,7 +453,7 @@ function MacroCircle(props) {
 function ToTitleCase(x) {
     /* 
     Very useful function for converting aNy sTriNG into Title Case, where only the first letter of every
-    word is capitalized. The API sends back everything in uppercase letters, so it's the job of the client
+    word is capitalized. The API sends back food names in uppercase letters, so it's the job of the client
     to figure out how best to display everything
     */
     x = x
@@ -594,8 +604,6 @@ function ProcessNutritionalContents(nutritionalContents, metricQuantity, numServ
         if (key === "kcal") return (nutrients[key] = Number((nutritionalContents[key] / 100) * metricQuantity));
         nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity * numServings).toFixed(precision));
     });
-
-    console.log(nutrients);
     nutrients.kcal = defaultUnitRounding ? RoundToNearestFive(nutrients.kcal) * numServings : nutrients.kcal * numServings;
     nutrients.kcal = nutrients.kcal > 25_000 ? nutrients.kcal.toExponential(2) : nutrients.kcal.toFixed(0);
     return nutrients;
