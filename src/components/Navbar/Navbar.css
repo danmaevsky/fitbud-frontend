@@ -1,8 +1,25 @@
 #navbar {
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     min-height: 5vh;
+}
+
+#navbar.food {
+    background-color: var(--food-tertiary-green);
+}
+
+#navbar.exercise {
+    background-color: var(--exercise-tertiary-red);
+}
+
+#navbar.profile {
+    background-color: var(--profile-tertiary-purple);
+}
+
+#navbar.main {
+    background-color: var(--default-tertiary-blue);
 }
 
 #navbar h1 {
@@ -36,5 +53,5 @@
 
 #navbar a {
     text-decoration: none;
-    color: black;
+    color: white;
 }

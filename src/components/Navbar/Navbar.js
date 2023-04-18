@@ -1,10 +1,31 @@
 import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
 
+const foodRoutes = ["food", "barcode", "recipes"];
+const exerciseRoutes = ["exercise", "workouts"];
+const profileRoutes = ["profile"];
+const mainRoutes = ["dashboard", "diary", "home", "", "login"];
+
 function Navbar() {
     const location = useLocation();
+
+    // picking the color of the navbar
+    const topLevelPath = location.pathname.split("/")[1];
+    let navbarClass;
+    if (foodRoutes.includes(topLevelPath)) {
+        navbarClass = "food";
+    } else if (exerciseRoutes.includes(topLevelPath)) {
+        navbarClass = "exercise";
+    } else if (profileRoutes.includes(topLevelPath)) {
+        navbarClass = "profile";
+    } else if (mainRoutes.includes(topLevelPath)) {
+        navbarClass = "main";
+    } else {
+        navbarClass = "main";
+    }
+
     return (
-        <nav id="navbar">
+        <nav id="navbar" className={navbarClass}>
             <Link
                 to="/"
                 onClick={() => {

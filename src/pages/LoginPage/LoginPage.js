@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./LoginPage.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import authFetch from "helpers/authFetch";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);
@@ -26,6 +26,7 @@ function Login(props) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
 
     const handleResponse = (res) => {
@@ -60,8 +61,7 @@ function Login(props) {
         })
             .then(handleResponse)
             .then((json) => {
-                console.log(json);
-                window.localStorage.accessToken = "1";
+                window.localStorage.accessToken = json.accessToken;
                 window.localStorage.refreshToken = json.refreshToken;
                 return authFetch(`${process.env.REACT_APP_GATEWAY_URI}/profile/users`, {
                     method: "GET",
@@ -74,9 +74,14 @@ function Login(props) {
                 setTitle(`Hello ${json.firstName}!`);
                 setMessage("Logged in successfully!");
                 setIsAttemptingFetch(false);
-                navigate("/");
+                if (location.state && location.state.from) {
+                    navigate(location.state.from.pathname, { replace: true });
+                } else {
+                    navigate("/dashboard");
+                }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.log(err);
                 setLoginError(true);
                 setIsAttemptingFetch(false);
             });
