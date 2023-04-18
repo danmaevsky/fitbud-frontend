@@ -7,8 +7,7 @@
     align-self: stretch;
     align-items: center;
     justify-content: center;
-    height: 60rem;
-    max-height: 90vh;
+    height: 100%;
 }
 
 #login-island {
@@ -157,7 +156,7 @@
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 15vh;
+    height: 16vh;
     background-color: var(--default-secondary-blue);
 }
 
@@ -165,7 +164,7 @@
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 6vh;
+    height: 8vh;
     background-color: var(--default-tertiary-blue);
 }
 

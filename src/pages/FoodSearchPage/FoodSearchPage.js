@@ -10,7 +10,7 @@ export default function FoodSearchPage() {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchStatus, setSearchStatus] = useState(200);
+    const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
 
     const fetchResults = () => {

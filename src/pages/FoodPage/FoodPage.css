@@ -6,9 +6,8 @@
     flex-direction: column;
     align-self: stretch;
     align-items: center;
-    justify-content: center;
-    height: 60rem;
-    max-height: 90vh;
+    justify-content: flex-start;
+    height: 100%;
 }
 
 #food-island {
@@ -22,12 +21,13 @@
     padding-right: 3vw;
     padding-top: 4vh;
     padding-bottom: 4vh;
+    margin-top: 0.5rem;
     background-color: white;
     min-width: 15rem;
     width: 40vw;
     max-width: 40rem;
-    min-height: 30vh;
-    height: 50rem;
+    min-height: 28vh;
+    /* height: 45rem; */
     max-height: 75vh;
 }
 
@@ -323,7 +323,7 @@ input::-webkit-inner-spin-button {
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 15vh;
+    height: 16vh;
     background-color: var(--food-secondary-green);
 }
 
@@ -331,7 +331,7 @@ input::-webkit-inner-spin-button {
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 6vh;
+    height: 8vh;
     background-color: var(--food-tertiary-green);
 }
 

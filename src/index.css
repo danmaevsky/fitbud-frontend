@@ -46,3 +46,9 @@ code {
         font-size: 12px;
     }
 }
+
+body,
+html,
+#root {
+    height: 100%;
+}
