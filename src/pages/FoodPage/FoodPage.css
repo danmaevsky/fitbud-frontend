@@ -26,9 +26,9 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 40rem;
-    min-height: 28vh;
-    /* height: 45rem; */
-    max-height: 75vh;
+    min-height: 30vh;
+    height: 45rem;
+    max-height: 74vh;
 }
 
 #food-island-back-arrow {
@@ -56,6 +56,7 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 40rem;
+    height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
 }

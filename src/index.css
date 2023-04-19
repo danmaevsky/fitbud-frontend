@@ -47,6 +47,12 @@ code {
     }
 }
 
+@media screen and (max-height: 500px) {
+    html {
+        font-size: 12px;
+    }
+}
+
 body,
 html,
 #root {

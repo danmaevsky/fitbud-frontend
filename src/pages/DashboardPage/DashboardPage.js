@@ -4,9 +4,22 @@ import clearTextX from "assets/clear-text-x.svg";
 import { useNavigate } from "react-router-dom";
 import "./DashboardPage.css";
 import useSessionStorage from "hooks/useSessionStorage";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import useLocalStorage from "hooks/useLocalStorage";
+import authFetch from "helpers/authFetch";
+import getAllDiaryEntries from "helpers/getAllDiaryEntries";
 
 export default function DashboardPage() {
+    const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    useEffect(() => {
+        const dateObj = new Date();
+        const currentDate = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+        if (!currentDiary) {
+            fetchDiaryHelper(currentDate, setCurrentDiary);
+        } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
+            fetchDiaryHelper(currentDate, setCurrentDiary);
+        }
+    }, []);
     return (
         <div id="dashboard-page-body">
             <div id="dashboard-page-round-background-decoration"></div>
@@ -80,4 +93,51 @@ function FoodSearchbox() {
             )}
         </div>
     );
+}
+
+function fetchDiaryHelper(currentDate, setCurrentDiary) {
+    let resStatus;
+    authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
+        method: "GET",
+    })
+        .then((res) => {
+            resStatus = res.status;
+            return res.json();
+        })
+        .then(async (diary) => {
+            if (resStatus === 200) {
+                return getAllDiaryEntries(diary);
+            } else if (resStatus === 400) {
+                throw new Error(400);
+            } else if (resStatus === 404) {
+                return authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
+                    method: "POST",
+                })
+                    .then((res) => {
+                        resStatus = res.status;
+                        return res.json();
+                    })
+                    .then(async (diary) => {
+                        if (resStatus === 201) {
+                            return getAllDiaryEntries(diary);
+                        } else {
+                            throw new Error(resStatus);
+                        }
+                    });
+            }
+        })
+        .then((processedDiary) => {
+            setCurrentDiary(processedDiary);
+        })
+        .catch((error) => {
+            console.log(error, resStatus);
+        });
+}
+
+function pad(number) {
+    if (String(number).length < 2) {
+        return "0" + number;
+    } else {
+        return number;
+    }
 }

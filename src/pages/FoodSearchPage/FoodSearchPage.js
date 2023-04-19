@@ -1,6 +1,7 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
 import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
 import clearTextX from "assets/clear-text-x.svg";
+import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import "./FoodSearchPage.css";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -65,7 +66,14 @@ export default function FoodSearchPage() {
             </div>
             <div id="food-search-island">
                 <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
-                {searchResults.length > 0 ? <FoodSearchList searchResults={searchResults} /> : null}
+                {searchResults.length > 0 ? (
+                    <FoodSearchList searchResults={searchResults} />
+                ) : (
+                    <>
+                        <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                        {searchStatus !== 200 ? null : <h3>Search for a Food or Scan a Barcode!</h3>}
+                    </>
+                )}
                 {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
             </div>
         </div>

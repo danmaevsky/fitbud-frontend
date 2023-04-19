@@ -61,6 +61,7 @@ function clearFoodSearchPageState(location) {
     if (location.pathname !== "/food") {
         window.sessionStorage.removeItem("FoodSearchPageText");
         window.sessionStorage.removeItem("FoodSearchPageResults");
+        window.sessionStorage.removeItem("FoodSearchPageStatus");
     }
 }
 

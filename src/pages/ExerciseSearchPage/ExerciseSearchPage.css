@@ -6,7 +6,7 @@
     flex-direction: column;
     align-self: stretch;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 100%;
 }
 #exercise-search-page-searchbox {
@@ -17,6 +17,7 @@
     z-index: 1;
     display: flex;
     margin-bottom: 1rem;
+    margin-top: 3rem;
     align-items: center;
     background-color: white;
     border-radius: 30px;
@@ -219,7 +220,7 @@
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 15vh;
+    height: 16vh;
     background-color: var(--exercise-secondary-red);
 }
 
@@ -227,7 +228,7 @@
     position: absolute;
     bottom: 0;
     width: 100vw;
-    height: 6vh;
+    height: 8vh;
     background-color: var(--exercise-tertiary-red);
 }
 
@@ -236,7 +237,7 @@
         width: 50vw;
     }
     #exercise-search-island {
-        width: 50vw;
+        width: 60vw;
     }
     #exercise-search-page-round-background-decoration {
         max-height: 30vh;

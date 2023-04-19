@@ -41,8 +41,9 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 30rem;
-    min-height: 32.5rem;
-    max-height: 40vh;
+    min-height: 22.5rem;
+    height: 60vh;
+
     margin: 2rem;
 }
 
