@@ -36,7 +36,7 @@ export default function FoodSearchPage() {
             <div id="food-search-page-bottom-top-banner-background-decoration"></div>
             <div id="food-search-page-bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
-                <button id="food-search-page-searchbox-button" onClick={fetchResults}>
+                <button title="Search!" id="food-search-page-searchbox-button" onClick={fetchResults}>
                     <img src={magnifyingGlass} alt="magnifying glass icon" />
                 </button>
                 <input
@@ -50,6 +50,7 @@ export default function FoodSearchPage() {
                 ></input>
                 {searchText !== "" ? (
                     <button
+                        title="Clear text"
                         id="food-search-page-cleartext-button"
                         onClick={() => {
                             searchBoxRef.current.focus();
@@ -59,7 +60,7 @@ export default function FoodSearchPage() {
                         <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
-                    <button id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
+                    <button title="Scan a Barcode!" id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
                         <img src={barcodeScannerIcon} alt="barcode scanner icon" />
                     </button>
                 )}

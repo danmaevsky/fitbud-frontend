@@ -1,6 +1,7 @@
 #login-page-body {
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: var(--default-primary-background);
     display: flex;
     flex-direction: column;
@@ -17,6 +18,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
+    margin-top: -3rem;
     border-radius: 1rem;
     padding-left: 3vw;
     padding-right: 3vw;

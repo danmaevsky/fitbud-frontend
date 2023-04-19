@@ -41,13 +41,14 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 30rem;
-    min-height: 22.5rem;
+    min-height: 32.5rem;
     height: 60vh;
 
     margin: 2rem;
 }
 
 #dashboard-food-searchbox {
+    backdrop-filter: blur(0);
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.363));
     position: inherit;
     box-sizing: border-box;
@@ -135,7 +136,7 @@
     #dashboard-daily-summary-island {
         width: 70vw;
         max-width: 30rem;
-        height: 25rem;
+        height: 35rem;
         min-height: 25rem;
     }
 
