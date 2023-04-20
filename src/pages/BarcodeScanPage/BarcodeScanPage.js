@@ -27,7 +27,7 @@ export default function BarcodeScanPage() {
         if (barcodeResponse) {
             if (barcodeStatus !== 200) {
             } else {
-                console.log("Redirect");
+                console.log("Redirect to Food");
                 navigate("/food/" + barcodeResponse._id);
             }
         }

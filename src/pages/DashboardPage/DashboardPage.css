@@ -127,7 +127,7 @@
 }
 
 #dashboard-search-island img {
-    filter: opacity(0.5) grayscale(0.5);
+    filter: opacity(0.4) grayscale(0.5);
     height: 10rem;
 }
 

@@ -7,20 +7,25 @@ import "./DashboardPage.css";
 import useSessionStorage from "hooks/useSessionStorage";
 import { useEffect, useRef } from "react";
 import useLocalStorage from "hooks/useLocalStorage";
-import authFetch from "helpers/authFetch";
-import getAllDiaryEntries from "helpers/getAllDiaryEntries";
+import authFetch from "helpers/auth/authFetch";
+import getAllDiaryEntries from "helpers/fitness/getAllDiaryEntries";
 import { useState } from "react";
+import CalculateGoal from "helpers/fitness/CalculateGoal";
 
 export default function DashboardPage() {
+    const navigate = useNavigate();
     const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    const [profile, setProfile] = useLocalStorage("profile", null);
+
     useEffect(() => {
         const dateObj = new Date();
         const currentDate = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
-        if (!currentDiary) {
-            fetchDiaryHelper(currentDate, setCurrentDiary);
-        } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
-            fetchDiaryHelper(currentDate, setCurrentDiary);
-        }
+        // if (!currentDiary) {
+        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
+        // } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
+        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
+        // }
+        fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
     }, []);
     return (
         <div id="dashboard-page-body">
@@ -28,9 +33,7 @@ export default function DashboardPage() {
             <div id="dashboard-page-bottom-top-banner-background-decoration"></div>
             <div id="dashboard-page-bottom-bot-banner-background-decoration"></div>
             <div id="dashboard-page-content">
-                <div id="dashboard-daily-summary-island">
-                    <h3>Your Daily Summary</h3>
-                </div>
+                <DailySummary currentDiary={currentDiary} profile={profile} />
                 <div id="dashboard-widgets">
                     <FoodSearchbox />
                     <div id="dashboard-search-island">
@@ -107,7 +110,28 @@ function FoodSearchbox() {
     );
 }
 
-function fetchDiaryHelper(currentDate, setCurrentDiary) {
+function DailySummary(props) {
+    const { currentDiary, profile } = props;
+
+    // Load the blank page here
+    if (!currentDiary || !profile) {
+        return (
+            <div id="dashboard-daily-summary-island">
+                <h3>Your Daily Summary</h3>
+                <p>Loading Diary and Profile...</p>
+            </div>
+        );
+    }
+
+    return (
+        <div id="dashboard-daily-summary-island">
+            <h3>Your Daily Summary</h3>
+            <h4>Goal: {CalculateGoal(profile)}</h4>
+        </div>
+    );
+}
+
+function fetchDiaryHelper(currentDate, setCurrentDiary, navigate) {
     let resStatus;
     authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
         method: "GET",
@@ -118,7 +142,7 @@ function fetchDiaryHelper(currentDate, setCurrentDiary) {
         })
         .then(async (diary) => {
             if (resStatus === 200) {
-                return getAllDiaryEntries(diary);
+                return getAllDiaryEntries(diary, navigate);
             } else if (resStatus === 400) {
                 throw new Error(400);
             } else if (resStatus === 404) {
@@ -131,7 +155,7 @@ function fetchDiaryHelper(currentDate, setCurrentDiary) {
                     })
                     .then(async (diary) => {
                         if (resStatus === 201) {
-                            return getAllDiaryEntries(diary);
+                            return getAllDiaryEntries(diary, navigate);
                         } else {
                             throw new Error(resStatus);
                         }
@@ -145,6 +169,8 @@ function fetchDiaryHelper(currentDate, setCurrentDiary) {
             console.log(error, resStatus);
         });
 }
+
+function TotalFoodCalories() {}
 
 function pad(number) {
     if (String(number).length < 2) {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./LoginPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import authFetch from "helpers/authFetch";
+import authFetch from "helpers/auth/authFetch";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);
     const [message, setMessage] = useState("Login or Sign Up to get started!");
@@ -63,10 +63,14 @@ function Login(props) {
             .then((json) => {
                 window.localStorage.accessToken = json.accessToken;
                 window.localStorage.refreshToken = json.refreshToken;
-                return authFetch(`${process.env.REACT_APP_GATEWAY_URI}/profile/users`, {
-                    method: "GET",
-                    // headers: { Authorization: "Bearer " + json.accessToken },
-                });
+                return authFetch(
+                    `${process.env.REACT_APP_GATEWAY_URI}/profile/users`,
+                    {
+                        method: "GET",
+                        // headers: { Authorization: "Bearer " + json.accessToken },
+                    },
+                    navigate
+                );
             })
             .then((res) => res.json())
             .then((json) => {

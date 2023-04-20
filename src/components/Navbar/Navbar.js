@@ -1,8 +1,8 @@
-import IsUserLogged from "helpers/IsUserLogged";
+import IsUserLogged from "helpers/auth/IsUserLogged";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import authFetch from "helpers/authFetch";
+import authFetch from "helpers/auth/authFetch";
 
 const foodRoutes = ["food", "barcode", "recipes"];
 const exerciseRoutes = ["exercise", "workouts"];
@@ -12,7 +12,6 @@ const mainRoutes = ["dashboard", "diary", "home", "", "login"];
 function Navbar() {
     const location = useLocation();
     const loggedIn = IsUserLogged(); // display a different Navbar if logged in
-    console.log("loggedIn", loggedIn);
 
     // picking the color of the navbar
     const topLevelPath = location.pathname.split("/")[1];
@@ -107,9 +106,13 @@ function ProfileMenu(props) {
 
     const logoutOnClick = () => {
         let resStatus;
-        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/account/logout`, {
-            method: "POST",
-        }).then((res) => {
+        authFetch(
+            `${process.env.REACT_APP_GATEWAY_URI}/account/logout`,
+            {
+                method: "POST",
+            },
+            navigate
+        ).then((res) => {
             resStatus = res.status;
             if (res.status === 200) {
                 window.localStorage.clear();
