@@ -30,7 +30,6 @@
     padding: 1rem;
     margin: 0;
     /* background-color: gray; */
-    cursor: pointer;
 }
 
 #navbar ul {
@@ -40,12 +39,15 @@
     list-style: none;
 }
 
-#navbar ul a {
+#navbar ul a,
+#navbar ul p {
+    cursor: pointer;
     transition: background-color 0.1s;
     padding: 1rem;
 }
 
-#navbar ul a:hover {
+#navbar ul a:hover,
+#navbar ul p:hover {
     background-color: #c7c7c7;
     padding: 1rem;
 }
@@ -120,11 +122,14 @@
     background-color: var(--default-tertiary-blue);
 }
 
-#navbar-profile-menu a {
+#navbar-profile-menu a,
+#navbar-profile-menu p {
     margin: 0.25rem;
     margin-right: 1rem;
     margin-left: 1rem;
     display: block;
     text-align: right;
     width: 10ch;
+    padding: 1rem;
+    font-size: 1.125rem;
 }

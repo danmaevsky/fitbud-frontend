@@ -1,7 +1,7 @@
 import IsUserLogged from "helpers/IsUserLogged";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import authFetch from "helpers/authFetch";
 
 const foodRoutes = ["food", "barcode", "recipes"];
@@ -29,28 +29,22 @@ function Navbar() {
         navbarClass = "main";
     }
 
+    useEffect(() => {
+        clearSearchState(topLevelPath);
+    }, [topLevelPath]);
+
     if (!loggedIn) {
         return (
             <nav id="navbar" className={navbarClass}>
-                <Link
-                    to="/"
-                    onClick={() => {
-                        clearFoodSearchPageState(location);
-                        clearExerciseSearchPageState(location);
-                    }}
-                >
+                <Link to="/">
                     <h1>fitBud.</h1>
                 </Link>
                 <ul>
                     <li>
-                        <Link to="/food" onClick={() => clearFoodSearchPageState(location)}>
-                            Food
-                        </Link>
+                        <Link to="/food">Food</Link>
                     </li>
                     <li>
-                        <Link to="/exercise" onClick={() => clearExerciseSearchPageState(location)}>
-                            Exercise
-                        </Link>
+                        <Link to="/exercise">Exercise</Link>
                     </li>
                     <li>
                         <Link to="/login">Login</Link>
@@ -65,22 +59,17 @@ function Navbar() {
                 <Link
                     to="/"
                     onClick={() => {
-                        clearFoodSearchPageState(location);
-                        clearExerciseSearchPageState(location);
+                        clearSearchState(location);
                     }}
                 >
                     <h1>fitBud.</h1>
                 </Link>
                 <ul>
                     <li>
-                        <Link to="/food" onClick={() => clearFoodSearchPageState(location)}>
-                            Food
-                        </Link>
+                        <Link to="/food">Food</Link>
                     </li>
                     <li>
-                        <Link to="/exercise" onClick={() => clearExerciseSearchPageState(location)}>
-                            Exercise
-                        </Link>
+                        <Link to="/exercise">Exercise</Link>
                     </li>
                     <li>
                         <ProfileIcon profile={profile} navbarClass={navbarClass} />
@@ -105,7 +94,7 @@ function ProfileIcon(props) {
             }}
         >
             <div id="navbar-profile-icon" onClick={() => setShowMenu(!showMenu)}>
-                {profile.firstName[0]}
+                {profile.firstName[0].toUpperCase()}
             </div>
             {showMenu ? <ProfileMenu navbarClass={navbarClass} /> : null}
         </div>
@@ -135,27 +124,23 @@ function ProfileMenu(props) {
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/diary">Diary</Link>
             <Link to="/profile">Profile</Link>
-            <a onClick={logoutOnClick}>Logout</a>
+            <p onClick={logoutOnClick}>Logout</p>
         </div>
     );
 }
 
-function clearFoodSearchPageState(location) {
+function clearSearchState(topLevelPath) {
     if (typeof window === "undefined") {
         return;
     }
-    if (location.pathname !== "/food") {
+
+    if (topLevelPath !== "food") {
         window.sessionStorage.removeItem("FoodSearchPageText");
         window.sessionStorage.removeItem("FoodSearchPageResults");
         window.sessionStorage.removeItem("FoodSearchPageStatus");
     }
-}
 
-function clearExerciseSearchPageState(location) {
-    if (typeof window === "undefined") {
-        return;
-    }
-    if (location.pathname !== "/exercise") {
+    if (topLevelPath !== "exercise") {
         window.sessionStorage.removeItem("ExerciseSearchPageText");
         window.sessionStorage.removeItem("ExerciseSearchPageType");
         window.sessionStorage.removeItem("ExerciseSearchPageResults");

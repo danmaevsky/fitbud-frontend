@@ -1,6 +1,7 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
 import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
 import clearTextX from "assets/clear-text-x.svg";
+import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import { useNavigate } from "react-router-dom";
 import "./DashboardPage.css";
 import useSessionStorage from "hooks/useSessionStorage";
@@ -8,6 +9,7 @@ import { useEffect, useRef } from "react";
 import useLocalStorage from "hooks/useLocalStorage";
 import authFetch from "helpers/authFetch";
 import getAllDiaryEntries from "helpers/getAllDiaryEntries";
+import { useState } from "react";
 
 export default function DashboardPage() {
     const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
@@ -29,7 +31,16 @@ export default function DashboardPage() {
                 <div id="dashboard-daily-summary-island">
                     <h3>Your Daily Summary</h3>
                 </div>
-                <FoodSearchbox />
+                <div id="dashboard-widgets">
+                    <FoodSearchbox />
+                    <div id="dashboard-search-island">
+                        <img src={foodSearchPlacehoder} alt="Food Search Placeholder Icon" />
+                        <h3>Search for a Food or Scan a Barcode!</h3>
+                    </div>
+                    <div id="dashboard-progress-island">
+                        <h3>Progress</h3>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -37,7 +48,7 @@ export default function DashboardPage() {
 
 function FoodSearchbox() {
     const navigate = useNavigate();
-    const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
+    const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
@@ -50,6 +61,7 @@ function FoodSearchbox() {
             })
             .then((json) => setSearchResults(json))
             .then(() => {
+                window.sessionStorage.FoodSearchPageText = JSON.stringify(searchText);
                 navigate("/food");
             });
     };
