@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./LoginPage.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import authFetch from "helpers/auth/authFetch";
+import FormInput from "components/FormInput";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);
     const [message, setMessage] = useState("Login or Sign Up to get started!");
@@ -95,7 +96,7 @@ function Login(props) {
 
     return (
         <div id="login-island-form">
-            <input
+            <FormInput
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -106,7 +107,7 @@ function Login(props) {
                     }
                 }}
             />
-            <input
+            <FormInput
                 type="password"
                 placeholder="Password"
                 value={password}

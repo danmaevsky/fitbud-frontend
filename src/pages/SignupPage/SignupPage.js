@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./SignupPage.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import authFetch from "helpers/auth/authFetch";
+import FormInput from "components/FormInput";
 
 export default function SignupPage() {
     // Component Related States
@@ -123,6 +124,7 @@ export default function SignupPage() {
                     {currentSignupForm > 0 ? <button onClick={backOnClick}>Back</button> : null}
                     <button onClick={nextOnClick}>Next</button>
                 </div>
+                <IndicatorDots currentSignupForm={currentSignupForm} numForms={signupForms.length} />
             </div>
         </div>
     );
@@ -132,16 +134,16 @@ function SignupForm1(props) {
     const { email, setEmail, password, setPassword, confirmPassword, setConfirmPassword } = props;
 
     return (
-        <div id="signup-form-1">
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input
+        <div id="signup-form-1" className="signup-island-form">
+            <FormInput type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <FormInput
                 type="password"
                 placeholder="Password"
                 autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <input
+            <FormInput
                 type="password"
                 placeholder="Confirm Password"
                 autoComplete="new-password"
@@ -157,6 +159,34 @@ function SignupForm2(props) {
 }
 
 function SignupForm3(props) {}
+
+function IndicatorDots(props) {
+    const { currentSignupForm, numForms } = props;
+    let circles = [];
+    let rNormal = 2;
+    let rCurrent = 3;
+    let gap = 6;
+    for (let i = 0; i < numForms; i++) {
+        let cx;
+        if (i < currentSignupForm) {
+            cx = rNormal + i * gap;
+        } else if (i === currentSignupForm) {
+            cx = rNormal + i * gap + rCurrent - rNormal;
+        } else {
+            cx = rNormal + i * gap + 2 * (rCurrent - rNormal);
+        }
+        let cy = rCurrent;
+        let r = i === currentSignupForm ? rCurrent : rNormal;
+        let circleClass = i === currentSignupForm ? "signup-indicator-dot-current" : "signup-indicator-dot-default";
+        circles.push(<circle key={"indicator-dot" + i} className={circleClass} r={r} cx={cx} cy={cy} />);
+    }
+
+    return (
+        <svg id="signup-indicator-dots" viewBox={`0 0 ${(numForms - 1) * gap + 2 * rCurrent} ${rCurrent * 2}`}>
+            {circles}
+        </svg>
+    );
+}
 
 function ValidatePassword(password) {
     const passcheck = new RegExp(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!.@#$%&*.])[A-Za-z0-9!.@#$%&*.]{8,}$/);

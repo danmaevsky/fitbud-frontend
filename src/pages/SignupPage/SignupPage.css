@@ -69,20 +69,23 @@
     border: 1px solid var(--default-secondary-text);
 }
 
-#signup-form-1 {
-    margin-top: 3rem;
+.signup-island-form {
+    margin-top: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1.25rem;
     width: 100%;
 }
 
-#signup-form-1 input {
+.signup-island-form .form-input {
+    width: 85%;
+}
+
+.signup-island-form input {
     font-size: 1.125rem;
     padding: 1rem;
-    height: 0.5rem;
-    width: 75%;
+    height: 1.25rem;
     max-width: 30ch;
     border: solid 1px;
     border-color: var(--default-primary-border);
@@ -93,7 +96,7 @@
     display: flex;
     gap: 0.5rem;
     position: absolute;
-    bottom: 1rem;
+    bottom: 3rem;
     align-self: flex-end;
     justify-self: flex-end;
 }
@@ -117,6 +120,21 @@
 #signup-nav-buttons button:hover {
     transition: background-color 0.1s;
     background-color: var(--profile-secondary-purple);
+}
+
+#signup-indicator-dots {
+    position: absolute;
+    bottom: 0.75rem;
+    height: 1.5rem;
+}
+
+#signup-indicator-dots .signup-indicator-dot-default {
+    fill: var(--default-secondary-background);
+}
+
+#signup-indicator-dots .signup-indicator-dot-current {
+    transition: r 0.1s;
+    fill: var(--profile-secondary-purple);
 }
 
 #signup-page-round-background-decoration {
@@ -156,7 +174,7 @@
         height: 1.75rem;
     }
 
-    #signup-island-form input {
+    .signup-island-form input {
         font-size: 1.35rem;
         height: 1.5rem;
     }
