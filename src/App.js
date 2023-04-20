@@ -6,6 +6,7 @@ import Navbar from "components/Navbar";
 // pages
 import DemoPage from "pages/DemoPage";
 import LoginPage from "pages/LoginPage";
+import SignupPage from "pages/SignupPage";
 import FoodSearchPage from "pages/FoodSearchPage";
 import FoodPage from "pages/FoodPage";
 import ExerciseSearchPage from "pages/ExerciseSearchPage";
@@ -21,6 +22,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={null} />
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
                     <Route path="/food" element={<FoodSearchPage />} />
                     <Route path="/food/:foodId" element={<FoodPage />} />
                     <Route path="/barcode" element={<BarcodeScanPage />} />

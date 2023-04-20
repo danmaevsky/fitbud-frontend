@@ -6,7 +6,7 @@ import authFetch from "helpers/auth/authFetch";
 
 const foodRoutes = ["food", "barcode", "recipes"];
 const exerciseRoutes = ["exercise", "workouts"];
-const profileRoutes = ["profile"];
+const profileRoutes = ["profile", "signup"];
 const mainRoutes = ["dashboard", "diary", "home", "", "login"];
 
 function Navbar() {

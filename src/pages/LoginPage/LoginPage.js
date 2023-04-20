@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./LoginPage.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import authFetch from "helpers/auth/authFetch";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);
@@ -12,8 +12,10 @@ export default function LoginPage() {
             <div id="login-page-bottom-top-banner-background-decoration"></div>
             <div id="login-page-bottom-bot-banner-background-decoration"></div>
             <div id="login-island">
-                <h2>{title ? `${title}` : "Member Login"}</h2>
-                <p id={loginError ? "login-message-error" : "login-message"}>{message}</p>
+                <div id="login-island-header">
+                    <h2>{title ? `${title}` : "Member Login"}</h2>
+                    <p id={loginError ? "login-message-error" : "login-message"}>{message}</p>
+                </div>
                 <Login setTitle={setTitle} setMessage={setMessage} setLoginError={setLoginError} />
             </div>
         </div>
@@ -119,7 +121,7 @@ function Login(props) {
             <div id="login-page-buttons">
                 <button onClick={loginOnClick}>LOG IN</button>
                 <hr />
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">SIGN UP</a>
+                <Link to="/signup">SIGN UP</Link>
             </div>
         </div>
     );

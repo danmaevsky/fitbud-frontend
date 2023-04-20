@@ -15,9 +15,9 @@
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
+    gap: 3rem;
     margin-top: -3rem;
     border-radius: 1rem;
     padding-left: 3vw;
@@ -33,7 +33,13 @@
     /* max-height: 50vh; */
 }
 
-#login-island h2 {
+#login-island-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#login-island-header h2 {
     padding: 0;
     margin: 0;
     font-size: 1.5rem;
@@ -46,7 +52,7 @@
 }
 
 #login-message-error {
-    color: var(--login-error-red);
+    color: var(--default-error-red);
     padding: 0;
     margin: 0;
     /* height: 1rem; */
@@ -174,6 +180,7 @@
     #login-island {
         width: 70vw;
         max-width: 30rem;
+        gap: 1rem;
     }
 
     #login-island a {

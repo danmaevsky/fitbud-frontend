@@ -11,8 +11,8 @@
     --default-primary-border: #cccccc;
     --default-primary-text: black;
     --default-secondary-text: #757575;
+    --default-error-red: #e62e2e;
     /* Specific Colors */
-    --login-error-red: #e62e2e;
     --food-primary-green: #32be62;
     --food-secondary-green: #6ed893;
     --food-tertiary-green: #007127;
