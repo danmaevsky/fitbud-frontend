@@ -110,6 +110,9 @@ function ProfileMenu(props) {
             `${process.env.REACT_APP_GATEWAY_URI}/account/logout`,
             {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             },
             navigate
         ).then((res) => {

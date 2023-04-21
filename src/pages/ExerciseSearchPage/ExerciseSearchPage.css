@@ -61,7 +61,7 @@
     border: 0.2rem solid var(--default-primary-blue);
 }
 
-#exercise-search-page-searchbox-placecholder {
+#exercise-search-page-searchbox-placeholder {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -267,7 +267,7 @@
         height: 1.5rem;
     }
 
-    #exercise-search-page-searchbox-placecholder {
+    #exercise-search-page-searchbox-placeholder {
         margin-right: 1rem;
         height: 3rem;
         width: 3rem;

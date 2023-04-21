@@ -57,7 +57,7 @@ export default function ExerciseSearchPage() {
                         <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
-                    <div id="exercise-search-page-searchbox-placecholder"></div>
+                    <div id="exercise-search-page-searchbox-placeholder"></div>
                 )}
             </div>
             <div id="exercise-search-page-choices">

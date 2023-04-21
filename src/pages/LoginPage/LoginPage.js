@@ -64,6 +64,7 @@ function Login(props) {
         })
             .then(handleResponse)
             .then((json) => {
+                window.localStorage.clear();
                 window.localStorage.accessToken = json.accessToken;
                 window.localStorage.refreshToken = json.refreshToken;
                 return authFetch(

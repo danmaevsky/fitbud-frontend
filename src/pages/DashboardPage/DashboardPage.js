@@ -148,6 +148,9 @@ function fetchDiaryHelper(currentDate, setCurrentDiary, navigate) {
             } else if (resStatus === 404) {
                 return authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 })
                     .then((res) => {
                         resStatus = res.status;
