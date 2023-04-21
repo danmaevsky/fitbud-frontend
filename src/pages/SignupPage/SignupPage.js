@@ -19,7 +19,6 @@ export default function SignupPage() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [birthdate, setBirthdate] = useState("");
-    console.log(birthdate);
     const [sex, setSex] = useState("male");
 
     // necessary profile parameters (page 3)
@@ -196,10 +195,6 @@ export default function SignupPage() {
         setSignupError(null);
         setCurrentSignupForm(currentSignupForm - 1);
     };
-
-    console.log("%", startingPercentBodyFat);
-    console.log("h:", height);
-    console.log("w:", startingWeight);
 
     return (
         <div id="signup-page-body">
@@ -504,13 +499,13 @@ function SignupForm6(props) {
                 })
                     .then((res) => res.json())
                     .then((json) => {
+                        window.localStorage.clear();
                         window.localStorage.accessToken = json.accessToken;
                         window.localStorage.refreshToken = json.refreshToken;
                         return authFetch(
                             `${process.env.REACT_APP_GATEWAY_URI}/profile/users`,
                             {
                                 method: "GET",
-                                // headers: { Authorization: "Bearer " + json.accessToken },
                             },
                             navigate
                         );
