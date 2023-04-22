@@ -30,9 +30,9 @@ export default function FoodPage() {
 
     return (
         <div id="food-page-body">
-            <div id="food-page-round-background-decoration"></div>
-            <div id="food-page-bottom-top-banner-background-decoration"></div>
-            <div id="food-page-bottom-bot-banner-background-decoration"></div>
+            <div className="food-background-round round-background-decoration"></div>
+            <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-island">
                 <Link to={-1} id="food-island-back-arrow">
                     <img src={backArrow} alt="back arrow" />
@@ -609,6 +609,6 @@ function ProcessNutritionalContents(nutritionalContents, metricQuantity, numServ
     return nutrients;
 }
 
-function RoundToNearestFive(n) {
-    return Math.round(n / 5) * 5;
+function RoundToNearestFive(x) {
+    return Math.round(x / 5) * 5;
 }

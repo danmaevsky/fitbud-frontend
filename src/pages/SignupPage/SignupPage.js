@@ -198,9 +198,9 @@ export default function SignupPage() {
 
     return (
         <div id="signup-page-body">
-            <div id="signup-page-round-background-decoration"></div>
-            <div id="signup-page-bottom-top-banner-background-decoration"></div>
-            <div id="signup-page-bottom-bot-banner-background-decoration"></div>
+            <div className="profile-background-round round-background-decoration"></div>
+            <div className="profile-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="profile-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="signup-island">
                 <div id="signup-island-header">
                     <h2>Member Signup</h2>

@@ -60,7 +60,7 @@
 }
 
 #signup-message-error {
-    color: var(--default-error-red);
+    color: var(--default-error-color);
     padding: 0;
     margin: 0;
     /* height: 1rem; */
@@ -167,7 +167,7 @@
     cursor: default;
     border: none;
     filter: brightness(1.1);
-    background-color: var(--profile-primary-purple);
+    background-color: var(--profile-primary-color);
     border-color: var(--default-secondary-text);
     color: white;
 }
@@ -240,7 +240,7 @@
 }
 
 .signup-activity-button.active {
-    background-color: var(--profile-primary-purple);
+    background-color: var(--profile-primary-color);
 }
 
 .signup-activity-level h5 {
@@ -290,7 +290,7 @@
     border: solid 1px;
     border-color: var(--default-primary-border);
     border-radius: 5px;
-    background-color: var(--profile-primary-purple);
+    background-color: var(--profile-primary-color);
     color: white;
     font-size: 1.375rem;
     font-weight: bold;
@@ -321,7 +321,7 @@
     transition: filter 0.1s;
     cursor: pointer;
     color: white;
-    background-color: var(--profile-primary-purple);
+    background-color: var(--profile-primary-color);
     /* height: 2.5rem;
     width: 3.5rem; */
     padding: 1rem;
@@ -361,34 +361,7 @@
 #signup-indicator-dots .signup-indicator-dot-current {
     transition: r 0.1s, cx 0.1s;
     /* transition: cx 0.01s; */
-    fill: var(--profile-secondary-purple);
-}
-
-#signup-page-round-background-decoration {
-    position: absolute;
-    bottom: 70%;
-    background-color: var(--profile-primary-purple);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
-}
-
-#signup-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--profile-secondary-purple);
-}
-
-#signup-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--profile-tertiary-purple);
+    fill: var(--profile-secondary-color);
 }
 
 @media screen and (max-width: 800px) {
@@ -408,9 +381,5 @@
 
     #signup-island-form button {
         height: 1.75rem;
-    }
-
-    #signup-page-round-background-decoration {
-        max-height: 30vh;
     }
 }

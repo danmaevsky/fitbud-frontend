@@ -308,34 +308,6 @@ input::-webkit-inner-spin-button {
     height: 1.125rem;
 }
 
-#food-page-round-background-decoration {
-    position: absolute;
-    z-index: 0;
-    bottom: 70%;
-    background-color: var(--food-primary-green);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
-}
-
-#food-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--food-secondary-green);
-}
-
-#food-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--food-tertiary-green);
-}
-
 @media screen and (max-width: 800px) {
     #food-island {
         width: 60vw;
@@ -353,10 +325,6 @@ input::-webkit-inner-spin-button {
 
     #food-page-serving-selector {
         width: 55vw;
-    }
-
-    #food-page-round-background-decoration {
-        max-height: 30vh;
     }
 
     #food-page-more-info {

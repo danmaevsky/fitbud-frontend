@@ -9,9 +9,9 @@ export default function LoginPage() {
     const [loginError, setLoginError] = useState(false);
     return (
         <div id="login-page-body">
-            <div id="login-page-round-background-decoration"></div>
-            <div id="login-page-bottom-top-banner-background-decoration"></div>
-            <div id="login-page-bottom-bot-banner-background-decoration"></div>
+            <div className="default-background-round round-background-decoration"></div>
+            <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="login-island">
                 <div id="login-island-header">
                     <h2>{title ? `${title}` : "Member Login"}</h2>

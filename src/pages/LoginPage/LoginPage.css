@@ -117,14 +117,14 @@
     border: solid 1px;
     border-color: var(--default-primary-border);
     border-radius: 5px;
-    background-color: var(--default-secondary-blue);
+    background-color: var(--default-secondary-color);
     color: white;
     font-size: 1rem;
     font-weight: bold;
 }
 
 #login-page-buttons button:hover {
-    background-color: var(--default-secondary-blue-hover);
+    background-color: var(--default-secondary-color-hover);
 }
 
 #login-page-buttons a {
@@ -142,7 +142,7 @@
     border: solid 1px;
     border-color: var(--default-primary-border);
     border-radius: 5px;
-    background-color: var(--default-secondary-blue);
+    background-color: var(--default-secondary-color);
     color: white;
     font-size: 1rem;
     font-weight: bold;
@@ -150,34 +150,7 @@
 }
 
 #login-island a:hover {
-    background-color: var(--default-secondary-blue-hover);
-}
-
-#login-page-round-background-decoration {
-    position: absolute;
-    bottom: 70%;
-    background-color: var(--default-primary-blue);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
-}
-
-#login-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--default-secondary-blue);
-}
-
-#login-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--default-tertiary-blue);
+    background-color: var(--default-secondary-color-hover);
 }
 
 @media screen and (max-width: 800px) {
@@ -198,9 +171,5 @@
 
     #login-island-form button {
         height: 1.25rem;
-    }
-
-    #login-page-round-background-decoration {
-        max-height: 30vh;
     }
 }

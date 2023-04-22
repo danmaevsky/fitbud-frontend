@@ -58,7 +58,7 @@
 }
 
 #exercise-search-page-searchbox:focus-within {
-    border: 0.2rem solid var(--default-primary-blue);
+    border: 0.2rem solid var(--default-primary-color);
 }
 
 #exercise-search-page-searchbox-placeholder {
@@ -204,43 +204,12 @@
     filter: none;
 }
 
-#exercise-search-page-round-background-decoration {
-    position: absolute;
-    z-index: 0;
-    bottom: 70%;
-    background-color: var(--exercise-primary-red);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
-}
-
-#exercise-search-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--exercise-secondary-red);
-}
-
-#exercise-search-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--exercise-tertiary-red);
-}
-
 @media screen and (max-width: 800px) {
     #exercise-search-page-body input {
         width: 50vw;
     }
     #exercise-search-island {
         width: 60vw;
-    }
-    #exercise-search-page-round-background-decoration {
-        max-height: 30vh;
     }
 }
 

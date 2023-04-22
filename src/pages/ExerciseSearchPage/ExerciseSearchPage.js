@@ -30,9 +30,9 @@ export default function ExerciseSearchPage() {
 
     return (
         <div id="exercise-search-page-body">
-            <div id="exercise-search-page-round-background-decoration"></div>
-            <div id="exercise-search-page-bottom-top-banner-background-decoration"></div>
-            <div id="exercise-search-page-bottom-bot-banner-background-decoration"></div>
+            <div className="exercise-background-round round-background-decoration"></div>
+            <div className="exercise-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="exercise-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="exercise-search-page-searchbox">
                 <button id="exercise-search-page-searchbox-button" onClick={fetchResults}>
                     <img src={magnifyingGlass} alt="magnifying glass icon" />

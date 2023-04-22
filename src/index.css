@@ -2,26 +2,28 @@
 
 :root {
     /* General Use Colors */
-    --default-primary-blue: #1956ff;
-    --default-secondary-blue: #4d86ff;
-    --default-secondary-blue-hover: #7ca4fc;
-    --default-tertiary-blue: #284687;
+    --default-primary-color: #1956ff;
+    --default-secondary-color: #4d86ff;
+    --default-secondary-color-hover: #7ca4fc;
+    --default-tertiary-color: #284687;
     --default-primary-background: #f1f1f1;
     --default-secondary-background: #b4b4b4;
     --default-primary-border: #cccccc;
     --default-primary-text: black;
     --default-secondary-text: #757575;
-    --default-error-red: #e62e2e;
+    --default-error-color: #e62e2e;
+    /* Page Specific Colors */
+    --food-primary-color: #32be62;
+    --food-secondary-color: #6ed893;
+    --food-tertiary-color: #007127;
+    --exercise-primary-color: #e62e2e;
+    --exercise-secondary-color: #e64d4d;
+    --exercise-tertiary-color: #8b1414;
+    --profile-primary-color: #8947d8;
+    --profile-secondary-color: #c681ff;
+    --profile-tertiary-color: #560e93;
+
     /* Specific Colors */
-    --food-primary-green: #32be62;
-    --food-secondary-green: #6ed893;
-    --food-tertiary-green: #007127;
-    --exercise-primary-red: #e62e2e;
-    --exercise-secondary-red: #e64d4d;
-    --exercise-tertiary-red: #8b1414;
-    --profile-primary-purple: #8947d8;
-    --profile-secondary-purple: #c681ff;
-    --profile-tertiary-purple: #560e93;
     --food-info-color-fat: #ffc300;
     --food-info-color-carb: #2bb6ff;
     --food-info-color-protein: #e5007a;

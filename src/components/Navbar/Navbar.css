@@ -9,19 +9,19 @@
 }
 
 #navbar.food {
-    background-color: var(--food-tertiary-green);
+    background-color: var(--food-tertiary-color);
 }
 
 #navbar.exercise {
-    background-color: var(--exercise-tertiary-red);
+    background-color: var(--exercise-tertiary-color);
 }
 
 #navbar.profile {
-    background-color: var(--profile-tertiary-purple);
+    background-color: var(--profile-tertiary-color);
 }
 
 #navbar.main {
-    background-color: var(--default-tertiary-blue);
+    background-color: var(--default-tertiary-color);
 }
 
 #navbar h1 {
@@ -108,19 +108,19 @@
 }
 
 #navbar-profile-menu.food {
-    background-color: var(--food-tertiary-green);
+    background-color: var(--food-tertiary-color);
 }
 
 #navbar-profile-menu.exercise {
-    background-color: var(--exercise-tertiary-red);
+    background-color: var(--exercise-tertiary-color);
 }
 
 #navbar-profile-menu.profile {
-    background-color: var(--profile-tertiary-purple);
+    background-color: var(--profile-tertiary-color);
 }
 
 #navbar-profile-menu.main {
-    background-color: var(--default-tertiary-blue);
+    background-color: var(--default-tertiary-color);
 }
 
 #navbar-profile-menu a,

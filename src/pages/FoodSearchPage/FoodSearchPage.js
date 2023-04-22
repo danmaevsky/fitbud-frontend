@@ -32,9 +32,9 @@ export default function FoodSearchPage() {
 
     return (
         <div id="food-search-page-body">
-            <div id="food-search-page-round-background-decoration"></div>
-            <div id="food-search-page-bottom-top-banner-background-decoration"></div>
-            <div id="food-search-page-bottom-bot-banner-background-decoration"></div>
+            <div className="food-background-round round-background-decoration"></div>
+            <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
                 <button title="Search!" id="food-search-page-searchbox-button" onClick={fetchResults}>
                     <img src={magnifyingGlass} alt="magnifying glass icon" />

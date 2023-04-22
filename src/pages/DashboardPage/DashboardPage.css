@@ -26,26 +26,126 @@
 }
 
 #dashboard-daily-summary-island {
+    flex-shrink: 0;
     backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
+    gap: 0rem;
     border-radius: 1rem;
     padding-left: 3vw;
     padding-right: 3vw;
-    padding-top: 4vh;
-    padding-bottom: 4vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     background-color: white;
     min-width: 15rem;
     width: 40vw;
     max-width: 30rem;
     min-height: 22.5rem;
     height: 60vh;
-
     margin: 2rem;
+}
+#dashboard-daily-summary-island h2 {
+    font-size: 1.5rem;
+    margin: 1rem;
+}
+
+#dashboard-daily-summary-calculation {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+}
+
+#dashboard-daily-summary-calculation h4 {
+    font-size: 1.125rem;
+    margin: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#dashboard-daily-summary-charts {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+}
+
+#dashboard-daily-summary-pie-charts {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+}
+
+#goal-circle {
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+#goal-circle h4 {
+    font-size: 1.25rem;
+    padding: 0;
+    margin: 0;
+}
+#goal-circle h5 {
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+#goal-circle div {
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    top: 50%;
+    align-self: center;
+    justify-self: center;
+}
+#goal-circle canvas {
+    position: absolute;
+}
+.dashboard-macro-circle {
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.dashboard-macro-circle-inner-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.dashboard-macro-circle-inner-text h4 {
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+}
+.dashboard-macro-circle p {
+    /* position: absolute; */
+    width: 5ch;
+    font-size: 0.75rem;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-macro-circle div {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    align-self: center;
+    justify-self: center;
+}
+.dashboard-macro-circle canvas {
+    position: absolute;
 }
 
 #dashboard-widgets {
@@ -103,7 +203,7 @@
     height: 1.5rem;
 }
 #dashboard-food-searchbox:focus-within {
-    border: 0.2rem solid var(--default-tertiary-blue);
+    border: 0.2rem solid var(--default-tertiary-color);
 }
 
 #dashboard-search-island {
@@ -157,31 +257,19 @@
     margin-top: 2rem;
 }
 
-#dashboard-page-round-background-decoration {
-    position: absolute;
-    bottom: 70%;
-    background-color: var(--default-primary-blue);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
+#dashboard-daily-summary-charts label {
+    font-weight: 700;
+    font-size: 1rem;
 }
 
-#dashboard-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--default-secondary-blue);
+#dashboard-daily-summary-fat label {
+    color: var(--food-info-color-fat);
 }
-
-#dashboard-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--default-tertiary-blue);
+#dashboard-daily-summary-carbs label {
+    color: var(--food-info-color-carb);
+}
+#dashboard-daily-summary-protein label {
+    color: var(--food-info-color-protein);
 }
 
 @media screen and (max-width: 800px) {
@@ -193,10 +281,10 @@
     }
 
     #dashboard-daily-summary-island {
-        width: 70vw;
+        width: 75vw;
         max-width: 30rem;
-        height: 35rem;
-        min-height: 25rem;
+        height: 32.5rem;
+        /* min-height: 25rem; */
     }
 
     #dashboard-food-searchbox input {
@@ -229,8 +317,13 @@
         width: 70vw;
         max-width: 30rem;
     }
+}
 
-    #dashboard-page-round-background-decoration {
-        max-height: 30vh;
+@media screen and (max-width: 400px) {
+    #dashboard-daily-summary-island {
+        width: 80vw;
+    }
+    #dashboard-search-island h3 {
+        font-size: 0.95rem;
     }
 }
