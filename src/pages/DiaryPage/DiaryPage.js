@@ -82,8 +82,17 @@ function MealSection(props) {
             let foodObject = foodLogs[i].foodObject;
             let foodName = ProcessFoodName(foodObject.name);
             let brand = foodObject.brandName ? ToTitleCase(foodObject.brandName) : foodObject.brandOwner ? ToTitleCase(foodObject.brandOwner) : null;
+            let calories;
 
-            foodItems.push(<div className="diary-meal-section-food-item"></div>);
+            foodItems.push(
+                <div className="diary-meal-section-food-item">
+                    <div className="diary-meal-section-food-name">
+                        <h4>{foodName}</h4>
+                        <p>{brand}</p>
+                    </div>
+                    <h4></h4>
+                </div>
+            );
         }
     }
 
