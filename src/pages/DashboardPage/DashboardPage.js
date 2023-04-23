@@ -11,6 +11,8 @@ import useWindowDimensions from "hooks/useWindowDimensions";
 import authFetch from "helpers/auth/authFetch";
 import getAllDiaryEntries from "helpers/fitness/getAllDiaryEntries";
 import CalculateGoal from "helpers/fitness/CalculateGoal";
+import fetchDiaryHelper from "helpers/fitness/fetchDiary";
+import getCurrentDate from "helpers/misc/getCurrentDate";
 
 export default function DashboardPage() {
     const navigate = useNavigate();
@@ -18,8 +20,8 @@ export default function DashboardPage() {
     const [profile, setProfile] = useLocalStorage("profile", null);
 
     useEffect(() => {
-        const dateObj = new Date();
-        const currentDate = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+        const currentDate = getCurrentDate();
+
         // if (!currentDiary) {
         //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
         // } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
@@ -148,14 +150,14 @@ function DailySummary(props) {
                         <h4>0</h4>
                     </div>
                     <label>=</label>
-                    <div id="dashboard-daily-summary-exercise">
+                    <div id="dashboard-daily-summary-remaining">
                         <label>Remaining</label>
                         <h4>{calorieGoal}</h4>
                     </div>
                 </div>
                 <div id="dashboard-daily-summary-charts">
                     <GoalCircle calorieGoal={calorieGoal} kcal={0} totalFat={0} totalCarb={0} protein={0} />
-                    <div id="dashboard-daily-summary-pie-charts">
+                    <div id="dashboard-daily-summary-macro-charts">
                         <div id="dashboard-daily-summary-fat">
                             <label>Fat Goal:</label>
                             <MacroCircle calorieGoal={calorieGoal} kcal={0} macroType="Fat" totalMacro={0} macroGoal={fatGoal} />
@@ -179,44 +181,10 @@ function DailySummary(props) {
             <h3 id="dashboard-daily-summary-header">Your Daily Summary</h3>
             <div id="dashboard-daily-summary-goal">
                 <label>Goal:</label>
-                <h4> {CalculateGoal(profile)}</h4>
+                <h4> {calorieGoal}</h4>
             </div>
         </div>
     );
-}
-
-function fetchDiaryHelper(currentDate, setCurrentDiary, navigate) {
-    let resStatus;
-    authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
-        method: "GET",
-    })
-        .then((res) => {
-            resStatus = res.status;
-            return res.json();
-        })
-        .then(async (diary) => {
-            if (resStatus === 200) {
-                return getAllDiaryEntries(diary, navigate);
-            } else if (resStatus === 400) {
-                throw new Error(400);
-            } else if (resStatus === 404) {
-                throw new Error(404);
-            }
-        })
-        .then((processedDiary) => {
-            setCurrentDiary(processedDiary);
-        })
-        .catch((error) => {
-            console.log(error, resStatus);
-        });
-}
-
-function pad(number) {
-    if (String(number).length < 2) {
-        return "0" + number;
-    } else {
-        return number;
-    }
 }
 
 function GoalCircle(props) {

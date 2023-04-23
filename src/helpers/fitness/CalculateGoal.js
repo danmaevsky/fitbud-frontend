@@ -1,6 +1,6 @@
 import CalculateTDEE from "./CalculateTDEE";
 
-export default function DisplayGoal(profile) {
+export default function CalculateGoal(profile) {
     // Given a profile, either compute TDEE +/- surplus/deficit, or display the user-set calorie goal
     if (!profile) {
         return 0;
