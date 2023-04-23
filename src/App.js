@@ -12,32 +12,39 @@ import FoodSearchPage from "pages/FoodSearchPage";
 import FoodPage from "pages/FoodPage";
 import ExerciseSearchPage from "pages/ExerciseSearchPage";
 import BarcodeScanPage from "pages/BarcodeScanPage";
+import ForgotPasswordEmailPage from "pages/ForgotPasswordEmailPage";
+import ForgotPasswordPasswordPage from "pages/ForgotPasswordPasswordPage";
 // protected pages
 import AuthWrapper from "layouts/AuthWrapper";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
 
 function App() {
-    return (
-        <div className="App">
-            <Navbar />
-            <div className="body">
-                <Routes>
-                    <Route path="/" element={null} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignupPage />} />
-                    <Route path="/food" element={<FoodSearchPage />} />
-                    <Route path="/food/:foodId" element={<FoodPage />} />
-                    <Route path="/barcode" element={<BarcodeScanPage />} />
-                    <Route path="/exercise" element={<ExerciseSearchPage />} />
-                    <Route element={<AuthWrapper />}>
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                        <Route path="/diary" element={<DiaryPage />} />
-                    </Route>
-                </Routes>
-            </div>
-        </div>
-    );
+  return (
+    <div className="App">
+      <Navbar />
+      <div className="body">
+        <Routes>
+          <Route path="/" element={null} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/food" element={<FoodSearchPage />} />
+          <Route path="/food/:foodId" element={<FoodPage />} />
+          <Route path="/barcode" element={<BarcodeScanPage />} />
+          <Route path="/exercise" element={<ExerciseSearchPage />} />
+          <Route path="/forgotPassword" element={<ForgotPasswordEmailPage />} />
+          <Route
+            path="/forgotPassword/:userId/:token"
+            element={<ForgotPasswordPasswordPage />}
+          />
+          <Route element={<AuthWrapper />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/diary" element={<DiaryPage />} />
+          </Route>
+        </Routes>
+      </div>
+    </div>
+  );
 }
 
 export default App;
