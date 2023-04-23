@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./LoginPage.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import authFetch from "helpers/auth/authFetch";
+import { authFetch } from "helpers/authHelpers";
 import FormInput from "components/FormInput";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);

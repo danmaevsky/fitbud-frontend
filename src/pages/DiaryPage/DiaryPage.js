@@ -2,11 +2,9 @@ import { useNavigate } from "react-router-dom";
 import "./DiaryPage.css";
 import addFoodPlus from "assets/add-food-plus.svg";
 import useLocalStorage from "hooks/useLocalStorage";
-import getCurrentDate from "helpers/misc/getCurrentDate";
+import { getCurrentDate } from "helpers/generalHelpers";
 import { useEffect } from "react";
-import fetchDiaryHelper from "helpers/fitness/fetchDiary";
-import CalculateGoal from "helpers/fitness/CalculateGoal";
-import { ToTitleCase, ProcessFoodName } from "helpers/fitness/ProcessFoodName";
+import { CalculateGoal, ToTitleCase, ProcessFoodName, ProcessNutritionalContents, ProcessUnit, fetchDiaryHelper } from "helpers/fitnessHelpers";
 
 export default function DiaryPage() {
     const navigate = useNavigate();
@@ -77,10 +75,16 @@ function Diary(props) {
 }
 
 function MealSection(props) {
-    const { mealName, calories, foods } = props;
-    let foodItem = [];
-    if (foods) {
-        foodItem.push(<div className="diary-meal-section-food-item"></div>);
+    const { mealName, calories, foodLogs } = props;
+    let foodItems = [];
+    if (foodLogs) {
+        for (let i = 0; i < foodLogs.length; i++) {
+            let foodObject = foodLogs[i].foodObject;
+            let foodName = ProcessFoodName(foodObject.name);
+            let brand = foodObject.brandName ? ToTitleCase(foodObject.brandName) : foodObject.brandOwner ? ToTitleCase(foodObject.brandOwner) : null;
+
+            foodItems.push(<div className="diary-meal-section-food-item"></div>);
+        }
     }
 
     return (

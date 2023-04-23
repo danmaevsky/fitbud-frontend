@@ -5,7 +5,7 @@ import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import { ToTitleCase, ProcessFoodName } from "helpers/fitness/ProcessFoodName";
+import { ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
 
 export default function FoodPage() {
     const { foodId } = useParams();
@@ -447,35 +447,4 @@ function MacroCircle(props) {
             </div>
         </div>
     );
-}
-
-/* Utility Functions */
-// Food Utilities
-function ProcessUnit(unit) {
-    if (unit === "ml") {
-        return "mL";
-    }
-    return unit;
-}
-
-function ProcessNutritionalContents(nutritionalContents, metricQuantity, numServings, defaultUnitRounding) {
-    /*
-    This function is used for processing nutrients and rounding them appropriately according the serving size.
-    If the serving size is the same as what came from the database i.e. the same as on a nutrition label,
-    it would look better if the calories were rounded to the nearest 5 and the macros were rounded to the 
-    nearest 1. That is the purpose of passing in "defaultUnitRounding"
-    */
-    let precision = defaultUnitRounding ? 0 : 1;
-    let nutrients = {};
-    Object.keys(nutritionalContents).forEach((key) => {
-        if (key === "kcal") return (nutrients[key] = Number((nutritionalContents[key] / 100) * metricQuantity));
-        nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity * numServings).toFixed(precision));
-    });
-    nutrients.kcal = defaultUnitRounding ? RoundToNearestFive(nutrients.kcal) * numServings : nutrients.kcal * numServings;
-    nutrients.kcal = nutrients.kcal > 25_000 ? nutrients.kcal.toExponential(2) : nutrients.kcal.toFixed(0);
-    return nutrients;
-}
-
-function RoundToNearestFive(x) {
-    return Math.round(x / 5) * 5;
 }

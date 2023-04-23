@@ -1,4 +1,4 @@
-export default function getCurrentDate() {
+export function getCurrentDate() {
     const dateObj = new Date();
     return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
 }

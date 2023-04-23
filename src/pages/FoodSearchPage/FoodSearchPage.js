@@ -6,7 +6,7 @@ import "./FoodSearchPage.css";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
-import { ToTitleCase, ProcessFoodName } from "helpers/fitness/ProcessFoodName";
+import { ToTitleCase, ProcessFoodName } from "helpers/fitnessHelpers";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();

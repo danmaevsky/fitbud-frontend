@@ -8,11 +8,9 @@ import useSessionStorage from "hooks/useSessionStorage";
 import { useEffect, useRef, useState } from "react";
 import useLocalStorage from "hooks/useLocalStorage";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import authFetch from "helpers/auth/authFetch";
-import getAllDiaryEntries from "helpers/fitness/getAllDiaryEntries";
-import CalculateGoal from "helpers/fitness/CalculateGoal";
-import fetchDiaryHelper from "helpers/fitness/fetchDiary";
-import getCurrentDate from "helpers/misc/getCurrentDate";
+import { authFetch } from "helpers/authHelpers";
+import { CalculateGoal, fetchDiaryHelper } from "helpers/fitnessHelpers";
+import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function DashboardPage() {
     const navigate = useNavigate();
