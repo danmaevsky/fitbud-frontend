@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 export default function ForgotPasswordPasswordPage() {
   const { userId, token } = useParams();
   const [title, setTitle] = useState("Forgot Password");
-  const [message, setMessage] = useState(null);
+  //const [message, setMessage] = useState(null);
 
   return (
     <div id="signup-page-body">
@@ -32,6 +32,8 @@ function ForgotPasswordVerifyToken(props) {
   const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive login button spam
 
   const [isTokenVerified, setIsTokenVerified] = useState(false);
+  const [triedVerify, setTriedVerify] = useState(false);
+  
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
@@ -60,6 +62,7 @@ function ForgotPasswordVerifyToken(props) {
       return;
     }
     setIsAttemptingFetch(true);
+    setTriedVerify(true);
 
     fetch(
       `${process.env.REACT_APP_GATEWAY_URI}/account/forgotPassword/${userId}/${token}`,
@@ -115,7 +118,10 @@ function ForgotPasswordVerifyToken(props) {
         setIsAttemptingFetch(false);
       });
   };
-  verifyToken();
+
+  if (!triedVerify) {
+    verifyToken();
+  }
   if (isTokenVerified) {
     return (
       <div id="signup-island-form">

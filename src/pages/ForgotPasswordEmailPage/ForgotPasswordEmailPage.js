@@ -37,7 +37,8 @@ function ForgotPasswordEmail(props) {
     }
 
     if (res.status === 500) {
-      setTitle("Something went wrong");
+      setTitle("Something went Wrong");
+      console.log(res)
       throw new Error(500);
     }
   };
