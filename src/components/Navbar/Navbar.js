@@ -27,8 +27,7 @@ function Navbar() {
     return (
         <nav id="navbar" className={navbarClass}>
             <Link
-                to="/"
-                onClick={() => {
+                to="/home" onClick={() => {
                     clearFoodSearchPageState(location);
                     clearExerciseSearchPageState(location);
                 }}
