@@ -1,16 +1,26 @@
 import "./FoodPage.css";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
+import addFoodPlus from "assets/add-food-plus.svg";
 import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import { ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
+import { GetBuiltInUnits, ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
+import { IsUserLogged, authFetch } from "helpers/authHelpers";
+import useSessionStorage from "hooks/useSessionStorage";
 
 export default function FoodPage() {
     const { foodId } = useParams();
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
+    const [numServings, setNumServings] = useState(1);
+    const [servingName, setServingName] = useState("");
+    const [metricQuantity, setMetricQuantity] = useState(100);
+    const [isAddingFoodLog, setIsAddingFoodLog] = useSessionStorage("isAddingFoodLog", false);
+
+    const userIsLoggedIn = IsUserLogged();
+
     useEffect(() => {
         let resStatus;
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/${foodId}`, {
@@ -39,9 +49,21 @@ export default function FoodPage() {
                     <img src={backArrow} alt="back arrow" />
                     Go Back
                 </Link>
-                {renderFoodInfo ? <FoodInfo foodResponse={foodResponse} /> : null}
+                {renderFoodInfo ? (
+                    <FoodInfo
+                        foodResponse={foodResponse}
+                        numServings={numServings}
+                        setNumServings={setNumServings}
+                        setServingName={setServingName}
+                        metricQuantity={metricQuantity}
+                        setMetricQuantity={setMetricQuantity}
+                    />
+                ) : null}
                 {!foodResponse ? "Loading..." : null}
                 {responseStatus !== 200 ? "404. No foods matching this ID!" : null}
+                {userIsLoggedIn && renderFoodInfo && isAddingFoodLog ? (
+                    <AddFoodLogButton foodId={foodId} servingName={servingName} numServings={numServings} quantityMetric={metricQuantity} />
+                ) : null}
             </div>
         </div>
     );
@@ -49,14 +71,16 @@ export default function FoodPage() {
 
 function FoodInfo(props) {
     const [showMoreInfo, setShowMoreInfo] = useState(false);
-    const { foodResponse } = props;
+    const { foodResponse, numServings, setNumServings, setServingName, metricQuantity, setMetricQuantity } = props;
 
-    const defaultMetricQuantity = foodResponse.servingQuantity ? foodResponse.servingQuantity.toFixed(2) : 100;
+    const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
     const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
 
-    const [metricQuantity, setMetricQuantity] = useState(defaultMetricQuantity);
-    const [numServings, setNumServings] = useState(1);
-    const defaultUnitRounding = metricQuantity === foodResponse.servingQuantity;
+    useEffect(() => {
+        setMetricQuantity(defaultMetricQuantity);
+    }, []);
+
+    const defaultUnitRounding = metricQuantity === Math.round(foodResponse.servingQuantity / 0.01) * 0.01;
 
     let foodName = ProcessFoodName(foodResponse.name);
     let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
@@ -66,23 +90,25 @@ function FoodInfo(props) {
         <div id="food-info">
             <h3>{foodName}</h3>
             <p>{brand}</p>
-            <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
-            <div id="food-info-macros">
-                <h5 id="food-info-macro-fat">
-                    Fat:
-                    <br />
-                    {nutrients.totalFat} g
-                </h5>
-                <h5 id="food-info-macro-carb">
-                    Carbs:
-                    <br />
-                    {nutrients.totalCarb} g
-                </h5>
-                <h5 id="food-info-macro-protein">
-                    Protein:
-                    <br />
-                    {nutrients.protein} g
-                </h5>
+            <div id="food-info-overview">
+                <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
+                <div id="food-info-macros">
+                    <h5 id="food-info-macro-fat">
+                        Fat:
+                        <br />
+                        {nutrients.totalFat} g
+                    </h5>
+                    <h5 id="food-info-macro-carb">
+                        Carbs:
+                        <br />
+                        {nutrients.totalCarb} g
+                    </h5>
+                    <h5 id="food-info-macro-protein">
+                        Protein:
+                        <br />
+                        {nutrients.protein} g
+                    </h5>
+                </div>
             </div>
             <SelectServingSize
                 householdServingName={foodResponse.servingName}
@@ -90,6 +116,7 @@ function FoodInfo(props) {
                 defaultMetricUnit={defaultMetricUnit}
                 setMetricQuantity={setMetricQuantity}
                 setNumServings={setNumServings}
+                setServingName={setServingName}
             />
             {showMoreInfo ? (
                 <>
@@ -266,11 +293,64 @@ function FoodMoreInfo(props) {
     );
 }
 
+function AddFoodLogButton(props) {
+    const { foodId, servingName, numServings, quantityMetric } = props;
+    const [isAddingFoodMealPosition, setIsAddingFoodMealPosition] = useSessionStorage("isAddingFoodMealPosition", null);
+
+    const navigate = useNavigate();
+
+    const currentDiaryExists = Boolean(window.localStorage.CurrentDiary);
+    const addFoodOnClick = () => {
+        if (currentDiaryExists) {
+            let diaryId = JSON.parse(window.localStorage.CurrentDiary)._id;
+            let patchBody = {
+                type: "food",
+                action: "addLog",
+                contents: {
+                    mealPosition: isAddingFoodMealPosition,
+                    foodId: foodId,
+                    servingName: servingName,
+                    numServings: numServings,
+                    quantityMetric: quantityMetric,
+                },
+            };
+            console.log(patchBody);
+
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(patchBody),
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        navigate("/diary");
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    return (
+        <div id="food-page-add-food-log" onClick={addFoodOnClick}>
+            <button>
+                <img src={addFoodPlus} />
+            </button>
+            <label>Add to Diary</label>
+        </div>
+    );
+}
+
 function SelectServingSize(props) {
     // needs to understand if food is measured in grams or milliliters by default
     // needs to preserve the default unit from the database
     // needs to create a range of appropriate units
-    const { householdServingName, defaultServingQuantity, defaultMetricUnit, setMetricQuantity, setNumServings } = props;
+    const { householdServingName, defaultServingQuantity, defaultMetricUnit, setMetricQuantity, setNumServings, setServingName } = props;
 
     const [numText, setNumText] = useState(1);
 
@@ -280,26 +360,12 @@ function SelectServingSize(props) {
         defaultUnitName += ` (${ToTitleCase(householdServingName)})`;
     }
     units[defaultUnitName] = defaultServingQuantity;
+    let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
 
-    if (defaultMetricUnit === "g") {
-        units = {
-            ...units,
-            "1 g": 1,
-            "1 kg": 1000,
-            "1 oz": 28,
-            "1 lb": 28 * 16,
-        };
-    } else if (defaultMetricUnit === "ml") {
-        units = {
-            ...units,
-            "1 mL": 1,
-            "1 L": 1000,
-            "1 tsp": 4.92892,
-            "1 tbsp": 14.7868,
-            "1 fl oz": 29.5735,
-            "1 cup": 236.588,
-        };
-    }
+    units = {
+        ...units,
+        ...builtInUnits,
+    };
 
     const inputOnChange = (e) => {
         let n = Number(e.target.value);
@@ -325,7 +391,14 @@ function SelectServingSize(props) {
 
     const onUnitSelect = (selection) => {
         setMetricQuantity(units[selection]);
+        setServingName(selection);
     };
+
+    useEffect(() => {
+        // determine initial unit
+        let initialServingName = householdServingName ? householdServingName : ProcessUnit(defaultMetricUnit);
+        setServingName(initialServingName);
+    }, []);
 
     return (
         <div id="food-page-serving-selector">
