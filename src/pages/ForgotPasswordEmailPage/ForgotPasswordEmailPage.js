@@ -12,7 +12,7 @@ export default function ForgotPasswordEmailPage() {
       <div id="send-reset-email-island">
         <div id="send-reset-email-island-header">
           <h2>{title}</h2>
-          <p id="login-message">{message}</p>
+          <p id="send-reset-email-message">{message}</p>
         </div>
         <ForgotPasswordEmail setTitle={setTitle} setMessage={setMessage} />
       </div>
