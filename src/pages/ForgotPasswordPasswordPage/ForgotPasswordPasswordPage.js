@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ForgotPasswordPassword.css";
 import FormInput from "components/FormInput";
 import { useParams } from "react-router-dom";
@@ -10,9 +10,9 @@ export default function ForgotPasswordPasswordPage() {
 
   return (
     <div id="signup-page-body">
-      <div className="default-background-round round-background-decoration"></div>
-      <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-      <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+      <div className="profile-background-round round-background-decoration"></div>
+      <div className="profile-background-top-banner bottom-top-banner-background-decoration"></div>
+      <div className="profile-background-bottom-banner bottom-bot-banner-background-decoration"></div>
       <div id="signup-island">
         <div id="signup-island-header">
           <h2>{title}</h2>
@@ -27,13 +27,14 @@ export default function ForgotPasswordPasswordPage() {
   );
 }
 
+
 function ForgotPasswordVerifyToken(props) {
   const { setTitle, userId, token } = props;
   const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive login button spam
 
   const [isTokenVerified, setIsTokenVerified] = useState(false);
-  const [triedVerify, setTriedVerify] = useState(false);
-  
+  //const [triedVerify, setTriedVerify] = useState(false);
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
@@ -62,7 +63,6 @@ function ForgotPasswordVerifyToken(props) {
       return;
     }
     setIsAttemptingFetch(true);
-    setTriedVerify(true);
 
     fetch(
       `${process.env.REACT_APP_GATEWAY_URI}/account/forgotPassword/${userId}/${token}`,
@@ -80,7 +80,7 @@ function ForgotPasswordVerifyToken(props) {
 
   const handleUpdatePasswordResponse = (res) => {
     if (res.status === 201) {
-      setTitle("Password Successfuly Updated");
+      setTitle("Password Successfully Updated");
       return res.json();
     }
 
@@ -119,9 +119,8 @@ function ForgotPasswordVerifyToken(props) {
       });
   };
 
-  if (!triedVerify) {
-    verifyToken();
-  }
+  useEffect(() => {verifyToken()}, [])
+
   if (isTokenVerified) {
     return (
       <div id="signup-island-form">

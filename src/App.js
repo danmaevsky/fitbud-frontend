@@ -5,7 +5,7 @@ import Navbar from "components/Navbar";
 
 /* Pages */
 // unprotected pages
-import DemoPage from "pages/DemoPage";
+
 import LoginPage from "pages/LoginPage";
 import SignupPage from "pages/SignupPage";
 import FoodSearchPage from "pages/FoodSearchPage";
@@ -18,6 +18,7 @@ import ForgotPasswordPasswordPage from "pages/ForgotPasswordPasswordPage";
 import AuthWrapper from "layouts/AuthWrapper";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
+import ProfilePage from "pages/ProfilePage";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route element={<AuthWrapper />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/diary" element={<DiaryPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Routes>
       </div>

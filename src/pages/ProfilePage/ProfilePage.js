@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./ForgotPasswordEmail.css";
+import "./ProfilePage.css";
 import FormInput from "components/FormInput";
-export default function ForgotPasswordEmailPage() {
+export default function ProfilePage() {
   const [title, setTitle] = useState("Enter your Email to Reset Password");
   return (
     <div id="signup-page-body">
@@ -12,13 +12,13 @@ export default function ForgotPasswordEmailPage() {
         <div id="signup-island-header">
           <h2>{title}</h2>
         </div>
-        <ForgotPasswordEmail setTitle={setTitle} />
+        <ProfilePic setTitle={setTitle} />
       </div>
     </div>
   );
 }
 
-function ForgotPasswordEmail(props) {
+function ProfilePic(props) {
   const { setTitle } = props;
   const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive login button spam
 
@@ -38,7 +38,7 @@ function ForgotPasswordEmail(props) {
 
     if (res.status === 500) {
       setTitle("Something went Wrong");
-      console.log(res)
+      console.log(res);
       throw new Error(500);
     }
   };
@@ -63,17 +63,7 @@ function ForgotPasswordEmail(props) {
 
   return (
     <div id="signup-island-form">
-      <FormInput
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendEmailOnClick();
-          }
-        }}
-      />
+
     </div>
   );
 }
