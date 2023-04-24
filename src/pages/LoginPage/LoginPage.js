@@ -1,19 +1,22 @@
 import { useState } from "react";
 import "./LoginPage.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import authFetch from "helpers/authFetch";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { authFetch } from "helpers/authHelpers";
+import FormInput from "components/FormInput";
 export default function LoginPage() {
     const [title, setTitle] = useState(null);
     const [message, setMessage] = useState("Login or Sign Up to get started!");
     const [loginError, setLoginError] = useState(false);
     return (
         <div id="login-page-body">
-            <div id="login-page-round-background-decoration"></div>
-            <div id="login-page-bottom-top-banner-background-decoration"></div>
-            <div id="login-page-bottom-bot-banner-background-decoration"></div>
+            <div className="default-background-round round-background-decoration"></div>
+            <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="login-island">
-                <h2>{title ? `${title}` : "Member Login"}</h2>
-                <p id={loginError ? "login-message-error" : "login-message"}>{message}</p>
+                <div id="login-island-header">
+                    <h2>{title ? `${title}` : "Member Login"}</h2>
+                    <p id={loginError ? "login-message-error" : "login-message"}>{message}</p>
+                </div>
                 <Login setTitle={setTitle} setMessage={setMessage} setLoginError={setLoginError} />
             </div>
         </div>
@@ -61,12 +64,17 @@ function Login(props) {
         })
             .then(handleResponse)
             .then((json) => {
+                window.localStorage.clear();
                 window.localStorage.accessToken = json.accessToken;
                 window.localStorage.refreshToken = json.refreshToken;
-                return authFetch(`${process.env.REACT_APP_GATEWAY_URI}/profile/users`, {
-                    method: "GET",
-                    // headers: { Authorization: "Bearer " + json.accessToken },
-                });
+                return authFetch(
+                    `${process.env.REACT_APP_GATEWAY_URI}/profile/users`,
+                    {
+                        method: "GET",
+                        // headers: { Authorization: "Bearer " + json.accessToken },
+                    },
+                    navigate
+                );
             })
             .then((res) => res.json())
             .then((json) => {
@@ -89,7 +97,7 @@ function Login(props) {
 
     return (
         <div id="login-island-form">
-            <input
+            <FormInput
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -100,7 +108,7 @@ function Login(props) {
                     }
                 }}
             />
-            <input
+            <FormInput
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -115,7 +123,7 @@ function Login(props) {
             <div id="login-page-buttons">
                 <button onClick={loginOnClick}>LOG IN</button>
                 <hr />
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">SIGN UP</a>
+                <Link to="/signup">SIGN UP</Link>
             </div>
         </div>
     );

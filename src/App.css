@@ -14,3 +14,87 @@
     justify-content: center;
     height: 92%;
 }
+
+/* All Backgrounds */
+.round-background-decoration {
+    position: absolute;
+    z-index: 0;
+    bottom: 70%;
+    height: 100rem;
+    max-height: 80vh;
+    width: 250rem;
+    max-width: 200vw;
+    border-radius: 50%;
+}
+
+.bottom-top-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 16vh;
+}
+
+.bottom-bot-banner-background-decoration {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 8vh;
+}
+
+/* Default Background */
+.default-background-round {
+    background-color: var(--default-primary-color);
+}
+
+.default-background-top-banner {
+    background-color: var(--default-secondary-color);
+}
+
+.default-background-bottom-banner {
+    background-color: var(--default-tertiary-color);
+}
+
+/* Food Background */
+.food-background-round {
+    background-color: var(--food-primary-color);
+}
+
+.food-background-top-banner {
+    background-color: var(--food-secondary-color);
+}
+
+.food-background-bottom-banner {
+    background-color: var(--food-tertiary-color);
+}
+
+/* Exercise Background */
+.exercise-background-round {
+    background-color: var(--exercise-primary-color);
+}
+
+.exercise-background-top-banner {
+    background-color: var(--exercise-secondary-color);
+}
+
+.exercise-background-bottom-banner {
+    background-color: var(--exercise-tertiary-color);
+}
+
+/* Profile Background */
+.profile-background-round {
+    background-color: var(--profile-primary-color);
+}
+
+.profile-background-top-banner {
+    background-color: var(--profile-secondary-color);
+}
+
+.profile-background-bottom-banner {
+    background-color: var(--profile-tertiary-color);
+}
+
+@media screen and (max-width: 800px) {
+    .round-background-decoration {
+        max-height: 30vh;
+    }
+}

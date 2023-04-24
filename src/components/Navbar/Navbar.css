@@ -6,26 +6,26 @@
     color: white;
     display: flex;
     justify-content: space-between;
-    align-items: stretch;
-    min-height: 5vh;
+    align-items: center;
+    min-height: 3.125rem;
     height: 8%;
     max-height: 5rem;
 }
 
 #navbar.food {
-    background-color: var(--food-tertiary-green);
+    background-color: var(--food-tertiary-color);
 }
 
 #navbar.exercise {
-    background-color: var(--exercise-tertiary-red);
+    background-color: var(--exercise-tertiary-color);
 }
 
 #navbar.profile {
-    background-color: var(--profile-tertiary-purple);
+    background-color: var(--profile-tertiary-color);
 }
 
 #navbar.main {
-    background-color: var(--default-tertiary-blue);
+    background-color: var(--default-tertiary-color);
 }
 
 #navbar h1 {
@@ -34,21 +34,25 @@
     padding: 1rem;
     margin: 0;
     /* background-color: gray; */
-    cursor: pointer;
 }
 
 #navbar ul {
     margin: 0;
+    padding: 0;
     display: flex;
     list-style: none;
 }
 
-#navbar ul a {
+#navbar ul a,
+#navbar ul p {
+    z-index: 3;
+    cursor: pointer;
     transition: background-color 0.1s;
     padding: 1rem;
 }
 
-#navbar ul a:hover {
+#navbar ul a:hover,
+#navbar ul p:hover {
     background-color: #c7c7c7;
     padding: 1rem;
 }
@@ -64,6 +68,75 @@
     align-items: center;
     text-decoration: none;
     color: white;
+    font-size: 1.125rem;
+}
+
+#navbar-profile {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    /* height: 1vh; */
+}
+
+#navbar-profile-icon {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    background: gray;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+#navbar-profile-icon:hover {
+    filter: brightness(1.5);
+}
+
+#navbar-profile-menu {
+    position: absolute;
+    top: 3rem;
+    padding-top: 1.5rem;
+    right: -1rem;
+    display: flex;
+    flex-direction: column;
+    border-bottom-left-radius: 1rem;
+}
+
+#navbar-profile-menu.food {
+    background-color: var(--food-tertiary-color);
+}
+
+#navbar-profile-menu.exercise {
+    background-color: var(--exercise-tertiary-color);
+}
+
+#navbar-profile-menu.profile {
+    background-color: var(--profile-tertiary-color);
+}
+
+#navbar-profile-menu.main {
+    background-color: var(--default-tertiary-color);
+}
+
+#navbar-profile-menu a,
+#navbar-profile-menu p {
+    margin: 0.25rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    display: block;
+    text-align: right;
+    width: 10ch;
+    padding: 1rem;
+    font-size: 1.125rem;
 }
 
 #navbar h1 {

@@ -27,7 +27,7 @@ export default function BarcodeScanPage() {
         if (barcodeResponse) {
             if (barcodeStatus !== 200) {
             } else {
-                console.log("Redirect");
+                console.log("Redirect to Food");
                 navigate("/food/" + barcodeResponse._id);
             }
         }
@@ -43,9 +43,9 @@ export default function BarcodeScanPage() {
 
     return (
         <div id="barcode-page-body">
-            <div id="barcode-page-round-background-decoration"></div>
-            <div id="barcode-page-bottom-top-banner-background-decoration"></div>
-            <div id="barcode-page-bottom-bot-banner-background-decoration"></div>
+            <div className="food-background-round round-background-decoration"></div>
+            <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="barcode-island">
                 <Link to={-1} id="food-island-back-arrow">
                     <img src={backArrow} />

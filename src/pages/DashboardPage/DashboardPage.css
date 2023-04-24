@@ -11,6 +11,7 @@
 }
 
 #dashboard-page-content {
+    z-index: 1;
     margin-top: -5rem;
     display: flex;
     flex-direction: row-reverse;
@@ -25,37 +26,145 @@
 }
 
 #dashboard-daily-summary-island {
+    flex-shrink: 0;
     backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
+    gap: 0rem;
     border-radius: 1rem;
     padding-left: 3vw;
     padding-right: 3vw;
-    padding-top: 4vh;
-    padding-bottom: 4vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     background-color: white;
     min-width: 15rem;
     width: 40vw;
     max-width: 30rem;
     min-height: 22.5rem;
-    height: 60vh;
-
     margin: 2rem;
+}
+#dashboard-daily-summary-island h2 {
+    font-size: 1.5rem;
+    margin: 1rem;
+}
+
+#dashboard-daily-summary-calculation {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+}
+
+#dashboard-daily-summary-calculation h4 {
+    font-size: 1.125rem;
+    margin: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#dashboard-daily-summary-charts {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 2rem;
+    margin: 1rem;
+}
+
+#dashboard-daily-summary-macro-charts {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+}
+
+#goal-circle {
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+#goal-circle h4 {
+    font-size: 1.25rem;
+    padding: 0;
+    margin: 0;
+}
+#goal-circle h5 {
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+#goal-circle div {
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    top: 50%;
+    align-self: center;
+    justify-self: center;
+}
+#goal-circle canvas {
+    position: absolute;
+}
+.dashboard-macro-circle {
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.dashboard-macro-circle-inner-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.dashboard-macro-circle-inner-text h4 {
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+}
+.dashboard-macro-circle p {
+    /* position: absolute; */
+    width: 5ch;
+    font-size: 0.75rem;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-macro-circle div {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    align-self: center;
+    justify-self: center;
+}
+.dashboard-macro-circle canvas {
+    position: absolute;
+}
+
+#dashboard-widgets {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0rem;
+    align-items: center;
+    z-index: 1;
 }
 
 #dashboard-food-searchbox {
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.363));
     position: inherit;
     box-sizing: border-box;
     height: 3.75rem;
-    width: auto;
-    z-index: 1;
+    width: fit-content;
     display: flex;
     margin: 2rem;
+    margin-bottom: 0.5rem;
     align-items: center;
     background-color: white;
     border-radius: 30px;
@@ -94,34 +203,73 @@
     height: 1.5rem;
 }
 #dashboard-food-searchbox:focus-within {
-    border: 0.2rem solid var(--default-primary-blue);
+    border: 0.2rem solid var(--default-tertiary-color);
 }
 
-#dashboard-page-round-background-decoration {
-    position: absolute;
-    bottom: 70%;
-    background-color: var(--default-primary-blue);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
+#dashboard-search-island {
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 1rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 25rem;
+    min-height: 10.5rem;
+    height: 20vh;
+    /* margin: 2rem; */
 }
 
-#dashboard-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--default-secondary-blue);
+#dashboard-search-island img {
+    filter: opacity(0.4) grayscale(0.5);
+    height: 10rem;
 }
 
-#dashboard-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--default-tertiary-blue);
+#dashboard-search-island h3 {
+    z-index: 1;
+    margin-top: -2.5rem;
+}
+
+#dashboard-progress-island {
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 1rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 25rem;
+    min-height: 10.5rem;
+    height: 35vh;
+    margin: 1rem;
+    margin-top: 2rem;
+}
+
+#dashboard-daily-summary-charts label {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+#dashboard-daily-summary-fat label {
+    color: var(--food-info-color-fat);
+}
+#dashboard-daily-summary-carbs label {
+    color: var(--food-info-color-carb);
+}
+#dashboard-daily-summary-protein label {
+    color: var(--food-info-color-protein);
 }
 
 @media screen and (max-width: 800px) {
@@ -133,10 +281,10 @@
     }
 
     #dashboard-daily-summary-island {
-        width: 70vw;
+        width: 75vw;
         max-width: 30rem;
-        height: 25rem;
-        min-height: 25rem;
+        /* height: 32.5rem; */
+        /* min-height: 25rem; */
     }
 
     #dashboard-food-searchbox input {
@@ -159,7 +307,23 @@
         height: 1.5rem;
     }
 
-    #dashboard-page-round-background-decoration {
-        max-height: 30vh;
+    #dashboard-search-island {
+        width: 70vw;
+        max-width: 30rem;
+    }
+
+    #dashboard-progress-island {
+        margin-top: 5rem;
+        width: 70vw;
+        max-width: 30rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #dashboard-daily-summary-island {
+        width: 80vw;
+    }
+    #dashboard-search-island h3 {
+        font-size: 0.95rem;
     }
 }

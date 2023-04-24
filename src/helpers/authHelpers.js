@@ -1,16 +1,13 @@
 // authFetch will handle sending accessToken, and if fails, retries request after using refreshToken to mint new accessToken
 // if still failure, then simply fail
-
-export default async function authFetch() {
-    let options = arguments[1];
+export async function authFetch(url, options, navigate) {
     options.headers = {
         ...options.headers,
         Authorization: `Bearer ${window.localStorage.accessToken}`,
     };
-    return fetch(arguments[0], options)
+    return fetch(url, options)
         .then((res) => {
             if (res.status === 401) {
-                console.log("first 401 in auth fetch");
                 throw new Error("401");
             } else {
                 return res;
@@ -18,7 +15,6 @@ export default async function authFetch() {
         })
         .catch(async (err) => {
             if (err.message === "401") {
-                console.log("catching 401");
                 // mint new token
                 let mintOptions = {
                     method: "POST",
@@ -35,13 +31,24 @@ export default async function authFetch() {
                         }
                     })
                     .then((json) => {
-                        console.log("should be here", json.accessToken);
                         window.localStorage.accessToken = json.accessToken;
                         options.headers["Authorization"] = `Bearer ${json.accessToken}`;
                     })
                     .then(() => {
-                        return fetch(arguments[0], options);
+                        return fetch(url, options);
+                    })
+                    .catch((error) => {
+                        if (error.message === "401") {
+                            window.localStorage.clear();
+                            window.sessionStorage.clear();
+                            navigate("/");
+                        }
                     });
             }
         });
+}
+
+// using the localStorage variables as a proxy for log-in status
+export function IsUserLogged() {
+    return Boolean(window.localStorage.profile && window.localStorage.accessToken && window.localStorage.refreshToken);
 }

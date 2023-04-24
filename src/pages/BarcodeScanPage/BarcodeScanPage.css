@@ -81,35 +81,7 @@
     height: 1.5rem;
 }
 #barcode-page-searchbox:focus-within {
-    border: 0.2rem solid var(--default-primary-blue);
-}
-
-#barcode-page-round-background-decoration {
-    position: absolute;
-    z-index: 0;
-    bottom: 70%;
-    background-color: var(--food-primary-green);
-    height: 100rem;
-    max-height: 80vh;
-    width: 250rem;
-    max-width: 200vw;
-    border-radius: 50%;
-}
-
-#barcode-page-bottom-top-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 16vh;
-    background-color: var(--food-secondary-green);
-}
-
-#barcode-page-bottom-bot-banner-background-decoration {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 8vh;
-    background-color: var(--food-tertiary-green);
+    border: 0.2rem solid var(--default-primary-color);
 }
 
 @media screen and (max-width: 800px) {
@@ -121,9 +93,6 @@
     }
     #barcode-island {
         width: 80vw;
-    }
-    #barcode-page-round-background-decoration {
-        max-height: 30vh;
     }
 }
 
