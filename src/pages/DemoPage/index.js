@@ -435,7 +435,7 @@ function MultiDimIncludes(arr, val) {
     return false;
 }
 
-export function ProcessFoodName(x) {
+function ProcessFoodName(x) {
     let phrases = GetPhrases(x);
     // console.log(phrases);
     let maxKey = "";

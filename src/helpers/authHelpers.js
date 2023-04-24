@@ -1,7 +1,6 @@
 // authFetch will handle sending accessToken, and if fails, retries request after using refreshToken to mint new accessToken
 // if still failure, then simply fail
-
-export default async function authFetch(url, options, navigate) {
+export async function authFetch(url, options, navigate) {
     options.headers = {
         ...options.headers,
         Authorization: `Bearer ${window.localStorage.accessToken}`,
@@ -47,4 +46,9 @@ export default async function authFetch(url, options, navigate) {
                     });
             }
         });
+}
+
+// using the localStorage variables as a proxy for log-in status
+export function IsUserLogged() {
+    return Boolean(window.localStorage.profile && window.localStorage.accessToken && window.localStorage.refreshToken);
 }

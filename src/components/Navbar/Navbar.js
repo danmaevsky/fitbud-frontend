@@ -1,8 +1,7 @@
-import IsUserLogged from "helpers/auth/IsUserLogged";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import authFetch from "helpers/auth/authFetch";
+import { authFetch, IsUserLogged } from "helpers/authHelpers";
 
 const foodRoutes = ["food", "barcode", "recipes"];
 const exerciseRoutes = ["exercise", "workouts"];

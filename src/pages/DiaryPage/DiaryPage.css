@@ -1,0 +1,142 @@
+#diary-page-body {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--default-primary-background);
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+}
+
+#diary-page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80vh;
+    max-height: 50rem;
+    width: 100vw;
+    max-width: 80rem;
+}
+
+#diary-calorie-calculation-island {
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0rem;
+    border-radius: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 50rem;
+    margin: 2.025rem;
+    /* margin: 2rem; */
+}
+
+#diary-calorie-calculation-island h3 {
+    align-self: flex-start;
+    margin-top: 0;
+}
+
+#diary-calorie-calculation-island h4 {
+    margin-bottom: 0;
+}
+
+#diary-calorie-calculation {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#diary {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.diary-meal-section {
+    flex-shrink: 0;
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0rem;
+    border-radius: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 50rem;
+    margin: 2rem;
+}
+
+.diary-meal-section-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.diary-meal-section-header h3 {
+    align-self: flex-start;
+    margin-top: 0;
+}
+
+.diary-meal-section-add-food {
+    cursor: pointer;
+    background-color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.diary-meal-section-add-food:hover {
+    filter: brightness(0.9);
+}
+
+.diary-meal-section-add-food button {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--default-primary-background);
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+}
+
+.diary-meal-section button img {
+    height: 2rem;
+    width: 2rem;
+}
+
+.diary-meal-section-add-food label {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+    #diary-calorie-calculation-island {
+        width: 75vw;
+    }
+
+    .diary-meal-section {
+        width: 75vw;
+    }
+}

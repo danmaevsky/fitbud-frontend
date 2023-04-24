@@ -44,7 +44,6 @@
     width: 40vw;
     max-width: 30rem;
     min-height: 22.5rem;
-    height: 60vh;
     margin: 2rem;
 }
 #dashboard-daily-summary-island h2 {
@@ -71,10 +70,11 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 1rem;
+    gap: 2rem;
+    margin: 1rem;
 }
 
-#dashboard-daily-summary-pie-charts {
+#dashboard-daily-summary-macro-charts {
     display: flex;
     justify-content: space-between;
     width: 95%;
@@ -283,7 +283,7 @@
     #dashboard-daily-summary-island {
         width: 75vw;
         max-width: 30rem;
-        height: 32.5rem;
+        /* height: 32.5rem; */
         /* min-height: 25rem; */
     }
 
