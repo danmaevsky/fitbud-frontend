@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./ProfilePage.css";
-import FormInput from "components/FormInput";
 import { authFetch } from "helpers/authHelpers";
 import { useNavigate } from "react-router-dom";
 export default function ProfilePage() {
@@ -60,14 +59,12 @@ function ProfilePic(props) {
       navigate
     )
       .then(handleResponse)
-      .then((imageLink) => res.data)
+      .then((imageLink) => imageLink.data)
       .catch((err) => {
         console.log(err);
         setIsAttemptingFetch(false);
       });
   };
 
-  return <div id="signup-island-form">
-
-  </div>;
+  return <div id="signup-island-form"></div>;
 }

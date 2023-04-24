@@ -5,16 +5,16 @@ import { useParams } from "react-router-dom";
 
 export default function ForgotPasswordPasswordPage() {
   const { userId, token } = useParams();
-  const [title, setTitle] = useState("Forgot Password");
+  const [title, setTitle] = useState("Reset Password");
   //const [message, setMessage] = useState(null);
 
   return (
-    <div id="signup-page-body">
+    <div id="reset-password-page-body">
       <div className="profile-background-round round-background-decoration"></div>
       <div className="profile-background-top-banner bottom-top-banner-background-decoration"></div>
       <div className="profile-background-bottom-banner bottom-bot-banner-background-decoration"></div>
-      <div id="signup-island">
-        <div id="signup-island-header">
+      <div id="reset-password-island">
+        <div id="reset-password-island-header">
           <h2>{title}</h2>
         </div>
         <ForgotPasswordVerifyToken
@@ -30,7 +30,7 @@ export default function ForgotPasswordPasswordPage() {
 
 function ForgotPasswordVerifyToken(props) {
   const { setTitle, userId, token } = props;
-  const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive login button spam
+  const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive reset-password button spam
 
   const [isTokenVerified, setIsTokenVerified] = useState(false);
   //const [triedVerify, setTriedVerify] = useState(false);
@@ -123,7 +123,7 @@ function ForgotPasswordVerifyToken(props) {
 
   if (isTokenVerified) {
     return (
-      <div id="signup-island-form">
+      <div id="reset-password-island-form">
         <FormInput
           type="password"
           placeholder="New Password"

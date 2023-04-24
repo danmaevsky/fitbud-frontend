@@ -3,42 +3,44 @@ import "./ForgotPasswordEmail.css";
 import FormInput from "components/FormInput";
 export default function ForgotPasswordEmailPage() {
   const [title, setTitle] = useState("Enter your Email to Reset Password");
+  const [message, setMessage] = useState(null);
   return (
-    <div id="signup-page-body">
+    <div id="send-reset-email-page-body">
       <div className="profile-background-round round-background-decoration"></div>
       <div className="profile-background-top-banner bottom-top-banner-background-decoration"></div>
       <div className="profile-background-bottom-banner bottom-bot-banner-background-decoration"></div>
-      <div id="signup-island">
-        <div id="signup-island-header">
+      <div id="send-reset-email-island">
+        <div id="send-reset-email-island-header">
           <h2>{title}</h2>
+          <p id="login-message">{message}</p>
         </div>
-        <ForgotPasswordEmail setTitle={setTitle} />
+        <ForgotPasswordEmail setTitle={setTitle} setMessage={setMessage} />
       </div>
     </div>
   );
 }
 
 function ForgotPasswordEmail(props) {
-  const { setTitle } = props;
-  const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive login button spam
+  const { setTitle, setMessage } = props;
+  const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive send-reset-email button spam
 
   const [email, setEmail] = useState("");
 
   const handleResponse = (res) => {
     if (res.status === 201) {
-      setTitle("Reset Link has been Sent!");
+      setMessage("Reset Link has been Sent!");
       return res.json();
     }
 
     // best way to cancel a Promise chain is to throw an error
     if (res.status === 404) {
-      setTitle("User does not exist");
+      setMessage("User does not exist");
       throw new Error(400);
     }
 
     if (res.status === 500) {
       setTitle("Something went Wrong");
-      console.log(res)
+      console.log(res);
       throw new Error(500);
     }
   };
@@ -48,21 +50,27 @@ function ForgotPasswordEmail(props) {
       return;
     }
     setIsAttemptingFetch(true);
-    fetch(`${process.env.REACT_APP_GATEWAY_URI}/account/forgotPassword`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email }),
-    })
-      .then(handleResponse)
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-        setIsAttemptingFetch(false);
-      });
+    const emailcheck = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+    if (!emailcheck.test(email)) {
+      setMessage("Please Enter a Valid Email");
+      setIsAttemptingFetch(false);
+    } else {
+      fetch(`${process.env.REACT_APP_GATEWAY_URI}/account/forgotPassword`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email }),
+      })
+        .then(handleResponse)
+        .then((res) => res.json())
+        .catch((err) => {
+          console.log(err);
+          setIsAttemptingFetch(false);
+        });
+    }
   };
 
   return (
-    <div id="signup-island-form">
+    <div id="send-reset-email-island-form">
       <FormInput
         type="email"
         placeholder="Email"
@@ -74,6 +82,9 @@ function ForgotPasswordEmail(props) {
           }
         }}
       />
+      <div id="send-reset-email-page-buttons">
+        <button onClick={sendEmailOnClick}>Send Email</button>
+      </div>
     </div>
   );
 }
