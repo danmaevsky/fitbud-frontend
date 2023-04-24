@@ -24,7 +24,6 @@ function CalculateTDEE(profile) {
         let birthYear = profile.birthdate.substring(0, 4);
         let currYear = new Date().getFullYear();
         let age = Number(currYear) - Number(birthYear);
-        console.log(age);
         bmr = StJeor_Mifflin(profile.currentWeightKg.value, profile.heightCm, age, profile.sex);
     } else {
         bmr = 2000;
@@ -119,9 +118,6 @@ export async function getAllDiaryEntries(diary, navigate) {
                     let totalNutritionalContent = {};
 
                     const defaultUnitRounding = log.quantityMetric === Math.round(json.servingQuantity / 0.01) * 0.01;
-                    console.log(json.name, "log.metricQuantity", log.quantityMetric);
-                    console.log(json.name, "json.servingQuantity", json.servingQuantity);
-                    console.log(json.name, "defaultUnitRounding:", defaultUnitRounding);
 
                     totalNutritionalContent = ProcessNutritionalContents(
                         json.nutritionalContent,
@@ -129,6 +125,7 @@ export async function getAllDiaryEntries(diary, navigate) {
                         log.numServings,
                         defaultUnitRounding
                     );
+
                     processedDiary[meal].foodLogs[i].totalNutritionalContent = totalNutritionalContent;
                 })
                 .catch((error) => {

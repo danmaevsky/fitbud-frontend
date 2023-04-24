@@ -18,7 +18,7 @@ export default function FoodPage() {
     const [numServings, setNumServings] = useState(1);
     const [servingName, setServingName] = useState("");
     const [metricQuantity, setMetricQuantity] = useState(100);
-    const [isAddingFoodLog, setIsAddingFoodLog] = useSessionStorage("isAddingFoodLog", false);
+    const [addingFoodLogState, setAddingFoodLogState] = useSessionStorage("addingFoodLogState", null);
 
     const userIsLoggedIn = IsUserLogged();
 
@@ -62,8 +62,14 @@ export default function FoodPage() {
                 ) : null}
                 {!foodResponse ? "Loading..." : null}
                 {responseStatus !== 200 ? "404. No foods matching this ID!" : null}
-                {userIsLoggedIn && renderFoodInfo && isAddingFoodLog ? (
-                    <AddFoodLogButton foodId={foodId} servingName={servingName} numServings={numServings} quantityMetric={metricQuantity} />
+                {userIsLoggedIn && renderFoodInfo && addingFoodLogState ? (
+                    <AddFoodLogButton
+                        foodId={foodId}
+                        servingName={servingName}
+                        numServings={numServings}
+                        quantityMetric={metricQuantity}
+                        addingFoodLogState={addingFoodLogState}
+                    />
                 ) : null}
             </div>
         </div>
@@ -295,27 +301,27 @@ function FoodMoreInfo(props) {
 }
 
 function AddFoodLogButton(props) {
-    const { foodId, servingName, numServings, quantityMetric } = props;
-    const [isAddingFoodMealPosition, setIsAddingFoodMealPosition] = useSessionStorage("isAddingFoodMealPosition", null);
-
+    const { foodId, servingName, numServings, quantityMetric, addingFoodLogState } = props;
     const navigate = useNavigate();
 
-    const currentDiary = JSON.parse(window.localStorage.CurrentDiary);
+    const currentDate = getCurrentDate();
+    const date = addingFoodLogState.date;
+    const diary = currentDate === addingFoodLogState.date ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
+
     const addFoodOnClick = () => {
-        if (currentDiary) {
-            let diaryId = JSON.parse(window.localStorage.CurrentDiary)._id;
+        if (diary) {
+            let diaryId = diary._id;
             let patchBody = {
                 type: "food",
                 action: "addLog",
                 contents: {
-                    mealPosition: isAddingFoodMealPosition,
+                    mealPosition: addingFoodLogState.mealPosition,
                     foodId: foodId,
                     servingName: servingName,
                     numServings: numServings,
                     quantityMetric: quantityMetric,
                 },
             };
-            console.log(patchBody);
 
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
                 method: "PATCH",
@@ -326,7 +332,11 @@ function AddFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 200) {
-                        navigate("/diary");
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
                     } else {
                         throw Error(res.status);
                     }
@@ -339,7 +349,7 @@ function AddFoodLogButton(props) {
                 type: "food",
                 action: "addLog",
                 contents: {
-                    mealPosition: isAddingFoodMealPosition,
+                    mealPosition: addingFoodLogState.mealPosition,
                     foodId: foodId,
                     servingName: servingName,
                     numServings: numServings,
@@ -348,9 +358,7 @@ function AddFoodLogButton(props) {
             };
             console.log(postBody);
 
-            const currentDate = getCurrentDate();
-
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${date}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -359,7 +367,11 @@ function AddFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 201) {
-                        navigate("/diary");
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
                     } else {
                         throw Error(res.status);
                     }

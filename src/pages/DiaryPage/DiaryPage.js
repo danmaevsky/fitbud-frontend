@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "./DiaryPage.css";
 import addFoodPlus from "assets/add-food-plus.svg";
 import useLocalStorage from "hooks/useLocalStorage";
@@ -18,22 +18,29 @@ import useSessionStorage from "hooks/useSessionStorage";
 
 export default function DiaryPage() {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    let dateSearchParam = searchParams.get("date");
+
     const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    const [prevDiary, setPrevDiary] = useLocalStorage("PrevDiary", null);
     const [profile, setProfile] = useLocalStorage("profile", null);
 
     let calorieGoal = CalculateGoal(profile);
 
-    useEffect(() => {
-        const currentDate = getCurrentDate();
-        // if (!currentDiary) {
-        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-        // } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
-        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-        // }
-        fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-    }, []);
+    const currentDate = getCurrentDate();
+    const date = dateSearchParam ? dateSearchParam : currentDate;
+    let diary = date === currentDate ? currentDiary : prevDiary;
 
-    if (!DiaryHasMealEntries(currentDiary)) {
+    // fetch the diary to display
+    useEffect(() => {
+        if (date === currentDate) {
+            fetchDiaryHelper(date, setCurrentDiary, navigate);
+        } else {
+            fetchDiaryHelper(date, setPrevDiary, navigate);
+        }
+    }, [dateSearchParam]);
+
+    if (!DiaryHasMealEntries(diary)) {
         return (
             <div className="page-body" id="diary-page-body">
                 <div className="default-background-round round-background-decoration"></div>
@@ -64,13 +71,13 @@ export default function DiaryPage() {
                             </div>
                         </div>
                     </div>
-                    <Diary currentDiary={currentDiary} profile={profile} />
+                    <Diary diary={diary} profile={profile} date={date} />
                 </div>
             </div>
         );
     }
 
-    let caloriesEaten = Math.round(currentDiary.totalDiaryNutritionalContents.kcal);
+    let caloriesEaten = Math.round(diary.totalDiaryNutritionalContents.kcal);
 
     return (
         <div className="page-body" id="diary-page-body">
@@ -102,43 +109,45 @@ export default function DiaryPage() {
                         </div>
                     </div>
                 </div>
-                <Diary currentDiary={currentDiary} profile={profile} />
+                <Diary diary={diary} profile={profile} date={date} />
             </div>
         </div>
     );
 }
 
 function Diary(props) {
-    const { currentDiary, profile } = props;
+    const { diary, profile, date } = props;
 
     let mealSections = [];
     for (let i = 0; i < profile.preferences.mealNames.length; i++) {
         let mealKey = "meal" + (i + 1);
         let mealName = profile.preferences.mealNames[i];
 
-        if (mealName && currentDiary && currentDiary[mealKey].totalMealNutritionalContent) {
-            let mealCalories = Math.round(currentDiary[mealKey].totalMealNutritionalContent.kcal);
+        if (mealName && diary && diary[mealKey].totalMealNutritionalContent) {
+            let mealCalories = Math.round(diary[mealKey].totalMealNutritionalContent.kcal);
             mealSections.push(
                 <MealSection
                     key={"mealSection" + i}
                     mealPosition={mealKey}
                     mealName={mealName}
-                    foodLogs={currentDiary[mealKey].foodLogs}
+                    foodLogs={diary[mealKey].foodLogs}
                     calories={mealCalories}
+                    date={date}
                 />
             );
-        } else if (mealName && currentDiary) {
+        } else if (mealName && diary) {
             mealSections.push(
                 <MealSection
                     key={"mealSection" + i}
                     mealPosition={mealKey}
                     mealName={mealName}
-                    foodLogs={currentDiary[mealKey].foodLogs}
+                    foodLogs={diary[mealKey].foodLogs}
                     calories={null}
+                    date={date}
                 />
             );
         } else if (mealName) {
-            mealSections.push(<MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} />);
+            mealSections.push(<MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} date={date} />);
         }
     }
 
@@ -146,9 +155,8 @@ function Diary(props) {
 }
 
 function MealSection(props) {
-    const { mealPosition, mealName, calories, foodLogs } = props;
-    const [isAddingFoodLog, setIsAddingFoodLog] = useSessionStorage("isAddingFoodLog", false);
-    const [isAddingFoodMealPosition, setIsAddingFoodMealPosition] = useSessionStorage("isAddingFoodMealPosition", null);
+    const { mealPosition, mealName, calories, foodLogs, date } = props;
+    const [addingFoodLogState, setAddingFoodLogState] = useSessionStorage("addingFoodLogState", null);
     const navigate = useNavigate();
 
     let foodItems = [];
@@ -178,8 +186,10 @@ function MealSection(props) {
     }
 
     const addFoodOnClick = () => {
-        setIsAddingFoodLog(true);
-        setIsAddingFoodMealPosition(mealPosition);
+        setAddingFoodLogState({
+            mealPosition: mealPosition,
+            date: date,
+        });
         navigate("/food");
     };
 
@@ -213,19 +223,16 @@ function CreateServingText(foodLog) {
 
     let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
 
-    console.log(Object.keys(builtInUnits));
-    console.log(servingName);
-
     let servingWords = servingName.split(" ");
     if (householdServingName && servingName === householdServingName) {
         // Here we need to strip the number from the servingName if there is one and multiply it by numServings
         let householdNumber = Number(servingWords[0]);
         if (Number.isNaN(householdNumber)) {
             // no number
-            return `${numServings} ${servingName}`;
+            return `${numServings} ${ToTitleCase(servingName)}`;
         } else {
             // there is a number
-            return `${numServings * householdNumber} ${servingWords.splice(1).join(" ")}`;
+            return `${numServings * householdNumber} ${ToTitleCase(servingWords.splice(1).join(" "))}`;
         }
     } else if (Object.keys(builtInUnits).includes(servingName) || servingName === "g" || servingName === "mL") {
         // Here we simply need to check if it is a metric unit or not
