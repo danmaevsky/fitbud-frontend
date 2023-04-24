@@ -125,6 +125,32 @@ function ProfileMenu(props) {
     };
 
     return (
+        <nav id="navbar" className={navbarClass}>
+            <Link
+                to="/home" onClick={() => {
+                    clearFoodSearchPageState(location);
+                    clearExerciseSearchPageState(location);
+                }}
+            >
+                <h1>fitBud.</h1>
+            </Link>
+            <ul>
+                <li>
+                    <Link to="/food" onClick={() => clearFoodSearchPageState(location)}>
+                        Food
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/exercise" onClick={() => clearExerciseSearchPageState(location)}>
+                        Exercise
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/login">Login</Link>
+                </li>
+            </ul>
+        </nav>
+
         <div id="navbar-profile-menu" className={navbarClass}>
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/diary">Diary</Link>
