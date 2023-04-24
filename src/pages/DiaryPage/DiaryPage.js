@@ -12,6 +12,7 @@ import {
     ProcessUnit,
     fetchDiaryHelper,
     GetBuiltInUnits,
+    DiaryHasMealEntries,
 } from "helpers/fitnessHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
 
@@ -32,7 +33,7 @@ export default function DiaryPage() {
         fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
     }, []);
 
-    if (!currentDiary) {
+    if (!DiaryHasMealEntries(currentDiary)) {
         return (
             <div className="page-body" id="diary-page-body">
                 <div className="default-background-round round-background-decoration"></div>
@@ -211,6 +212,9 @@ function CreateServingText(foodLog) {
     let householdServingName = foodLog.foodObject.servingName;
 
     let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
+
+    console.log(Object.keys(builtInUnits));
+    console.log(servingName);
 
     let servingWords = servingName.split(" ");
     if (householdServingName && servingName === householdServingName) {

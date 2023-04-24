@@ -9,6 +9,7 @@ import useWindowDimensions from "hooks/useWindowDimensions";
 import { GetBuiltInUnits, ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
 import { IsUserLogged, authFetch } from "helpers/authHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
+import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function FoodPage() {
     const { foodId } = useParams();
@@ -299,9 +300,9 @@ function AddFoodLogButton(props) {
 
     const navigate = useNavigate();
 
-    const currentDiaryExists = Boolean(window.localStorage.CurrentDiary);
+    const currentDiary = JSON.parse(window.localStorage.CurrentDiary);
     const addFoodOnClick = () => {
-        if (currentDiaryExists) {
+        if (currentDiary) {
             let diaryId = JSON.parse(window.localStorage.CurrentDiary)._id;
             let patchBody = {
                 type: "food",
@@ -325,6 +326,39 @@ function AddFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 200) {
+                        navigate("/diary");
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else {
+            let postBody = {
+                type: "food",
+                action: "addLog",
+                contents: {
+                    mealPosition: isAddingFoodMealPosition,
+                    foodId: foodId,
+                    servingName: servingName,
+                    numServings: numServings,
+                    quantityMetric: quantityMetric,
+                },
+            };
+            console.log(postBody);
+
+            const currentDate = getCurrentDate();
+
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${currentDate}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(postBody),
+            })
+                .then((res) => {
+                    if (res.status === 201) {
                         navigate("/diary");
                     } else {
                         throw Error(res.status);

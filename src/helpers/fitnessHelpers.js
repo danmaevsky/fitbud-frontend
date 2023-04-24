@@ -117,7 +117,18 @@ export async function getAllDiaryEntries(diary, navigate) {
                     // Note: quantityMetric is per serving, still need to multiply by numServings
                     processedDiary[meal].foodLogs[i].foodObject = json;
                     let totalNutritionalContent = {};
-                    totalNutritionalContent = ProcessNutritionalContents(json.nutritionalContent, log.quantityMetric, log.numServings, false);
+
+                    const defaultUnitRounding = log.quantityMetric === Math.round(json.servingQuantity / 0.01) * 0.01;
+                    console.log(json.name, "log.metricQuantity", log.quantityMetric);
+                    console.log(json.name, "json.servingQuantity", json.servingQuantity);
+                    console.log(json.name, "defaultUnitRounding:", defaultUnitRounding);
+
+                    totalNutritionalContent = ProcessNutritionalContents(
+                        json.nutritionalContent,
+                        log.quantityMetric,
+                        log.numServings,
+                        defaultUnitRounding
+                    );
                     processedDiary[meal].foodLogs[i].totalNutritionalContent = totalNutritionalContent;
                 })
                 .catch((error) => {
@@ -278,6 +289,25 @@ function AddNutrients(nutrients1, nutrients2) {
     return sum;
 }
 
+export function DiaryHasMealEntries(currentDiary) {
+    if (!currentDiary) {
+        return false;
+    }
+
+    if (
+        !currentDiary.meal1.totalMealNutritionalContent &&
+        !currentDiary.meal2.totalMealNutritionalContent &&
+        !currentDiary.meal3.totalMealNutritionalContent &&
+        !currentDiary.meal4.totalMealNutritionalContent &&
+        !currentDiary.meal5.totalMealNutritionalContent &&
+        !currentDiary.meal6.totalMealNutritionalContent
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
 /* The returned processDiary will look like
 processedDiary := {}
 
@@ -432,14 +462,7 @@ export function ProcessNutritionalContents(nutritionalContents, metricQuantity, 
 }
 
 export function GetBuiltInUnits(defaultMetricUnit) {
-    if (defaultMetricUnit === "g") {
-        return {
-            "1 g": 1,
-            "1 kg": 1000,
-            "1 oz": 28,
-            "1 lb": 28 * 16,
-        };
-    } else {
+    if (defaultMetricUnit === "mL") {
         return {
             "1 mL": 1,
             "1 L": 1000,
@@ -447,6 +470,13 @@ export function GetBuiltInUnits(defaultMetricUnit) {
             "1 tbsp": 14.7868,
             "1 fl oz": 29.5735,
             "1 cup": 236.588,
+        };
+    } else {
+        return {
+            "1 g": 1,
+            "1 kg": 1000,
+            "1 oz": 28,
+            "1 lb": 28 * 16,
         };
     }
 }

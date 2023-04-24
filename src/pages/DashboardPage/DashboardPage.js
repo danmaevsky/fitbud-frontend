@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import useLocalStorage from "hooks/useLocalStorage";
 import useWindowDimensions from "hooks/useWindowDimensions";
 import { authFetch } from "helpers/authHelpers";
-import { CalculateGoal, fetchDiaryHelper } from "helpers/fitnessHelpers";
+import { CalculateGoal, DiaryHasMealEntries, fetchDiaryHelper } from "helpers/fitnessHelpers";
 import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function DashboardPage() {
@@ -128,7 +128,7 @@ function DailySummary(props) {
     let carbGoal = profile.goals.macroBreakdown.carbs;
     let proteinGoal = profile.goals.macroBreakdown.protein;
     // No Diary Found, display Default
-    if (!currentDiary) {
+    if (!DiaryHasMealEntries(currentDiary)) {
         return (
             <div id="dashboard-daily-summary-island">
                 <h2 id="dashboard-daily-summary-header">Your Daily Summary</h2>
