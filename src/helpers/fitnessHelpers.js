@@ -117,7 +117,7 @@ export async function getAllDiaryEntries(diary, navigate) {
                     processedDiary[meal].foodLogs[i].foodObject = json;
                     let totalNutritionalContent = {};
 
-                    const defaultUnitRounding = log.quantityMetric === Math.round(json.servingQuantity / 0.01) * 0.01;
+                    const defaultUnitRounding = log.quantityMetric === Math.round(json.servingQuantity / 0.001) * 0.001;
 
                     totalNutritionalContent = ProcessNutritionalContents(
                         json.nutritionalContent,
@@ -231,7 +231,7 @@ export async function getAllDiaryEntries(diary, navigate) {
     }
 
     return Promise.all(All_Promises).then(() => {
-        return CountNutrientsPerMeal(processedDiary);
+        return CountExerciseCalories(CountNutrientsPerMeal(processedDiary));
     });
 }
 
@@ -284,6 +284,25 @@ function AddNutrients(nutrients1, nutrients2) {
         sum[nutrient] = Number(nutrients1[nutrient]) + Number(nutrients2[nutrient]);
     });
     return sum;
+}
+
+function CountExerciseCalories(diary) {
+    let totalBurnedCalories = 0;
+    // Handling Exercise: Cardio, Strength, & Workouts
+    for (let i = 0; i < diary.exercise.strengthLogs.length; i++) {
+        let log = diary.exercise.strengthLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    for (let i = 0; i < diary.exercise.cardioLogs.length; i++) {
+        let log = diary.exercise.cardioLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    for (let i = 0; i < diary.exercise.workoutLogs.length; i++) {
+        let log = diary.exercise.workoutLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    diary.exercise.totalBurnedCalories = totalBurnedCalories;
+    return diary;
 }
 
 export function DiaryHasMealEntries(currentDiary) {

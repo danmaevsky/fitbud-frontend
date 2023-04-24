@@ -4,7 +4,7 @@ import showMoreDownArrow from "assets/show-more-down-arrow.svg";
 import addFoodPlus from "assets/add-food-plus.svg";
 import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
 import { GetBuiltInUnits, ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
 import { IsUserLogged, authFetch } from "helpers/authHelpers";
@@ -13,15 +13,20 @@ import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function FoodPage() {
     const { foodId } = useParams();
+    const location = useLocation();
+    console.log(location.state);
+
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
     const [numServings, setNumServings] = useState(1);
     const [servingName, setServingName] = useState("");
     const [metricQuantity, setMetricQuantity] = useState(100);
-    const [addingFoodLogState, setAddingFoodLogState] = useSessionStorage("addingFoodLogState", null);
+    const [mealPosition, setMealPosition] = useState("meal1");
+    const [diaryDate, setDiaryDate] = useState(getCurrentDate());
 
     const userIsLoggedIn = IsUserLogged();
 
+    // fetching food object
     useEffect(() => {
         let resStatus;
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/${foodId}`, {
@@ -36,6 +41,16 @@ export default function FoodPage() {
                 setFoodResponse(json);
             });
     }, [foodId]);
+
+    // seeing if user came from the diary page
+    useEffect(() => {
+        if (location.state) {
+            if (location.state.mealPosition && location.state.date) {
+                setMealPosition(location.state.mealPosition);
+                setDiaryDate(location.state.date);
+            }
+        }
+    }, []);
 
     let renderFoodInfo = responseStatus === 200; // check if response code is good
     renderFoodInfo = renderFoodInfo && foodResponse && foodId === foodResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
@@ -58,17 +73,20 @@ export default function FoodPage() {
                         setServingName={setServingName}
                         metricQuantity={metricQuantity}
                         setMetricQuantity={setMetricQuantity}
+                        mealPosition={mealPosition}
+                        setMealPosition={setMealPosition}
                     />
                 ) : null}
                 {!foodResponse ? "Loading..." : null}
                 {responseStatus !== 200 ? "404. No foods matching this ID!" : null}
-                {userIsLoggedIn && renderFoodInfo && addingFoodLogState ? (
+                {userIsLoggedIn && renderFoodInfo ? (
                     <AddFoodLogButton
                         foodId={foodId}
                         servingName={servingName}
                         numServings={numServings}
                         quantityMetric={metricQuantity}
-                        addingFoodLogState={addingFoodLogState}
+                        mealPosition={mealPosition}
+                        diaryDate={diaryDate}
                     />
                 ) : null}
             </div>
@@ -78,7 +96,7 @@ export default function FoodPage() {
 
 function FoodInfo(props) {
     const [showMoreInfo, setShowMoreInfo] = useState(false);
-    const { foodResponse, numServings, setNumServings, setServingName, metricQuantity, setMetricQuantity } = props;
+    const { foodResponse, numServings, setNumServings, setServingName, metricQuantity, setMetricQuantity, mealPosition, setMealPosition } = props;
 
     const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
     const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
@@ -124,6 +142,8 @@ function FoodInfo(props) {
                 setMetricQuantity={setMetricQuantity}
                 setNumServings={setNumServings}
                 setServingName={setServingName}
+                mealPosition={mealPosition}
+                setMealPosition={setMealPosition}
             />
             {showMoreInfo ? (
                 <>
@@ -301,12 +321,11 @@ function FoodMoreInfo(props) {
 }
 
 function AddFoodLogButton(props) {
-    const { foodId, servingName, numServings, quantityMetric, addingFoodLogState } = props;
+    const { foodId, servingName, numServings, quantityMetric, mealPosition, diaryDate } = props;
     const navigate = useNavigate();
 
     const currentDate = getCurrentDate();
-    const date = addingFoodLogState.date;
-    const diary = currentDate === addingFoodLogState.date ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
+    const diary = currentDate === diaryDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
 
     const addFoodOnClick = () => {
         if (diary) {
@@ -315,7 +334,7 @@ function AddFoodLogButton(props) {
                 type: "food",
                 action: "addLog",
                 contents: {
-                    mealPosition: addingFoodLogState.mealPosition,
+                    mealPosition: mealPosition,
                     foodId: foodId,
                     servingName: servingName,
                     numServings: numServings,
@@ -332,10 +351,10 @@ function AddFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 200) {
-                        if (date === currentDate) {
+                        if (diaryDate === currentDate) {
                             navigate("/diary");
                         } else {
-                            navigate("/diary/?date=" + date);
+                            navigate("/diary/?date=" + diaryDate);
                         }
                     } else {
                         throw Error(res.status);
@@ -349,7 +368,7 @@ function AddFoodLogButton(props) {
                 type: "food",
                 action: "addLog",
                 contents: {
-                    mealPosition: addingFoodLogState.mealPosition,
+                    mealPosition: mealPosition,
                     foodId: foodId,
                     servingName: servingName,
                     numServings: numServings,
@@ -358,7 +377,7 @@ function AddFoodLogButton(props) {
             };
             console.log(postBody);
 
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${date}`, {
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${diaryDate}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -367,10 +386,10 @@ function AddFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 201) {
-                        if (date === currentDate) {
+                        if (diaryDate === currentDate) {
                             navigate("/diary");
                         } else {
-                            navigate("/diary/?date=" + date);
+                            navigate("/diary/?date=" + diaryDate);
                         }
                     } else {
                         throw Error(res.status);
@@ -396,7 +415,16 @@ function SelectServingSize(props) {
     // needs to understand if food is measured in grams or milliliters by default
     // needs to preserve the default unit from the database
     // needs to create a range of appropriate units
-    const { householdServingName, defaultServingQuantity, defaultMetricUnit, setMetricQuantity, setNumServings, setServingName } = props;
+    const {
+        householdServingName,
+        defaultServingQuantity,
+        defaultMetricUnit,
+        setMetricQuantity,
+        setNumServings,
+        setServingName,
+        mealPosition,
+        setMealPosition,
+    } = props;
 
     const [numText, setNumText] = useState(1);
 
@@ -446,6 +474,36 @@ function SelectServingSize(props) {
         setServingName(initialServingName);
     }, []);
 
+    let mealNames;
+    let mealOptions;
+    const userIsLoggedIn = IsUserLogged();
+
+    if (userIsLoggedIn) {
+        mealNames = JSON.parse(window.localStorage.profile).preferences.mealNames;
+        mealNames = {
+            meal1: mealNames[0],
+            meal2: mealNames[1],
+            meal3: mealNames[2],
+            meal4: mealNames[3],
+            meal5: mealNames[4],
+            meal6: mealNames[5],
+        };
+        mealOptions = Object.values(mealNames)
+            .slice()
+            .filter((name) => Boolean(name));
+    }
+
+    const onMealSelect = (selection) => {
+        let i = Object.values(mealNames).indexOf(selection);
+
+        if (i < 0) {
+            return;
+        }
+
+        let mealPosition = "meal" + (i + 1);
+        setMealPosition(mealPosition);
+    };
+
     return (
         <div id="food-page-serving-selector">
             <div id="food-page-num-serving-selector">
@@ -461,8 +519,24 @@ function SelectServingSize(props) {
             </div>
             <div id="food-page-serving-size-selector">
                 <p>Serving Size:</p>
-                <DropdownMenu options={Object.keys(units)} listItemClass="food-serving-dropdown-item" onSelect={onUnitSelect} />
+                <DropdownMenu
+                    options={Object.keys(units)}
+                    listItemClass="food-serving-dropdown-item"
+                    onSelect={onUnitSelect}
+                    initialSelection={Object.keys(units)[0]}
+                />
             </div>
+            {userIsLoggedIn ? (
+                <div id="food-page-meal-position-selector">
+                    <p>Meal:</p>
+                    <DropdownMenu
+                        options={mealOptions}
+                        listItemClass="meal-name-dropdown-item"
+                        onSelect={onMealSelect}
+                        initialSelection={mealNames[mealPosition]}
+                    />
+                </div>
+            ) : null}
         </div>
     );
 }

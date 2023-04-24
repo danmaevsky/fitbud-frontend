@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "./DiaryPage.css";
-import addFoodPlus from "assets/add-food-plus.svg";
+import addLogPlus from "assets/add-food-plus.svg";
 import useLocalStorage from "hooks/useLocalStorage";
 import { getCurrentDate } from "helpers/generalHelpers";
 import { useEffect } from "react";
@@ -118,14 +118,14 @@ export default function DiaryPage() {
 function Diary(props) {
     const { diary, profile, date } = props;
 
-    let mealSections = [];
+    let diarySections = [];
     for (let i = 0; i < profile.preferences.mealNames.length; i++) {
         let mealKey = "meal" + (i + 1);
         let mealName = profile.preferences.mealNames[i];
 
         if (mealName && diary && diary[mealKey].totalMealNutritionalContent) {
             let mealCalories = Math.round(diary[mealKey].totalMealNutritionalContent.kcal);
-            mealSections.push(
+            diarySections.push(
                 <MealSection
                     key={"mealSection" + i}
                     mealPosition={mealKey}
@@ -136,7 +136,7 @@ function Diary(props) {
                 />
             );
         } else if (mealName && diary) {
-            mealSections.push(
+            diarySections.push(
                 <MealSection
                     key={"mealSection" + i}
                     mealPosition={mealKey}
@@ -147,16 +147,20 @@ function Diary(props) {
                 />
             );
         } else if (mealName) {
-            mealSections.push(<MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} date={date} />);
+            diarySections.push(<MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} date={date} />);
         }
     }
 
-    return <div id="diary">{mealSections}</div>;
+    if (diary) {
+        let allExercises = diary.exercise.strengthLogs.concat(diary.exercise.cardioLogs).concat(diary.exercise.workoutLogs);
+        diarySections.push(<ExerciseSection exerciseLogs={allExercises} date={date} />);
+    }
+
+    return <div id="diary">{diarySections}</div>;
 }
 
 function MealSection(props) {
     const { mealPosition, mealName, calories, foodLogs, date } = props;
-    const [addingFoodLogState, setAddingFoodLogState] = useSessionStorage("addingFoodLogState", null);
     const navigate = useNavigate();
 
     let foodItems = [];
@@ -195,8 +199,8 @@ function MealSection(props) {
             let numServingText = CreateServingText(foodLog);
 
             foodItems.push(
-                <div key={`${mealName}-food-item-${i}`} className="diary-meal-section-food-item" onClick={foodLogOnClick}>
-                    <div className="diary-meal-section-food-name">
+                <div key={`${mealName}-food-item-${i}`} className="diary-section-item" onClick={foodLogOnClick}>
+                    <div className="diary-section-item-name">
                         <h4>{foodName}</h4>
                         <p>
                             {brand ? brand + "," : null} {numServingText}
@@ -210,23 +214,24 @@ function MealSection(props) {
 
     const addFoodOnClick = (e) => {
         e.stopPropagation();
-        setAddingFoodLogState({
-            mealPosition: mealPosition,
-            date: date,
+        navigate("/food", {
+            state: {
+                mealPosition: mealPosition,
+                date: date,
+            },
         });
-        navigate("/food");
     };
 
     return (
-        <div id={"diary-" + mealName + "-section"} className="diary-meal-section">
-            <div className="diary-meal-section-header">
+        <div id={"diary-" + mealName + "-section"} className="diary-section">
+            <div className="diary-section-header">
                 <h3>{mealName}</h3>
                 <h4>{calories ? calories : null}</h4>
             </div>
-            <div className="diary-meal-section-foods">{foodItems}</div>
-            <div className="diary-meal-section-add-food" onClick={addFoodOnClick}>
+            <div className="diary-section-items">{foodItems}</div>
+            <div className="diary-section-add-item" onClick={addFoodOnClick}>
                 <button>
-                    <img src={addFoodPlus} />
+                    <img src={addLogPlus} />
                 </button>
                 <label>Add Food</label>
             </div>
@@ -234,7 +239,56 @@ function MealSection(props) {
     );
 }
 
-function ExerciseSection(props) {}
+function ExerciseSection(props) {
+    const { exerciseLogs, date } = props;
+    const [addingExerciseLogState, setAddingExerciseLogState] = useSessionStorage("addingExerciseLogState", null);
+    const navigate = useNavigate();
+
+    let exerciseItems = [];
+    if (exerciseLogs) {
+        for (let i = 0; i < exerciseLogs.length; i++) {
+            let exerciseLog = exerciseLogs[i];
+            let exerciseObject = exerciseLog.exerciseObject;
+            let exerciseName = exerciseObject.name;
+            let MET_value = exerciseObject.MET;
+            exerciseItems.push(
+                <div key={`exercise-item-${i}`} className="diary-exercise-section-exercise-item" onClick={() => {}}>
+                    <div className="diary-meal-section-food-name">
+                        <h4>{exerciseName}</h4>
+                        <p>MET: {MET_value}</p>
+                    </div>
+                    <h4>{calories}</h4>
+                </div>
+            );
+        }
+    }
+
+    const addFoodOnClick = (e) => {
+        // e.stopPropagation();
+        // setAddingExerciseLogState({
+        //     date: date,
+        // });
+        // navigate("/exercise");
+    };
+
+    let calories = 100;
+
+    return (
+        <div id={"diary-exercise-section"} className="diary-section">
+            <div className="diary-section-header">
+                <h3>Exercise</h3>
+                <h4>{calories ? calories : null}</h4>
+            </div>
+            <div className="diary-section-foods">{exerciseItems}</div>
+            <div className="diary-section-add-item" onClick={addFoodOnClick}>
+                <button>
+                    <img src={addLogPlus} />
+                </button>
+                <label>Add Exercise</label>
+            </div>
+        </div>
+    );
+}
 
 /* Utitlity Function for Creating Serving Text */
 function CreateServingText(foodLog) {

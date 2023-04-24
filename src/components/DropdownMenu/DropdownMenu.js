@@ -14,7 +14,6 @@ export default function DropdownMenu(props) {
             <select className="dropdown-menu-list" value={selection} onChange={selectOnChange}>
                 {options.map((option, index) => {
                     if (option === selection) {
-                        console.log("option === selection");
                         return (
                             <option className={listItemClass} selected="selected">
                                 {option}

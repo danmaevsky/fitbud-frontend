@@ -4,12 +4,13 @@ import clearTextX from "assets/clear-text-x.svg";
 import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import "./FoodSearchPage.css";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 import { ToTitleCase, ProcessFoodName } from "helpers/fitnessHelpers";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
@@ -98,13 +99,16 @@ function FoodSearchList(props) {
 
 function FoodSearchResult(props) {
     let { _id, name, brandOwner, brandName, isVerified } = props.response;
+    const location = useLocation();
     name = ProcessFoodName(name);
     let brand = brandName ? ToTitleCase(brandName) : brandOwner ? ToTitleCase(brandOwner) : null;
 
     const navigate = useNavigate();
 
     const resultOnClick = () => {
-        navigate("/food/" + _id);
+        navigate("/food/" + _id, {
+            state: location.state,
+        });
     };
     return (
         <li className="food-search-result" onClick={resultOnClick}>
