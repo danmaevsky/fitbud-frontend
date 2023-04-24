@@ -16,6 +16,7 @@ import BarcodeScanPage from "pages/BarcodeScanPage";
 import AuthWrapper from "layouts/AuthWrapper";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
+import EditFoodLogPage from "pages/EditFoodLogPage";
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                     <Route element={<AuthWrapper />}>
                         <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/diary" element={<DiaryPage />} />
+                        <Route path="editLogs/food" element={<EditFoodLogPage />} />
                     </Route>
                 </Routes>
             </div>

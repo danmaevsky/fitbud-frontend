@@ -459,7 +459,7 @@ export function ProcessNutritionalContents(nutritionalContents, metricQuantity, 
 }
 
 export function GetBuiltInUnits(defaultMetricUnit) {
-    if (defaultMetricUnit === "mL") {
+    if (defaultMetricUnit === "ml") {
         return {
             "1 mL": 1,
             "1 L": 1000,

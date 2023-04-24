@@ -162,6 +162,29 @@ function MealSection(props) {
     let foodItems = [];
     if (foodLogs) {
         for (let i = 0; i < foodLogs.length; i++) {
+            const foodLogOnClick = () => {
+                const currentDate = getCurrentDate();
+                if (date === currentDate) {
+                    navigate("/editLogs/food", {
+                        state: {
+                            mealPosition: mealPosition,
+                            logPosition: i,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                } else {
+                    navigate(`/editLogs/food`, {
+                        state: {
+                            mealPosition: mealPosition,
+                            logPosition: i,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                }
+            };
+
             let foodLog = foodLogs[i];
             let foodObject = foodLog.foodObject;
             let foodName = ProcessFoodName(foodObject.name);
@@ -172,7 +195,7 @@ function MealSection(props) {
             let numServingText = CreateServingText(foodLog);
 
             foodItems.push(
-                <div key={`${mealName}-food-item-${i}`} className="diary-meal-section-food-item">
+                <div key={`${mealName}-food-item-${i}`} className="diary-meal-section-food-item" onClick={foodLogOnClick}>
                     <div className="diary-meal-section-food-name">
                         <h4>{foodName}</h4>
                         <p>
@@ -185,7 +208,8 @@ function MealSection(props) {
         }
     }
 
-    const addFoodOnClick = () => {
+    const addFoodOnClick = (e) => {
+        e.stopPropagation();
         setAddingFoodLogState({
             mealPosition: mealPosition,
             date: date,
