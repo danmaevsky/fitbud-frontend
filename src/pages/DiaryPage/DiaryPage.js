@@ -45,7 +45,15 @@ export default function DiaryPage() {
             <div className="page-body" id="diary-page-body">
                 <div className="default-background-round round-background-decoration"></div>
                 <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-                <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+                <div className="default-background-bottom-banner bottom-bot-banner-background-decoration" id="diary-page-bottom-banner">
+                    <input
+                        id="diary-date-input"
+                        type="date"
+                        value={date}
+                        placeholder={date}
+                        onChange={(e) => navigate("/diary?date=" + e.target.value)}
+                    />
+                </div>
                 <div id="diary-page-content">
                     <div id="diary-calorie-calculation-island">
                         <h3>Calories</h3>
@@ -83,7 +91,15 @@ export default function DiaryPage() {
         <div className="page-body" id="diary-page-body">
             <div className="default-background-round round-background-decoration"></div>
             <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration" id="diary-page-bottom-banner">
+                <input
+                    id="diary-date-input"
+                    type="date"
+                    value={date}
+                    placeholder={date}
+                    onChange={(e) => navigate("/diary?date=" + e.target.value)}
+                />
+            </div>
             <div id="diary-page-content">
                 <div id="diary-calorie-calculation-island">
                     <h3>Calories</h3>
