@@ -85,7 +85,6 @@ export default function ExerciseSearchPage() {
     );
 }
 
-
 /* Utility Functions */
 
 function ExerciseSearchList(props) {
@@ -93,11 +92,7 @@ function ExerciseSearchList(props) {
     return (
         <ul id="exercise-search-results-list">
             {searchResults.map((searchResults, index) => (
-                <ExerciseSearchResult 
-                exerciseType={exerciseType}
-                response={searchResults} 
-                key={`exercise-search-result-${index}`} 
-                />
+                <ExerciseSearchResult exerciseType={exerciseType} response={searchResults} key={`exercise-search-result-${index}`} />
             ))}
             <li id="exercise-search-refine-message">
                 <h4>Didn't find what you were looking for? Consider refining your search!</h4>
@@ -109,15 +104,18 @@ function ExerciseSearchList(props) {
 function ExerciseSearchResult(props) {
     let { exerciseType, response } = props;
     let { _id, name, MET } = response;
-    
+
+    // we need a state here so that the value does not mutate when the user selects a different exerciseType
+    const [exerciseTypeState, setExerciseTypeState] = useState(exerciseType);
+
     const navigate = useNavigate();
-        const resultOnClick = () => {
-            if(exerciseType === "strength"){
-                navigate("/exercise/strength/" + _id);
-            }
-            if(exerciseType === "cardio"){
-                navigate("/exercise/cardio/" + _id);
-            }
+    const resultOnClick = () => {
+        if (exerciseTypeState === "strength") {
+            navigate("/exercise/strength/" + _id);
+        }
+        if (exerciseTypeState === "cardio") {
+            navigate("/exercise/cardio/" + _id);
+        }
     };
     return (
         <li className="exercise-search-result" onClick={resultOnClick}>

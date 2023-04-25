@@ -14,7 +14,6 @@ import { getCurrentDate } from "helpers/generalHelpers";
 export default function FoodPage() {
     const { foodId } = useParams();
     const location = useLocation();
-    console.log(location.state);
 
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);

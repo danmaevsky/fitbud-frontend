@@ -15,8 +15,7 @@ export function CalculateGoal(profile) {
     }
 }
 
-function CalculateTDEE(profile) {
-    let activityFactor = ActivityLevelMapper(profile.activityLevel);
+export function CalculateBMR(profile) {
     let bmr = 0;
     if (profile.currentPercentBodyFat.value && profile.currentWeightKg.value) {
         bmr = Katch_McArdle(profile.currentWeightKg.value, profile.currentPercentBodyFat.value);
@@ -28,6 +27,13 @@ function CalculateTDEE(profile) {
     } else {
         bmr = 2000;
     }
+
+    return bmr;
+}
+
+function CalculateTDEE(profile) {
+    let activityFactor = ActivityLevelMapper(profile.activityLevel);
+    let bmr = CalculateBMR(profile);
 
     return activityFactor * bmr;
 }

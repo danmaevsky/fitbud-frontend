@@ -37,7 +37,7 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 50rem;
-    margin: 2.025rem;
+    margin: 2.05rem;
     /* margin: 2rem; */
 }
 
@@ -61,7 +61,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    height: 50vh;
+    height: 34rem;
+    max-height: 55vh;
     flex-shrink: 0;
 }
 
@@ -205,13 +206,18 @@
     -moz-appearance: none;
 }
 
+#diary-page-bottom-banner .form-input label {
+    color: white;
+}
+
 @media screen and (max-width: 800px) {
     #diary-calorie-calculation-island {
         width: 75vw;
     }
 
     #diary {
-        height: 50vh;
+        height: 40rem;
+        max-height: 42.5vh;
     }
 
     .diary-section {

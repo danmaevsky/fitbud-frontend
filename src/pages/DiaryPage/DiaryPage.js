@@ -15,6 +15,7 @@ import {
     DiaryHasMealEntries,
 } from "helpers/fitnessHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
+import FormInput from "components/FormInput";
 
 export default function DiaryPage() {
     const navigate = useNavigate();
@@ -46,11 +47,11 @@ export default function DiaryPage() {
                 <div className="default-background-round round-background-decoration"></div>
                 <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
                 <div className="default-background-bottom-banner bottom-bot-banner-background-decoration" id="diary-page-bottom-banner">
-                    <input
+                    <FormInput
                         id="diary-date-input"
                         type="date"
                         value={date}
-                        placeholder={date}
+                        placeholder="Date"
                         onChange={(e) => navigate("/diary?date=" + e.target.value)}
                     />
                 </div>
@@ -86,17 +87,18 @@ export default function DiaryPage() {
     }
 
     let caloriesEaten = Math.round(diary.totalDiaryNutritionalContents.kcal);
+    let caloriesBurned = diary.exercise.totalBurnedCalories ? Math.round(diary.exercise.totalBurnedCalories) : 0;
 
     return (
         <div className="page-body" id="diary-page-body">
             <div className="default-background-round round-background-decoration"></div>
             <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="default-background-bottom-banner bottom-bot-banner-background-decoration" id="diary-page-bottom-banner">
-                <input
+                <FormInput
                     id="diary-date-input"
                     type="date"
                     value={date}
-                    placeholder={date}
+                    placeholder="Date:"
                     onChange={(e) => navigate("/diary?date=" + e.target.value)}
                 />
             </div>
@@ -116,12 +118,12 @@ export default function DiaryPage() {
                         <label>+</label>
                         <div id="diary-calorie-calculation-exercise">
                             <label>Exercise</label>
-                            <h4>0</h4>
+                            <h4>{caloriesBurned}</h4>
                         </div>
                         <label>=</label>
                         <div id="diary-calorie-calculation-exercise">
                             <label>Remaining</label>
-                            <h4>{calorieGoal - caloriesEaten}</h4>
+                            <h4>{calorieGoal - caloriesEaten + caloriesBurned}</h4>
                         </div>
                     </div>
                 </div>
@@ -257,7 +259,6 @@ function MealSection(props) {
 
 function ExerciseSection(props) {
     const { exerciseLogs, date } = props;
-    const [addingExerciseLogState, setAddingExerciseLogState] = useSessionStorage("addingExerciseLogState", null);
     const navigate = useNavigate();
 
     let exerciseItems = [];
@@ -267,13 +268,14 @@ function ExerciseSection(props) {
             let exerciseObject = exerciseLog.exerciseObject;
             let exerciseName = exerciseObject.name;
             let MET_value = exerciseObject.MET;
+            let exerciseCalories = exerciseLog.kcal;
             exerciseItems.push(
                 <div key={`exercise-item-${i}`} className="diary-exercise-section-exercise-item" onClick={() => {}}>
                     <div className="diary-meal-section-food-name">
                         <h4>{exerciseName}</h4>
                         <p>MET: {MET_value}</p>
                     </div>
-                    <h4>{calories}</h4>
+                    <h4>{exerciseCalories}</h4>
                 </div>
             );
         }
@@ -281,9 +283,6 @@ function ExerciseSection(props) {
 
     const addExerciseOnClick = (e) => {
         e.stopPropagation();
-        setAddingExerciseLogState({
-            date: date,
-        });
         navigate("/exercise");
     };
 
