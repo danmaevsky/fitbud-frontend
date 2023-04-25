@@ -263,12 +263,12 @@ function ExerciseSection(props) {
         }
     }
 
-    const addFoodOnClick = (e) => {
-        // e.stopPropagation();
-        // setAddingExerciseLogState({
-        //     date: date,
-        // });
-        // navigate("/exercise");
+    const addExerciseOnClick = (e) => {
+        e.stopPropagation();
+        setAddingExerciseLogState({
+            date: date,
+        });
+        navigate("/exercise");
     };
 
     let calories = 100;
@@ -280,7 +280,7 @@ function ExerciseSection(props) {
                 <h4>{calories ? calories : null}</h4>
             </div>
             <div className="diary-section-foods">{exerciseItems}</div>
-            <div className="diary-section-add-item" onClick={addFoodOnClick}>
+            <div className="diary-section-add-item" onClick={addExerciseOnClick}>
                 <button>
                     <img src={addLogPlus} />
                 </button>

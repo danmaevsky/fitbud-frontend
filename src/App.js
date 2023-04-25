@@ -6,7 +6,7 @@ import Navbar from "components/Navbar";
 
 /* Pages */
 // unprotected pages
-import DemoPage from "pages/DemoPage";
+import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import SignupPage from "pages/SignupPage";
 import FoodSearchPage from "pages/FoodSearchPage";
