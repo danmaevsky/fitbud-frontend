@@ -3,10 +3,10 @@ import { Route, Routes } from "react-router-dom";
 // components
 import Navbar from "components/Navbar";
 
-
 /* Pages */
 // unprotected pages
 import DemoPage from "pages/DemoPage";
+import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import SignupPage from "pages/SignupPage";
 import FoodSearchPage from "pages/FoodSearchPage";
@@ -20,7 +20,6 @@ import ExerciseStrengthPage from "pages/ExerciseStrengthPage";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
 import EditFoodLogPage from "pages/EditFoodLogPage";
-
 
 function App() {
     return (
