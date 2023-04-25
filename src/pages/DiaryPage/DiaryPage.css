@@ -61,6 +61,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    height: 50vh;
+    flex-shrink: 0;
 }
 
 .diary-section {
@@ -181,9 +183,35 @@
     cursor: pointer;
 }
 
+#diary-page-bottom-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#diary-date-input {
+    flex-shrink: 0;
+    color: var(--default-primary-text);
+    display: inline-flex;
+    background-color: white;
+    /* margin-top: 2rem; */
+    z-index: 1;
+    background-color: white;
+    border: 2px solid var(--default-primary-border);
+    border-radius: 5px;
+    font-size: 1.125rem;
+    height: 2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 @media screen and (max-width: 800px) {
     #diary-calorie-calculation-island {
         width: 75vw;
+    }
+
+    #diary {
+        height: 50vh;
     }
 
     .diary-section {
