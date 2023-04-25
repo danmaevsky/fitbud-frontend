@@ -171,7 +171,10 @@ function Diary(props) {
 
     if (diary) {
         let allExercises = diary.exercise.strengthLogs.concat(diary.exercise.cardioLogs).concat(diary.exercise.workoutLogs);
-        diarySections.push(<ExerciseSection exerciseLogs={allExercises} date={date} />);
+        let caloriesBurned = diary.exercise.totalBurnedCalories ? Math.round(diary.exercise.totalBurnedCalories) : 0;
+        diarySections.push(<ExerciseSection exerciseLogs={allExercises} date={date} calories={caloriesBurned} />);
+    } else {
+        diarySections.push(<ExerciseSection exerciseLogs={null} date={date} calories={null} />);
     }
 
     return <div id="diary">{diarySections}</div>;
@@ -258,7 +261,7 @@ function MealSection(props) {
 }
 
 function ExerciseSection(props) {
-    const { exerciseLogs, date } = props;
+    const { exerciseLogs, date, calories } = props;
     const navigate = useNavigate();
 
     let exerciseItems = [];
@@ -270,8 +273,8 @@ function ExerciseSection(props) {
             let MET_value = exerciseObject.MET;
             let exerciseCalories = exerciseLog.kcal;
             exerciseItems.push(
-                <div key={`exercise-item-${i}`} className="diary-exercise-section-exercise-item" onClick={() => {}}>
-                    <div className="diary-meal-section-food-name">
+                <div key={`exercise-item-${i}`} className="diary-section-item" onClick={() => {}}>
+                    <div className="diary-section-item-name">
                         <h4>{exerciseName}</h4>
                         <p>MET: {MET_value}</p>
                     </div>
@@ -286,15 +289,13 @@ function ExerciseSection(props) {
         navigate("/exercise");
     };
 
-    let calories = 100;
-
     return (
         <div id={"diary-exercise-section"} className="diary-section">
             <div className="diary-section-header">
                 <h3>Exercise</h3>
                 <h4>{calories ? calories : null}</h4>
             </div>
-            <div className="diary-section-foods">{exerciseItems}</div>
+            <div className="diary-section-items">{exerciseItems}</div>
             <div className="diary-section-add-item" onClick={addExerciseOnClick}>
                 <button>
                     <img src={addLogPlus} />

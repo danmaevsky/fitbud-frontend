@@ -178,6 +178,8 @@ function DailySummary(props) {
     let fatEaten = Math.round(currentDiary.totalDiaryNutritionalContents.totalFat);
     let carbEaten = Math.round(currentDiary.totalDiaryNutritionalContents.totalCarb);
     let proteinEaten = Math.round(currentDiary.totalDiaryNutritionalContents.protein);
+    let caloriesBurned = currentDiary.exercise.totalBurnedCalories ? Math.round(currentDiary.exercise.totalBurnedCalories) : 0;
+
     return (
         <div id="dashboard-daily-summary-island">
             <h2 id="dashboard-daily-summary-header">Your Daily Summary</h2>
@@ -194,29 +196,41 @@ function DailySummary(props) {
                 <label>+</label>
                 <div id="dashboard-daily-summary-exercise">
                     <label>Exercise</label>
-                    <h4>0</h4>
+                    <h4>{caloriesBurned}</h4>
                 </div>
                 <label>=</label>
                 <div id="dashboard-daily-summary-remaining">
                     <label>Remaining</label>
-                    <h4>{calorieGoal - caloriesEaten}</h4>
+                    <h4>{calorieGoal - caloriesEaten + caloriesBurned}</h4>
                 </div>
             </div>
             <div id="dashboard-daily-summary-charts">
-                <GoalCircle calorieGoal={calorieGoal} kcal={caloriesEaten} totalFat={0} totalCarb={0} protein={0} />
+                <GoalCircle calorieGoal={calorieGoal + caloriesBurned} kcal={caloriesEaten} totalFat={0} totalCarb={0} protein={0} />
                 <div id="dashboard-daily-summary-macro-charts">
                     <div id="dashboard-daily-summary-fat">
                         <label>Fat Goal:</label>
-                        <MacroCircle calorieGoal={calorieGoal} kcal={caloriesEaten} macroType="Fat" totalMacro={fatEaten} macroGoal={fatGoal} />
+                        <MacroCircle
+                            calorieGoal={calorieGoal + caloriesBurned}
+                            kcal={caloriesEaten}
+                            macroType="Fat"
+                            totalMacro={fatEaten}
+                            macroGoal={fatGoal}
+                        />
                     </div>
                     <div id="dashboard-daily-summary-carbs">
                         <label>Carb Goal:</label>
-                        <MacroCircle calorieGoal={calorieGoal} kcal={caloriesEaten} macroType="Carbs" totalMacro={carbEaten} macroGoal={carbGoal} />
+                        <MacroCircle
+                            calorieGoal={calorieGoal + caloriesBurned}
+                            kcal={caloriesEaten}
+                            macroType="Carbs"
+                            totalMacro={carbEaten}
+                            macroGoal={carbGoal}
+                        />
                     </div>
                     <div id="dashboard-daily-summary-protein">
                         <label>Protein Goal:</label>
                         <MacroCircle
-                            calorieGoal={calorieGoal}
+                            calorieGoal={calorieGoal + caloriesBurned}
                             kcal={caloriesEaten}
                             macroType="Protein"
                             totalMacro={proteinEaten}
