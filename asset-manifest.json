@@ -1,19 +1,21 @@
 {
   "files": {
-    "main.css": "/fitbud-frontend/static/css/main.c40c8da3.css",
-    "main.js": "/fitbud-frontend/static/js/main.bab5842a.js",
+    "main.css": "/fitbud-frontend/static/css/main.3995dd71.css",
+    "main.js": "/fitbud-frontend/static/js/main.942e7d15.js",
     "static/js/27.27dd4fb7.chunk.js": "/fitbud-frontend/static/js/27.27dd4fb7.chunk.js",
+    "static/media/BreeSerif-Regular.ttf": "/fitbud-frontend/static/media/BreeSerif-Regular.751eb941c0e1335ad247.ttf",
     "static/media/food-search-placeholder.svg": "/fitbud-frontend/static/media/food-search-placeholder.e6d1bd59c8a8f5214d912e9f22659b9b.svg",
     "static/media/magnifying-glass.svg": "/fitbud-frontend/static/media/magnifying-glass.6801b76f612b02ce97628efa1bc961e4.svg",
-    "static/media/barcode-scan-icon.svg": "/fitbud-frontend/static/media/barcode-scan-icon.2f12f8f1391332435862931717dd3281.svg",
     "index.html": "/fitbud-frontend/index.html",
+    "static/media/barcode-scan-icon.svg": "/fitbud-frontend/static/media/barcode-scan-icon.2f12f8f1391332435862931717dd3281.svg",
     "static/media/back-arrow.svg": "/fitbud-frontend/static/media/back-arrow.0d23849785d370bcfca40f0273884107.svg",
     "static/media/add-food-plus.svg": "/fitbud-frontend/static/media/add-food-plus.96eaf3dcfdc36408fca7471f81376155.svg",
     "static/media/clear-text-x.svg": "/fitbud-frontend/static/media/clear-text-x.2e5db62dc058f988207cd955d37b515d.svg",
-    "static/media/show-more-down-arrow.svg": "/fitbud-frontend/static/media/show-more-down-arrow.b3325f06d2e58d8d5586da8585fe47d8.svg"
+    "static/media/show-more-down-arrow.svg": "/fitbud-frontend/static/media/show-more-down-arrow.b3325f06d2e58d8d5586da8585fe47d8.svg",
+    "static/media/minus-sign.svg": "/fitbud-frontend/static/media/minus-sign.e9880a10e4877e38eedd1e826db05752.svg"
   },
   "entrypoints": [
-    "static/css/main.c40c8da3.css",
-    "static/js/main.bab5842a.js"
+    "static/css/main.3995dd71.css",
+    "static/js/main.942e7d15.js"
   ]
 }
