@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./SignupPage.css";
 import { Form, Link, useLocation, useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { authFetch } from "helpers/authHelpers";
 import FormInput from "components/FormInput";
 
@@ -207,7 +208,9 @@ export default function SignupPage() {
                     {signupError ? (
                         <p id="signup-message-error">{signupError}</p>
                     ) : currentSignupForm === 0 ? (
-                        <p id="signup-now-message">Start tracking your fitness now!</p>
+                        <p id="signup-now-message">
+                            Start tracking your fitness now for <b>$19.95!</b>
+                        </p>
                     ) : null}
                 </div>
                 {signupForms[currentSignupForm]}
@@ -586,9 +589,27 @@ function SignupForm6(props) {
                         <b>{displayActivity}</b>
                     </p>
                 </div>
-                <button id="create-account-button" onClick={createAccountOnClick}>
-                    Create Account
-                </button>
+                <h2>Send us money to register!</h2>
+                <PayPalScriptProvider
+                    options={{
+                        "client-id": "ATHqzk7O8Iw5mjxZCgoEZoau53QTL2gECuTwPwuFasj_EQnP5zig568VwzBQSl3_3xCPxTSbX2iWd6B_",
+                    }}
+                >
+                    <PayPalButtons
+                        createOrder={(data, actions) => {
+                            return actions.order.create({
+                                purchase_units: [
+                                    {
+                                        amount: {
+                                            value: "19.95",
+                                        },
+                                    },
+                                ],
+                            });
+                        }}
+                        onApprove={createAccountOnClick}
+                    ></PayPalButtons>
+                </PayPalScriptProvider>
             </div>
         </div>
     );
