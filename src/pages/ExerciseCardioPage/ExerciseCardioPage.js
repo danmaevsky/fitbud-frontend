@@ -1,10 +1,8 @@
 import "./ExerciseCardioPage.css";
 import backArrow from "assets/back-arrow.svg";
 import addLogPlus from "assets/add-food-plus.svg";
-import minusSign from "assets/minus-sign.svg";
 import { useState, useEffect } from "react";
-import { Form, Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import useArray from "hooks/useArray";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import FormInput from "components/FormInput";
 import { getCurrentDate } from "helpers/generalHelpers";
 import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";

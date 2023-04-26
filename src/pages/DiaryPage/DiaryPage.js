@@ -284,6 +284,7 @@ function MealSection(props) {
 function ExerciseSection(props) {
     const { exerciseLogs, date, calories } = props;
     const navigate = useNavigate();
+    console.log(exerciseLogs);
 
     let exerciseItems = [];
     if (exerciseLogs) {
