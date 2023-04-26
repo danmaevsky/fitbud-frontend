@@ -178,6 +178,10 @@ function Settings(props) {
         window.localStorage.profile = JSON.stringify(json);
         setIsAttemptingFetch(false);
         window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsAttemptingFetch(false);
       });
   };
 
@@ -517,9 +521,9 @@ function Settings(props) {
       </ul>
       <h2> Meal Names </h2>
       <p>
-        If you would like to rename your meals, please enter them below. Add names 
-        for meals 5 and 6 if you like to add more meals to your diaries. Remove the names to
-        remove meals from your diary.
+        If you would like to rename your meals, please enter them below. Add
+        names for meals 5 and 6 if you like to add more meals to your diaries.
+        Remove the names to remove meals from your diary.
       </p>
       <UpdateFormInput
         type="text"
