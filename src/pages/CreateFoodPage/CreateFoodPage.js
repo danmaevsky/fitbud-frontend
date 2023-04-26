@@ -9,6 +9,7 @@ import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function CreateFoodPage() {
   const loggedIn = IsUserLogged();
+  const [message, setMessage] = useState("");
 
   if (!loggedIn) {
     return;
@@ -22,10 +23,9 @@ export default function CreateFoodPage() {
         <div id="create-food-island">
           <div id="create-food-island-header">
             <h2>Add a Food to Our Database</h2>
-            <p id="create-food-message-error"></p>
+            <p id="create-food-message-error">{message ? message : ""}</p>
           </div>
-
-          <AddFood profile={profile} />
+          <AddFood profile={profile} setMessage={setMessage} />
         </div>
       </div>
     );
@@ -33,7 +33,7 @@ export default function CreateFoodPage() {
 }
 
 function AddFood(props) {
-  const { profile, setGoals100 } = props;
+  const { profile, setMessage, setSuccessMessage } = props;
 
   const [isAttemptingFetch, setIsAttemptingFetch] = useState(false);
 
@@ -81,22 +81,156 @@ function AddFood(props) {
   const navigate = useNavigate();
 
   const handleResponse = (res) => {
-    if (res.status === 200) {
+    if (res.status === 201) {
       return res.json();
     }
     // best way to cancel a Promise chain is to throw an error
     if (res.status === 400) {
+      setMessage("Bad Request");
       throw new Error(400);
     }
     if (res.status === 500) {
       console.log(res);
+      setMessage("Something went wrong. Try again later!");
       throw new Error(500);
     }
+  };
+
+  const createFoodOnClick = () => {
+    if (isAttemptingFetch) {
+      return;
+    }
+    setIsAttemptingFetch(true);
+
+    if (name === "" || brandName === "") {
+      setMessage("Name and Brand can not be blank!");
+      setIsAttemptingFetch(false);
+      return;
+    } else if (
+      kcal === "" ||
+      totalCarb === "" ||
+      totalFat === "" ||
+      protein === ""
+    ) {
+      setMessage("Major Macro Fields can not be blank!");
+      setIsAttemptingFetch(false);
+      return;
+    } else if (
+      servingQuantity === "" ||
+      servingQuantityUnit === "" ||
+      servingName === ""
+    ) {
+      setMessage("Serving Information can not be blank!");
+      setIsAttemptingFetch(false);
+      return;
+    }
+
+    const newFood = {
+      name: name,
+      brandName: brandName,
+      brandOwner: null,
+      barcode: barcode !== "" ? barcode : null,
+      userId: profile._id,
+      servingQuantity: servingQuantity,
+      servingQuantityUnit: servingQuantityUnit,
+      servingName: servingName,
+      nutritionalContent: {
+        kcal: kcal !== "" ? (kcal >= 0 ? kcal : 0) : null,
+        totalFat: totalFat !== "" ? (totalFat >= 0 ? totalFat : 0) : null,
+        saturatedFat:
+          saturatedFat !== "" ? (saturatedFat >= 0 ? saturatedFat : 0) : null,
+        transFat: transFat !== "" ? (transFat >= 0 ? transFat : 0) : null,
+        polyunsaturatedFat:
+          polyunsaturatedFat !== ""
+            ? polyunsaturatedFat >= 0
+              ? polyunsaturatedFat
+              : 0
+            : null,
+        monounsaturatedFat:
+          monounsaturatedFat !== ""
+            ? monounsaturatedFat >= 0
+              ? monounsaturatedFat
+              : 0
+            : null,
+        cholesterol:
+          cholesterol !== "" ? (cholesterol >= 0 ? cholesterol : 0) : null,
+        sodium: sodium !== "" ? (sodium >= 0 ? sodium : 0) : null,
+        totalCarb: totalCarb !== "" ? (totalCarb >= 0 ? totalCarb : 0) : null,
+        dietaryFiber:
+          dietaryFiber !== "" ? (dietaryFiber >= 0 ? dietaryFiber : 0) : null,
+        totalSugar:
+          totalSugar !== "" ? (totalSugar >= 0 ? totalSugar : 0) : null,
+        addedSugar:
+          addedSugar !== "" ? (addedSugar >= 0 ? addedSugar : 0) : null,
+        sugarAlcohols:
+          sugarAlcohols !== ""
+            ? sugarAlcohols >= 0
+              ? sugarAlcohols
+              : 0
+            : null,
+        protein: protein !== "" ? (protein >= 0 ? protein : 0) : null,
+        vitaminD: vitaminD !== "" ? (vitaminD >= 0 ? vitaminD : 0) : null,
+        calcium: calcium !== "" ? (calcium >= 0 ? calcium : 0) : null,
+        iron: iron !== "" ? (iron >= 0 ? iron : 0) : null,
+        potassium: potassium !== "" ? (potassium >= 0 ? potassium : 0) : null,
+        vitaminA: vitaminA !== "" ? (vitaminA >= 0 ? vitaminA : 0) : null,
+        vitaminC: vitaminC !== "" ? (vitaminC >= 0 ? vitaminC : 0) : null,
+        vitaminE: vitaminE !== "" ? (vitaminE >= 0 ? vitaminE : 0) : null,
+        thiamin: thiamin !== "" ? (thiamin >= 0 ? thiamin : 0) : null,
+        riboflavin:
+          riboflavin !== "" ? (riboflavin >= 0 ? riboflavin : 0) : null,
+        niacin: niacin !== "" ? (niacin >= 0 ? niacin : 0) : null,
+        vitaminB6: vitaminB6 !== "" ? (vitaminB6 >= 0 ? vitaminB6 : 0) : null,
+        folate: folate !== "" ? (folate >= 0 ? folate : 0) : null,
+        vitaminB12:
+          vitaminB12 !== "" ? (vitaminB12 >= 0 ? vitaminB12 : 0) : null,
+        biotin: biotin !== "" ? (biotin >= 0 ? biotin : 0) : null,
+        pantothenicAcid:
+          pantothenicAcid !== ""
+            ? pantothenicAcid >= 0
+              ? pantothenicAcid
+              : 0
+            : null,
+        phosphorus:
+          phosphorus !== "" ? (phosphorus >= 0 ? phosphorus : 0) : null,
+        iodine: iodine !== "" ? (iodine >= 0 ? iodine : 0) : null,
+        magnesium: magnesium !== "" ? (magnesium >= 0 ? magnesium : 0) : null,
+        selenium: selenium !== "" ? (selenium >= 0 ? selenium : 0) : null,
+      },
+      isVerified: false,
+    };
+
+    console.log(newFood);
+
+    authFetch(
+      `${process.env.REACT_APP_GATEWAY_URI}/food`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newFood),
+      },
+      navigate
+    )
+      .then(handleResponse)
+      .then((json) => {
+        setIsAttemptingFetch(false);
+        navigate(`/food/${json._id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsAttemptingFetch(false);
+      });
   };
 
   return (
     <div id="create-food-form-3" className="create-food-island-form">
       <h3>General Information</h3>
+      <p>
+        Please enter the Name and Brand Information of the food item. The
+        Barcode is optional
+      </p>
       <FormInput
         type="text"
         placeholder="Name"
@@ -116,6 +250,10 @@ function AddFood(props) {
         onChange={(e) => setBarcode(e.target.value)}
       />
       <h3>Serving Information</h3>
+      <p>
+        These fields are to enter the serving size information. These fields are
+        required.
+      </p>
       <FormInput
         type="Number"
         inputMode="decimal"
@@ -136,6 +274,10 @@ function AddFood(props) {
         onChange={(e) => setServingName(e.target.value)}
       />
       <h3>Major Macros</h3>
+      <p>
+        These fields are to enter the major macro information. These fields are
+        required.
+      </p>
       <FormInput
         type="Number"
         inputMode="decimal"
@@ -165,6 +307,10 @@ function AddFood(props) {
         onChange={(e) => setProtein(e.target.value)}
       />
       <h3>Other Nutrional Content</h3>
+      <p>
+        These fields are to enter the additonal nutrional content. They are
+        optional.
+      </p>
       <FormInput
         type="Number"
         inputMode="decimal"
@@ -268,7 +414,7 @@ function AddFood(props) {
         inputMode="decimal"
         placeholder="Potassium"
         value={potassium}
-        onChange={(e) => potassium(e.target.value)}
+        onChange={(e) => setPotassium(e.target.value)}
       />
       <FormInput
         type="Number"
@@ -368,6 +514,9 @@ function AddFood(props) {
         value={vitaminE}
         onChange={(e) => setVitaminE(e.target.value)}
       />
+      <button id="create-food-button" onClick={createFoodOnClick}>
+        Create Food
+      </button>
     </div>
   );
 }
