@@ -516,7 +516,7 @@ function SignupForm6(props) {
                     .then((res) => res.json())
                     .then((json) => {
                         window.localStorage.profile = JSON.stringify(json);
-                        navigate("/profile/goals");
+                        navigate("/dashboard");
                     })
                     .catch((err) => {
                         console.log(err);
