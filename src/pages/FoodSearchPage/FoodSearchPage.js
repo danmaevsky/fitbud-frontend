@@ -7,22 +7,38 @@ import { useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 import { ToTitleCase, ProcessFoodName } from "helpers/fitnessHelpers";
+import { IsUserLogged, authFetch } from "helpers/authHelpers";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
+    const [searchType, setSearchType] = useState("full");
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
 
+    const userIsLoggedIn = IsUserLogged();
+
     const fetchResults = () => {
-        fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
-            .then((res) => {
-                setSearchStatus(res.status);
-                return res.json();
+        if (userIsLoggedIn && searchType === "user") {
+            let userId = JSON.parse(window.localStorage.profile)._id;
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?userId=${userId}`, {
+                method: "GET",
             })
-            .then((json) => setSearchResults(json));
+                .then((res) => {
+                    setSearchStatus(res.status);
+                    return res.json();
+                })
+                .then((json) => setSearchResults(json));
+        } else {
+            fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
+                .then((res) => {
+                    setSearchStatus(res.status);
+                    return res.json();
+                })
+                .then((json) => setSearchResults(json));
+        }
     };
     const inputOnKeydown = (e) => {
         if (e.key === "Enter") {
@@ -67,6 +83,29 @@ export default function FoodSearchPage() {
                     </button>
                 )}
             </div>
+            {userIsLoggedIn ? (
+                <div id="food-search-page-logged-in-features">
+                    <div id="food-search-page-choices">
+                        <button
+                            id="food-search-page-choice-full"
+                            className={`exercise-search-page-choice-button${searchType === "full" ? "-active" : ""}`}
+                            onClick={() => setSearchType("full")}
+                        >
+                            Full Search
+                        </button>
+                        <button
+                            id="food-search-page-choice-user"
+                            className={`exercise-search-page-choice-button${searchType === "user" ? "-active" : ""}`}
+                            onClick={() => setSearchType("user")}
+                        >
+                            My Foods
+                        </button>
+                    </div>
+                    <button id="food-search-page-submit-food-button" onClick={() => navigate("/food/createFood")}>
+                        Submit a Food!
+                    </button>
+                </div>
+            ) : null}
             <div id="food-search-island">
                 <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
                 {searchResults.length > 0 ? (
