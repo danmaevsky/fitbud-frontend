@@ -190,7 +190,7 @@ function MealSection(props) {
             const foodLogOnClick = () => {
                 const currentDate = getCurrentDate();
                 if (date === currentDate) {
-                    navigate("/editLogs/food", {
+                    navigate("/edit-logs/food", {
                         state: {
                             mealPosition: mealPosition,
                             logPosition: i,
@@ -199,7 +199,7 @@ function MealSection(props) {
                         replace: false,
                     });
                 } else {
-                    navigate(`/editLogs/food`, {
+                    navigate(`/edit-logs/food`, {
                         state: {
                             mealPosition: mealPosition,
                             logPosition: i,

@@ -1,2 +1,3 @@
-import EditExerciseLogPage from "./EditExerciseLogPage";
-export default EditExerciseLogPage;
+export default function EditExerciseLogPage(){
+    
+}
