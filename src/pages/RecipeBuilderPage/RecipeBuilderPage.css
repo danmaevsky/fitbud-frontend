@@ -371,3 +371,48 @@
     display: flex;
     flex-direction: row;
 }
+
+.recipe-section-item {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border-radius: 0.75rem;
+    background-color: white;
+}
+
+.recipe-section-item:hover {
+    filter: brightness(0.95);
+}
+
+.recipe-section-item-name p {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--default-secondary-text);
+}
+
+#recipe-inputs {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#recipe-inputs .form-input input {
+    height: 3rem;
+    border: 1px solid var(--default-primary-border);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+#recipe-name-input {
+    max-width: 18ch;
+}
+
+#recipe-serving-input {
+    max-width: 8ch;
+}
