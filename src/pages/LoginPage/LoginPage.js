@@ -32,7 +32,7 @@ function Login(props) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [currentDiary, setCurrentDiary] = useLocalStorage(null);
+    const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
 
     const location = useLocation();
     const navigate = useNavigate();

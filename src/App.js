@@ -24,6 +24,7 @@ import ProfilePage from "pages/ProfilePage";
 import RecipeBuilderPage from "pages/RecipeBuilderPage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
 import ExerciseCardioPage from "pages/ExerciseCardioPage";
+import EditExerciseStrengthLogPage from "pages/EditExerciseStrengthLogPage";
 
 function App() {
     return (
@@ -45,6 +46,7 @@ function App() {
                         <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/diary" element={<DiaryPage />} />
                         <Route path="/edit-logs/food" element={<EditFoodLogPage />} />
+                        <Route path="/edit-logs/strength" element={<EditExerciseStrengthLogPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
                         <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />

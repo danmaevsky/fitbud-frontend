@@ -170,7 +170,28 @@ function Diary(props) {
     }
 
     if (diary) {
-        let allExercises = diary.exercise.strengthLogs.concat(diary.exercise.cardioLogs).concat(diary.exercise.workoutLogs);
+        let modifiedStrengthLogs = diary.exercise.strengthLogs.map((strengthLog, idx) => {
+            return {
+                ...strengthLog,
+                logType: "strength",
+                logPosition: idx,
+            };
+        });
+        let modifiedCardioLogs = diary.exercise.cardioLogs.map((strengthLog, idx) => {
+            return {
+                ...strengthLog,
+                logType: "cardio",
+                logPosition: idx,
+            };
+        });
+        let modifiedWorkoutLogs = diary.exercise.workoutLogs.map((strengthLog, idx) => {
+            return {
+                ...strengthLog,
+                logType: "workout",
+                logPosition: idx,
+            };
+        });
+        let allExercises = modifiedCardioLogs.concat(modifiedStrengthLogs).concat(modifiedWorkoutLogs);
         let caloriesBurned = diary.exercise.totalBurnedCalories ? Math.round(diary.exercise.totalBurnedCalories) : 0;
         diarySections.push(<ExerciseSection exerciseLogs={allExercises} date={date} calories={caloriesBurned} />);
     } else {
@@ -268,12 +289,42 @@ function ExerciseSection(props) {
     if (exerciseLogs) {
         for (let i = 0; i < exerciseLogs.length; i++) {
             let exerciseLog = exerciseLogs[i];
+
+            const exerciseLogOnClick = () => {
+                const currentDate = getCurrentDate();
+                if (exerciseLog.logType === "strength") {
+                    navigate("/edit-logs/strength", {
+                        state: {
+                            logPosition: exerciseLog.logPosition,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                } else if (exerciseLog.logType === "cardio") {
+                    navigate(`/edit-logs/cardio`, {
+                        state: {
+                            logPosition: exerciseLog.logPosition,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                } else if (exerciseLog.logType === "workout") {
+                    navigate(`/edit-logs/workout`, {
+                        state: {
+                            logPosition: exerciseLog.logPosition,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                }
+            };
+
             let exerciseObject = exerciseLog.exerciseObject;
             let exerciseName = exerciseObject.name;
             let MET_value = exerciseObject.MET;
             let exerciseCalories = exerciseLog.kcal;
             exerciseItems.push(
-                <div key={`exercise-item-${i}`} className="diary-section-item" onClick={() => {}}>
+                <div key={`exercise-item-${i}`} className="diary-section-item" onClick={exerciseLogOnClick}>
                     <div className="diary-section-item-name">
                         <h4>{exerciseName}</h4>
                         <p>MET: {MET_value}</p>

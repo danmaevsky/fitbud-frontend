@@ -1,100 +1,110 @@
-import "./ExerciseStrengthPage.css";
+import "./EditExerciseStrengthLogPage.css";
 import backArrow from "assets/back-arrow.svg";
 import addLogPlus from "assets/add-food-plus.svg";
 import minusSign from "assets/minus-sign.svg";
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import SaveLogButtonIcon from "components/SaveLogButtonIcon";
+import DeleteLogButtonIcon from "components/DeleteLogButtonIcon";
 import useArray from "hooks/useArray";
 import FormInput from "components/FormInput";
+
+import { IsUserLogged, authFetch } from "helpers/authHelpers";
 import { getCurrentDate } from "helpers/generalHelpers";
-import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
 
-export default function ExerciseStrengthPage() {
-    const { exerciseId } = useParams();
+export default function EditExerciseStrengthLogPage() {
+    // Basically the FoodPage but with blue background and reads from localStorage instead of GET request
     const location = useLocation();
+    const navigate = useNavigate();
 
-    const [exerciseResponse, setExerciseResponse] = useState(null);
-    const [responseStatus, setResponseStatus] = useState(200);
-    const [numSets, setNumSets] = useState(0);
-    const [kcal, setKcal] = useState(0);
-    const [weightKgArray, weightKgArrayMethods] = useArray([]);
-    const [repsArray, repsArrayMethods] = useArray([]);
-    const [diaryDate, setDiaryDate] = useState(getCurrentDate());
-
+    const currentDate = getCurrentDate();
     const userIsLoggedIn = IsUserLogged();
     let profile = userIsLoggedIn ? JSON.parse(window.localStorage.profile) : null;
 
-    // fetching exercise object or loading from results
-    useEffect(() => {
-        let tempResponse = LookForExerciseInLocalStorage(exerciseId);
-        if (!tempResponse) {
-            let resStatus;
-            fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/strength/${exerciseId}`, {
-                method: "GET",
-            })
-                .then((res) => {
-                    resStatus = res.status;
-                    return res.json();
-                })
-                .then((json) => {
-                    setResponseStatus(resStatus);
-                    setExerciseResponse(json);
-                });
-        } else {
-            setResponseStatus(200);
-            setExerciseResponse(tempResponse);
-        }
-    }, [exerciseId]);
+    let logPosition, date, exerciseLog, exerciseResponse, diary;
+    let initialNumSets = 0;
+    let initialRepsArray = [];
+    let initialWeightKgArray = [];
+    let initialKcal = 0;
 
-    // seeing if user came from the diary page
+    if (location.state) {
+        logPosition = location.state.logPosition;
+        date = location.state.date;
+        diary = date === currentDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
+        exerciseLog = diary["exercise"].strengthLogs[logPosition];
+        exerciseResponse = exerciseLog.exerciseObject;
+
+        // set initial values
+        initialNumSets = exerciseLog.sets;
+        initialRepsArray = exerciseLog.reps;
+        initialWeightKgArray = exerciseLog.weightKg;
+        initialKcal = exerciseLog.kcal;
+    }
+
+    const [numSets, setNumSets] = useState(initialNumSets);
+    const [repsArray, repsArrayMethods] = useArray(initialRepsArray);
+    const [weightKgArray, weightKgArrayMethods] = useArray(initialWeightKgArray);
+    const [kcal, setKcal] = useState(initialKcal);
+
     useEffect(() => {
-        if (location.state) {
-            if (location.state.date) {
-                setDiaryDate(location.state.date);
-            }
+        if (!location.state) {
+            navigate(-1, { state: null });
+        } else {
+            setNumSets(initialNumSets);
+            repsArrayMethods.set(initialRepsArray);
+            weightKgArrayMethods.set(initialWeightKgArray);
+            setKcal(initialKcal);
         }
     }, []);
 
-    let renderExerciseInfo = responseStatus === 200;
-    renderExerciseInfo = renderExerciseInfo && exerciseResponse && exerciseId === exerciseResponse._id;
+    if (!location.state) {
+        return (
+            <div id="exercise-strength-page-body">
+                <div className="default-background-round round-background-decoration"></div>
+                <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
+                <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+                <div id="exercise-strength-island"></div>
+            </div>
+        );
+    }
 
     return (
-        <div id="exercise-strength-page-body">
-            <div className="exercise-background-round round-background-decoration"></div>
-            <div className="exercise-background-top-banner bottom-top-banner-background-decoration"></div>
-            <div className="exercise-background-bottom-banner bottom-bot-banner-background-decoration"></div>
-            <div id="exercise-strength-island">
-                <Link to={-1} id="exercise-island-back-arrow">
-                    <img src={backArrow} alt="back arrow icon" />
+        <div id="food-page-body">
+            <div className="default-background-round round-background-decoration"></div>
+            <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+            <div id="food-island">
+                <Link to={-1} id="food-island-back-arrow">
+                    <img src={backArrow} alt="back arrow" />
                     Go Back
                 </Link>
-                {userIsLoggedIn && renderExerciseInfo ? (
-                    <ExerciseInfo
-                        profile={profile}
-                        exerciseResponse={exerciseResponse}
-                        numSets={numSets}
-                        setNumSets={setNumSets}
-                        repsArray={repsArray}
-                        repsArrayMethods={repsArrayMethods}
-                        weightKgArray={weightKgArray}
-                        weightKgArrayMethods={weightKgArrayMethods}
-                    />
-                ) : null}
+                <ExerciseInfo
+                    profile={profile}
+                    exerciseResponse={exerciseResponse}
+                    numSets={numSets}
+                    setNumSets={setNumSets}
+                    repsArray={repsArray}
+                    repsArrayMethods={repsArrayMethods}
+                    weightKgArray={weightKgArray}
+                    weightKgArrayMethods={weightKgArrayMethods}
+                />
                 {!exerciseResponse ? "Loading..." : null}
-                {responseStatus !== 200 ? "404. No Exercises matching this ID!" : null}
-                {userIsLoggedIn && renderExerciseInfo ? (
-                    <div id="exercise-strength-page-log-buttons">
-                        <CalorieSelector setKcal={setKcal} />
-                        <AddExerciseLogButton
-                            exerciseId={exerciseId}
-                            numSets={numSets}
-                            repsArray={repsArray}
-                            weightKgArray={weightKgArray}
-                            kcal={kcal}
-                            diaryDate={diaryDate}
-                        />
-                    </div>
-                ) : null}
+                <div id="exercise-strength-page-log-buttons">
+                    <CalorieSelector kcal={kcal} setKcal={setKcal} />
+                </div>
+                <div id="food-log-page-log-buttons">
+                    <DeleteStrengthLogButton logPosition={logPosition} date={date} diary={diary} />
+                    <SaveStrengthLogButton
+                        logPosition={logPosition}
+                        date={date}
+                        exerciseId={exerciseResponse._id}
+                        numSets={numSets}
+                        repsArray={repsArray}
+                        weightKgArray={weightKgArray}
+                        kcal={kcal}
+                        diary={diary}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -128,8 +138,8 @@ function SelectExerciseSRW(props) {
     for (let i = 0; i < numSets; i++) {
         setSections.push(
             <SetSection
-                key={`set-section-${i}`}
                 profile={profile}
+                key={`set-section-${i}`}
                 numSets={numSets}
                 setNumSets={setNumSets}
                 setIndex={i}
@@ -161,7 +171,7 @@ function SelectExerciseSRW(props) {
 function SetSection(props) {
     const { profile, setIndex, numSets, setNumSets, repsArray, repsArrayMethods, weightKgArray, weightKgArrayMethods } = props;
 
-    let numRepsInitialValue = repsArray[setIndex];
+    let numRepsInitialValue = Math.round(repsArray[setIndex]);
     let numWeightInitialValue = weightKgArray[setIndex];
     let unitPreference = "metric";
     if (profile) {
@@ -170,7 +180,8 @@ function SetSection(props) {
         }
     }
 
-    numWeightInitialValue = unitPreference === "imperial" ? numWeightInitialValue * 2.2 : numWeightInitialValue;
+    numWeightInitialValue =
+        unitPreference === "imperial" ? Math.round(numWeightInitialValue * 2.2 * 10) / 10 : Math.round(numWeightInitialValue * 10) / 10;
 
     const [numRepsText, setNumRepsText] = useState(numRepsInitialValue);
     const [numWeightText, setNumWeightText] = useState(numWeightInitialValue);
@@ -256,7 +267,7 @@ function SetSection(props) {
                 type="number"
                 inputMode="decimal"
                 value={numWeightText}
-                placeholder={unitPreference === "imperial" ? "# lbs" : "# kg"}
+                placeholder="# kg"
                 onClick={(e) => e.target.select()}
                 onChange={weightInputOnChange}
                 onBlur={weightInputOnBlur}
@@ -282,104 +293,9 @@ function AddSetButton(props) {
     );
 }
 
-function AddExerciseLogButton(props) {
-    const { exerciseId, numSets, repsArray, weightKgArray, kcal, diaryDate } = props;
-    const navigate = useNavigate();
-
-    const currentDate = getCurrentDate();
-    const userDiaryIsReady = IsUserDiaryReady();
-
-    let diary = null;
-    if (userDiaryIsReady)
-        diary = currentDate === diaryDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
-
-    const addFoodOnClick = () => {
-        if (diary) {
-            let diaryId = diary._id;
-            let patchBody = {
-                type: "strength",
-                action: "addLog",
-                contents: {
-                    exerciseId: exerciseId,
-                    sets: numSets,
-                    reps: repsArray,
-                    weightKg: weightKgArray,
-                    kcal: kcal,
-                },
-            };
-
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(patchBody),
-            })
-                .then((res) => {
-                    if (res.status === 200) {
-                        if (diaryDate === currentDate) {
-                            navigate("/diary");
-                        } else {
-                            navigate("/diary/?date=" + diaryDate);
-                        }
-                    } else {
-                        throw Error(res.status);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } else {
-            let postBody = {
-                type: "strength",
-                action: "addLog",
-                contents: {
-                    exerciseId: exerciseId,
-                    sets: numSets,
-                    reps: repsArray,
-                    weightKg: weightKgArray,
-                    kcal: kcal,
-                },
-            };
-            console.log(postBody);
-
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${diaryDate}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(postBody),
-            })
-                .then((res) => {
-                    if (res.status === 201) {
-                        if (diaryDate === currentDate) {
-                            navigate("/diary");
-                        } else {
-                            navigate("/diary/?date=" + diaryDate);
-                        }
-                    } else {
-                        throw Error(res.status);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
-    return (
-        <div id="exercise-strength-page-add-exercise-log" onClick={addFoodOnClick}>
-            <button>
-                <img src={addLogPlus} />
-            </button>
-            <label>Add to Diary</label>
-        </div>
-    );
-}
-
 function CalorieSelector(props) {
-    const { setKcal } = props;
-    const [kcalText, setKcalText] = useState("");
+    const { kcal, setKcal } = props;
+    const [kcalText, setKcalText] = useState(kcal);
 
     let calorieMax = 100000;
 
@@ -417,13 +333,106 @@ function CalorieSelector(props) {
     );
 }
 
-function LookForExerciseInLocalStorage(exerciseId) {
-    let exerciseResponse = null;
-    if (window.sessionStorage.ExerciseSearchPageResults) {
-        let results = JSON.parse(window.sessionStorage.ExerciseSearchPageResults);
-        results.forEach((result) => {
-            if (result._id === exerciseId) exerciseResponse = result;
-        });
-    }
-    return exerciseResponse;
+function SaveStrengthLogButton(props) {
+    const { logPosition, date, exerciseId, numSets, repsArray, weightKgArray, kcal, diary } = props;
+    const navigate = useNavigate();
+
+    const currentDate = getCurrentDate();
+
+    const saveExerciseOnClick = () => {
+        if (diary) {
+            let diaryId = diary._id;
+            let patchBody = {
+                type: "strength",
+                action: "updateLog",
+                contents: {
+                    logPosition: logPosition,
+                    exerciseId: exerciseId,
+                    sets: numSets,
+                    reps: repsArray,
+                    weightKg: weightKgArray,
+                    kcal: kcal,
+                },
+            };
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(patchBody),
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    return (
+        <div id="food-log-page-save-log" className="food-log-page-log-button" onClick={saveExerciseOnClick}>
+            <label>Save Changes</label>
+            <button>
+                <SaveLogButtonIcon />
+            </button>
+        </div>
+    );
+}
+
+function DeleteStrengthLogButton(props) {
+    const { logPosition, date, diary } = props;
+    const navigate = useNavigate();
+    const currentDate = getCurrentDate();
+
+    const deleteExerciseOnClick = () => {
+        if (diary) {
+            let diaryId = diary._id;
+            let patchBody = {
+                type: "strength",
+                action: "deleteLog",
+                contents: {
+                    logPosition: logPosition,
+                },
+            };
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(patchBody),
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    return (
+        <div id="food-log-page-delete-log" className="food-log-page-log-button" onClick={deleteExerciseOnClick}>
+            <button>
+                <DeleteLogButtonIcon />
+            </button>
+            <label>Delete Log</label>
+        </div>
+    );
 }
