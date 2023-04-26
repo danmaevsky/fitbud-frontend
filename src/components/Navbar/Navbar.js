@@ -194,7 +194,7 @@ function ProfileMenu(props) {
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/diary">Diary</Link>
             <Link to="/profile">Profile</Link>
-            <Link to="/create-recipe">Create a Recipe</Link>
+            <Link to="/recipe-builder">Create a Recipe</Link>
             <p onClick={logoutOnClick}>Logout</p>
         </div>
     );
