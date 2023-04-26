@@ -41,7 +41,7 @@ function AddFood(props) {
   const [brandName, setBrandName] = useState("");
   const [barcode, setBarcode] = useState("");
   const [servingQuantity, setServingQuantity] = useState("");
-  const [servingQuantityUnit, setServingQuantityUnit] = useState("");
+  const [servingQuantityUnit, setServingQuantityUnit] = useState("g");
   const [servingName, setServingName] = useState("");
   const [kcal, setKcal] = useState("");
   const [totalCarb, setTotalCarb] = useState("");
@@ -135,67 +135,195 @@ function AddFood(props) {
       servingQuantityUnit: servingQuantityUnit,
       servingName: servingName,
       nutritionalContent: {
-        kcal: kcal !== "" ? (kcal >= 0 ? kcal : 0) : null,
-        totalFat: totalFat !== "" ? (totalFat >= 0 ? totalFat : 0) : null,
+        kcal:
+          kcal !== "" ? (kcal >= 0 ? (kcal / servingQuantity) * 100 : 0) : null,
+        totalFat:
+          totalFat !== ""
+            ? totalFat >= 0
+              ? (totalFat / servingQuantity) * 100
+              : 0
+            : null,
         saturatedFat:
-          saturatedFat !== "" ? (saturatedFat >= 0 ? saturatedFat : 0) : null,
-        transFat: transFat !== "" ? (transFat >= 0 ? transFat : 0) : null,
+          saturatedFat !== ""
+            ? saturatedFat >= 0
+              ? (saturatedFat / servingQuantity) * 100
+              : 0
+            : null,
+        transFat:
+          transFat !== ""
+            ? transFat >= 0
+              ? (transFat / servingQuantity) * 100
+              : 0
+            : null,
         polyunsaturatedFat:
           polyunsaturatedFat !== ""
             ? polyunsaturatedFat >= 0
-              ? polyunsaturatedFat
+              ? (polyunsaturatedFat / servingQuantity) * 100
               : 0
             : null,
         monounsaturatedFat:
           monounsaturatedFat !== ""
             ? monounsaturatedFat >= 0
-              ? monounsaturatedFat
+              ? (monounsaturatedFat / servingQuantity) * 100
               : 0
             : null,
         cholesterol:
-          cholesterol !== "" ? (cholesterol >= 0 ? cholesterol : 0) : null,
-        sodium: sodium !== "" ? (sodium >= 0 ? sodium : 0) : null,
-        totalCarb: totalCarb !== "" ? (totalCarb >= 0 ? totalCarb : 0) : null,
+          cholesterol !== ""
+            ? cholesterol >= 0
+              ? (cholesterol / servingQuantity) * 100
+              : 0
+            : null,
+        sodium:
+          sodium !== ""
+            ? sodium >= 0
+              ? (sodium / servingQuantity) * 100
+              : 0
+            : null,
+        totalCarb:
+          totalCarb !== ""
+            ? totalCarb >= 0
+              ? (totalCarb / servingQuantity) * 100
+              : 0
+            : null,
         dietaryFiber:
-          dietaryFiber !== "" ? (dietaryFiber >= 0 ? dietaryFiber : 0) : null,
+          dietaryFiber !== ""
+            ? dietaryFiber >= 0
+              ? (dietaryFiber / servingQuantity) * 100
+              : 0
+            : null,
         totalSugar:
-          totalSugar !== "" ? (totalSugar >= 0 ? totalSugar : 0) : null,
+          totalSugar !== ""
+            ? totalSugar >= 0
+              ? (totalSugar / servingQuantity) * 100
+              : 0
+            : null,
         addedSugar:
-          addedSugar !== "" ? (addedSugar >= 0 ? addedSugar : 0) : null,
+          addedSugar !== ""
+            ? addedSugar >= 0
+              ? (addedSugar / servingQuantity) * 100
+              : 0
+            : null,
         sugarAlcohols:
           sugarAlcohols !== ""
             ? sugarAlcohols >= 0
-              ? sugarAlcohols
+              ? (sugarAlcohols / servingQuantity) * 100
               : 0
             : null,
-        protein: protein !== "" ? (protein >= 0 ? protein : 0) : null,
-        vitaminD: vitaminD !== "" ? (vitaminD >= 0 ? vitaminD : 0) : null,
-        calcium: calcium !== "" ? (calcium >= 0 ? calcium : 0) : null,
+        protein:
+          protein !== ""
+            ? protein >= 0
+              ? (protein / servingQuantity) * 100
+              : 0
+            : null,
+        vitaminD:
+          vitaminD !== ""
+            ? vitaminD >= 0
+              ? (vitaminD / servingQuantity) * 100
+              : 0
+            : null,
+        calcium:
+          calcium !== ""
+            ? calcium >= 0
+              ? (calcium / servingQuantity) * 100
+              : 0
+            : null,
         iron: iron !== "" ? (iron >= 0 ? iron : 0) : null,
-        potassium: potassium !== "" ? (potassium >= 0 ? potassium : 0) : null,
-        vitaminA: vitaminA !== "" ? (vitaminA >= 0 ? vitaminA : 0) : null,
-        vitaminC: vitaminC !== "" ? (vitaminC >= 0 ? vitaminC : 0) : null,
-        vitaminE: vitaminE !== "" ? (vitaminE >= 0 ? vitaminE : 0) : null,
-        thiamin: thiamin !== "" ? (thiamin >= 0 ? thiamin : 0) : null,
+        potassium:
+          potassium !== ""
+            ? potassium >= 0
+              ? (potassium / servingQuantity) * 100
+              : 0
+            : null,
+        vitaminA:
+          vitaminA !== ""
+            ? vitaminA >= 0
+              ? (vitaminA / servingQuantity) * 100
+              : 0
+            : null,
+        vitaminC:
+          vitaminC !== ""
+            ? vitaminC >= 0
+              ? (vitaminC / servingQuantity) * 100
+              : 0
+            : null,
+        vitaminE:
+          vitaminE !== ""
+            ? vitaminE >= 0
+              ? (vitaminE / servingQuantity) * 100
+              : 0
+            : null,
+        thiamin:
+          thiamin !== ""
+            ? thiamin >= 0
+              ? (thiamin / servingQuantity) * 100
+              : 0
+            : null,
         riboflavin:
-          riboflavin !== "" ? (riboflavin >= 0 ? riboflavin : 0) : null,
-        niacin: niacin !== "" ? (niacin >= 0 ? niacin : 0) : null,
-        vitaminB6: vitaminB6 !== "" ? (vitaminB6 >= 0 ? vitaminB6 : 0) : null,
-        folate: folate !== "" ? (folate >= 0 ? folate : 0) : null,
+          riboflavin !== ""
+            ? riboflavin >= 0
+              ? (riboflavin / servingQuantity) * 100
+              : 0
+            : null,
+        niacin:
+          niacin !== ""
+            ? niacin >= 0
+              ? (niacin / servingQuantity) * 100
+              : 0
+            : null,
+        vitaminB6:
+          vitaminB6 !== ""
+            ? vitaminB6 >= 0
+              ? (vitaminB6 / servingQuantity) * 100
+              : 0
+            : null,
+        folate:
+          folate !== ""
+            ? folate >= 0
+              ? (folate / servingQuantity) * 100
+              : 0
+            : null,
         vitaminB12:
-          vitaminB12 !== "" ? (vitaminB12 >= 0 ? vitaminB12 : 0) : null,
-        biotin: biotin !== "" ? (biotin >= 0 ? biotin : 0) : null,
+          vitaminB12 !== ""
+            ? vitaminB12 >= 0
+              ? (vitaminB12 / servingQuantity) * 100
+              : 0
+            : null,
+        biotin:
+          biotin !== ""
+            ? biotin >= 0
+              ? (biotin / servingQuantity) * 100
+              : 0
+            : null,
         pantothenicAcid:
           pantothenicAcid !== ""
             ? pantothenicAcid >= 0
-              ? pantothenicAcid
+              ? (pantothenicAcid / servingQuantity) * 100
               : 0
             : null,
         phosphorus:
-          phosphorus !== "" ? (phosphorus >= 0 ? phosphorus : 0) : null,
-        iodine: iodine !== "" ? (iodine >= 0 ? iodine : 0) : null,
-        magnesium: magnesium !== "" ? (magnesium >= 0 ? magnesium : 0) : null,
-        selenium: selenium !== "" ? (selenium >= 0 ? selenium : 0) : null,
+          phosphorus !== ""
+            ? phosphorus >= 0
+              ? (phosphorus / servingQuantity) * 100
+              : 0
+            : null,
+        iodine:
+          iodine !== ""
+            ? iodine >= 0
+              ? (iodine / servingQuantity) * 100
+              : 0
+            : null,
+        magnesium:
+          magnesium !== ""
+            ? magnesium >= 0
+              ? (magnesium / servingQuantity) * 100
+              : 0
+            : null,
+        selenium:
+          selenium !== ""
+            ? selenium >= 0
+              ? (selenium / servingQuantity) * 100
+              : 0
+            : null,
       },
       isVerified: false,
     };
@@ -257,16 +385,35 @@ function AddFood(props) {
       <FormInput
         type="Number"
         inputMode="decimal"
-        placeholder="Serving Quantity"
+        placeholder="Serving Quantity (Metric)"
         value={servingQuantity}
         onChange={(e) => setServingQuantity(e.target.value)}
       />
-      <FormInput
-        type="text"
-        placeholder="Serving Quantity Unit"
-        value={servingQuantityUnit}
-        onChange={(e) => setServingQuantityUnit(e.target.value)}
-      />
+      <label id="create-food-form-sex-label">Serving Quantity Unit (Metric)</label>
+      <div className="create-food-form-choices">
+        <button
+          id="create-food-form-unit-choice-imperial"
+          className={`create-food-form-choice-left create-food-form-choice-button${
+            servingQuantityUnit === "g" ? "-active" : ""
+          }`}
+          onClick={() => {
+            setServingQuantityUnit("g");
+          }}
+        >
+          g
+        </button>
+        <button
+          id="create-food-form-unit-choice-metric"
+          className={`create-food-form-choice-right create-food-form-choice-button${
+            servingQuantityUnit === "ml" ? "-active" : ""
+          }`}
+          onClick={() => {
+            setServingQuantityUnit("ml");
+          }}
+        >
+          mL
+        </button>
+      </div>
       <FormInput
         type="text"
         placeholder="Serving Name"
