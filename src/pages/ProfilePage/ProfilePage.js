@@ -517,9 +517,8 @@ function Settings(props) {
       </ul>
       <h2> Meal Names </h2>
       <p>
-        If you would like to rename your meals, please enter them below. Leave
-        the entries blank if you prefer the default names. Add names for meals 5
-        and 6 if you like to add more meals to your diaries. Remove the names to
+        If you would like to rename your meals, please enter them below. Add names 
+        for meals 5 and 6 if you like to add more meals to your diaries. Remove the names to
         remove meals from your diary.
       </p>
       <UpdateFormInput
@@ -567,7 +566,7 @@ function Settings(props) {
       <h2> Macro Goals </h2>
       <p>
         Here you can set the percent breakdown of macros you would like to
-        acheive. The percent total must add up to 100%
+        achieve. The percent total must add up to 100%
       </p>
       <UpdateFormInput
         type="number"
