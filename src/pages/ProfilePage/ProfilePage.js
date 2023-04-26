@@ -119,15 +119,18 @@ function Settings(props) {
         calorieGoal: profile.goals.calorieGoal,
         weightDelta: profile.goals.weightDelta,
         macroBreakdown: {
-          carbs: carbGoalPercent
-            ? carbGoalPercent / 100
-            : profile.goals.macroBreakdown.carbs,
-          fat: fatGoalPercent
-            ? fatGoalPercent / 100
-            : profile.goals.macroBreakdown.fat,
-          protein: proteinGoalPercent
-            ? proteinGoalPercent / 100
-            : profile.goals.macroBreakdown.protein,
+          carbs:
+            carbGoalPercent !== ""
+              ? carbGoalPercent / 100
+              : profile.goals.macroBreakdown.carbs,
+          fat:
+            fatGoalPercent !== ""
+              ? fatGoalPercent / 100
+              : profile.goals.macroBreakdown.fat,
+          protein:
+            proteinGoalPercent !== ""
+              ? proteinGoalPercent / 100
+              : profile.goals.macroBreakdown.protein,
         },
       },
       preferences: {
@@ -138,9 +141,9 @@ function Settings(props) {
     };
 
     if (
-      profile.goals.macroBreakdown.carbs +
-        profile.goals.macroBreakdown.fat +
-        profile.goals.macroBreakdown.protein !==
+      updatedProfile.goals.macroBreakdown.carbs +
+        updatedProfile.goals.macroBreakdown.fat +
+        updatedProfile.goals.macroBreakdown.protein !==
       1
     ) {
       setGoals100(false);
@@ -503,7 +506,9 @@ function Settings(props) {
         type="number"
         inputMode="decimal"
         label="Carbs"
-        placeholder={profile.goals.macroBreakdown.carbs * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.carbs * 100 * 10) / 10 + "%"
+        }
         value={carbGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputCarbOnChange}
@@ -513,7 +518,9 @@ function Settings(props) {
         type="number"
         inputMode="decimal"
         label="Fat"
-        placeholder={profile.goals.macroBreakdown.fat * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.fat * 100 * 10) / 10 + "%"
+        }
         value={fatGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputFatOnChange}
@@ -523,7 +530,9 @@ function Settings(props) {
         type="number"
         inputMode="decimal"
         label="Protein"
-        placeholder={profile.goals.macroBreakdown.protein * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.protein * 100 * 10) / 10 + "%"
+        }
         value={proteinGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputProteinOnChange}
