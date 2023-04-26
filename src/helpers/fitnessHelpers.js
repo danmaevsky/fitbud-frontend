@@ -15,8 +15,7 @@ export function CalculateGoal(profile) {
     }
 }
 
-function CalculateTDEE(profile) {
-    let activityFactor = ActivityLevelMapper(profile.activityLevel);
+export function CalculateBMR(profile) {
     let bmr = 0;
     if (profile.currentPercentBodyFat.value && profile.currentWeightKg.value) {
         bmr = Katch_McArdle(profile.currentWeightKg.value, profile.currentPercentBodyFat.value);
@@ -24,11 +23,17 @@ function CalculateTDEE(profile) {
         let birthYear = profile.birthdate.substring(0, 4);
         let currYear = new Date().getFullYear();
         let age = Number(currYear) - Number(birthYear);
-        console.log(age);
         bmr = StJeor_Mifflin(profile.currentWeightKg.value, profile.heightCm, age, profile.sex);
     } else {
         bmr = 2000;
     }
+
+    return bmr;
+}
+
+function CalculateTDEE(profile) {
+    let activityFactor = ActivityLevelMapper(profile.activityLevel);
+    let bmr = CalculateBMR(profile);
 
     return activityFactor * bmr;
 }
@@ -114,13 +119,19 @@ export async function getAllDiaryEntries(diary, navigate) {
                 })
                 .then((json) => {
                     // counting calories, macros, and micros right here
-                    // Note: quantityMetric is per serving, still need to multiply by numServing
+                    // Note: quantityMetric is per serving, still need to multiply by numServings
                     processedDiary[meal].foodLogs[i].foodObject = json;
                     let totalNutritionalContent = {};
-                    Object.keys(json.nutritionalContent).forEach((nutrient) => {
-                        totalNutritionalContent[nutrient] =
-                            ((Number(json.nutritionalContent[nutrient]) * Number(log.quantityMetric)) / 100) * Number(log.numServing);
-                    });
+
+                    const defaultUnitRounding = log.quantityMetric === Math.round(json.servingQuantity / 0.001) * 0.001;
+
+                    totalNutritionalContent = ProcessNutritionalContents(
+                        json.nutritionalContent,
+                        log.quantityMetric,
+                        log.numServings,
+                        defaultUnitRounding
+                    );
+
                     processedDiary[meal].foodLogs[i].totalNutritionalContent = totalNutritionalContent;
                 })
                 .catch((error) => {
@@ -226,12 +237,13 @@ export async function getAllDiaryEntries(diary, navigate) {
     }
 
     return Promise.all(All_Promises).then(() => {
-        return CountNutrientsPerMeal(processedDiary);
+        return CountExerciseCalories(CountNutrientsPerMeal(processedDiary));
     });
 }
 
 function CountNutrientsPerMeal(diary) {
     // Handling all 6 Meals: Food & Recipes
+    let totalDiaryNutritionalContents = null;
     for (let m = 1; m <= 6; m++) {
         let meal = "meal" + m;
         let totalMealNutrients = null;
@@ -248,7 +260,16 @@ function CountNutrientsPerMeal(diary) {
         // }
 
         diary[meal].totalMealNutritionalContent = totalMealNutrients;
+        if (totalMealNutrients) {
+            if (totalDiaryNutritionalContents) {
+                totalDiaryNutritionalContents = AddNutrients(totalDiaryNutritionalContents, totalMealNutrients);
+            } else {
+                totalDiaryNutritionalContents = totalMealNutrients;
+            }
+        }
     }
+
+    diary.totalDiaryNutritionalContents = totalDiaryNutritionalContents;
 
     // Handling Exercise: Cardio, Strength, & Workouts
     // for (let i = 0; i < diary.exercise.strengthLogs.length; i++) {
@@ -269,6 +290,44 @@ function AddNutrients(nutrients1, nutrients2) {
         sum[nutrient] = Number(nutrients1[nutrient]) + Number(nutrients2[nutrient]);
     });
     return sum;
+}
+
+function CountExerciseCalories(diary) {
+    let totalBurnedCalories = 0;
+    // Handling Exercise: Cardio, Strength, & Workouts
+    for (let i = 0; i < diary.exercise.strengthLogs.length; i++) {
+        let log = diary.exercise.strengthLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    for (let i = 0; i < diary.exercise.cardioLogs.length; i++) {
+        let log = diary.exercise.cardioLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    for (let i = 0; i < diary.exercise.workoutLogs.length; i++) {
+        let log = diary.exercise.workoutLogs[i];
+        totalBurnedCalories += log.kcal;
+    }
+    diary.exercise.totalBurnedCalories = totalBurnedCalories;
+    return diary;
+}
+
+export function DiaryHasMealEntries(currentDiary) {
+    if (!currentDiary) {
+        return false;
+    }
+
+    if (
+        !currentDiary.meal1.totalMealNutritionalContent &&
+        !currentDiary.meal2.totalMealNutritionalContent &&
+        !currentDiary.meal3.totalMealNutritionalContent &&
+        !currentDiary.meal4.totalMealNutritionalContent &&
+        !currentDiary.meal5.totalMealNutritionalContent &&
+        !currentDiary.meal6.totalMealNutritionalContent
+    ) {
+        return false;
+    }
+
+    return true;
 }
 
 /* The returned processDiary will look like
@@ -414,12 +473,34 @@ export function ProcessNutritionalContents(nutritionalContents, metricQuantity, 
     let precision = defaultUnitRounding ? 0 : 1;
     let nutrients = {};
     Object.keys(nutritionalContents).forEach((key) => {
+        // console.log(key, ":", nutritionalContents[key]);
         if (key === "kcal") return (nutrients[key] = Number((nutritionalContents[key] / 100) * metricQuantity));
         nutrients[key] = Number(((nutritionalContents[key] / 100) * metricQuantity * numServings).toFixed(precision));
     });
     nutrients.kcal = defaultUnitRounding ? RoundToNearestFive(nutrients.kcal) * numServings : nutrients.kcal * numServings;
     nutrients.kcal = nutrients.kcal > 25_000 ? nutrients.kcal.toExponential(2) : nutrients.kcal.toFixed(0);
+    // console.log(nutrients);
     return nutrients;
+}
+
+export function GetBuiltInUnits(defaultMetricUnit) {
+    if (defaultMetricUnit === "ml") {
+        return {
+            "1 mL": 1,
+            "1 L": 1000,
+            "1 tsp": 4.92892,
+            "1 tbsp": 14.7868,
+            "1 fl oz": 29.5735,
+            "1 cup": 236.588,
+        };
+    } else {
+        return {
+            "1 g": 1,
+            "1 kg": 1000,
+            "1 oz": 28,
+            "1 lb": 28 * 16,
+        };
+    }
 }
 
 /* Math Helpers */

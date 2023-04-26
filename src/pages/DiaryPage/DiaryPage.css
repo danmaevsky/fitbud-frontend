@@ -37,7 +37,7 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 50rem;
-    margin: 2.025rem;
+    margin: 2.05rem;
     /* margin: 2rem; */
 }
 
@@ -47,6 +47,7 @@
 }
 
 #diary-calorie-calculation-island h4 {
+    font-size: 1.125rem;
     margin-bottom: 0;
 }
 
@@ -60,9 +61,12 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    height: 34rem;
+    max-height: 55vh;
+    flex-shrink: 0;
 }
 
-.diary-meal-section {
+.diary-section {
     flex-shrink: 0;
     backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
@@ -80,21 +84,70 @@
     min-width: 15rem;
     width: 40vw;
     max-width: 50rem;
-    margin: 2rem;
+    margin: 2.05rem;
 }
 
-.diary-meal-section-header {
+.diary-section-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-.diary-meal-section-header h3 {
+.diary-section-header h3 {
+    text-align: left;
     align-self: flex-start;
     margin-top: 0;
 }
 
-.diary-meal-section-add-food {
+.diary-section-header h4 {
+    margin-top: 0;
+    font-size: 1.125rem;
+}
+
+.diary-section-items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.diary-section-item {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border-radius: 0.75rem;
+    background-color: white;
+}
+
+.diary-section-item:hover {
+    filter: brightness(0.95);
+}
+
+.diary-section-item-name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.25rem;
+}
+
+.diary-section-item-name h4 {
+    text-align: left;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.diary-section-item-name p {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--default-secondary-text);
+}
+
+.diary-section-add-item {
     cursor: pointer;
     background-color: white;
     font-size: 1rem;
@@ -103,14 +156,14 @@
     align-items: center;
     gap: 1rem;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
 }
 
-.diary-meal-section-add-food:hover {
-    filter: brightness(0.9);
+.diary-section-add-item:hover {
+    filter: brightness(0.95);
 }
 
-.diary-meal-section-add-food button {
+.diary-section-add-item button {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -122,13 +175,39 @@
     width: 3rem;
 }
 
-.diary-meal-section button img {
+.diary-section-add-item img {
     height: 2rem;
     width: 2rem;
 }
 
-.diary-meal-section-add-food label {
+.diary-section-add-item label {
     cursor: pointer;
+}
+
+#diary-page-bottom-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#diary-date-input {
+    flex-shrink: 0;
+    color: var(--default-primary-text);
+    display: inline-flex;
+    background-color: white;
+    /* margin-top: 2rem; */
+    z-index: 1;
+    background-color: white;
+    border: 2px solid var(--default-primary-border);
+    border-radius: 5px;
+    font-size: 1.125rem;
+    height: 2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+#diary-page-bottom-banner .form-input label {
+    color: white;
 }
 
 @media screen and (max-width: 800px) {
@@ -136,7 +215,16 @@
         width: 75vw;
     }
 
-    .diary-meal-section {
+    #diary {
+        height: 40rem;
+        max-height: 42.5vh;
+    }
+
+    .diary-section {
         width: 75vw;
+    }
+
+    .diary-section-item-name p {
+        font-size: 0.875rem;
     }
 }

@@ -27,6 +27,8 @@
     --food-info-color-fat: #ffc300;
     --food-info-color-carb: #2bb6ff;
     --food-info-color-protein: #e5007a;
+    --save-log-button-background: #32be62;
+    --delete-log-button-background: #e62e2e;
 }
 
 body,
