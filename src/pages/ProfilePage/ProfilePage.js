@@ -8,8 +8,6 @@ import UpdateFormInput from "components/UpdateFormInput";
 import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function ProfilePage() {
-  const [profilePic, setProfilePic] = useState(null);
-  const [profile, setProfile] = useLocalStorage("profile", null);
   const [goals100, setGoals100] = useState(true);
   const loggedIn = IsUserLogged();
 
