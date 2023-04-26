@@ -475,7 +475,7 @@ function FoodMoreInfo(props) {
 	const { processedNutrients } = props;
 
 	return (
-		<ul id="food-page-more-info">
+		<ul id="recipe-page-more-info">
 			<h5>Nutritional Content</h5>
 			<li>
 				<p>Calories:</p>
