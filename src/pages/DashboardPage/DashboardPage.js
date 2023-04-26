@@ -42,6 +42,7 @@ export default function DashboardPage() {
                     </div>
                     <div id="dashboard-progress-island">
                         <h3>Progress</h3>
+                        <h4>Not enough diaries to show any progress yet!</h4>
                     </div>
                 </div>
             </div>
