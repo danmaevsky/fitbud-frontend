@@ -383,10 +383,10 @@ function SaveFoodLogButton(props) {
 
     return (
         <div id="food-log-page-save-log" className="food-log-page-log-button" onClick={saveFoodOnClick}>
+            <label>Save Changes</label>
             <button>
                 <SaveLogButtonIcon />
             </button>
-            <label>Save Changes</label>
         </div>
     );
 }

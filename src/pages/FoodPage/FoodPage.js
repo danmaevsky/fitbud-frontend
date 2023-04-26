@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
 import { GetBuiltInUnits, ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase } from "helpers/fitnessHelpers";
-import { IsUserLogged, authFetch } from "helpers/authHelpers";
+import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
 import { getCurrentDate } from "helpers/generalHelpers";
 
@@ -324,7 +324,10 @@ function AddFoodLogButton(props) {
     const navigate = useNavigate();
 
     const currentDate = getCurrentDate();
-    const diary = currentDate === diaryDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
+    const userIsLoaded = IsUserDiaryReady();
+
+    let diary = null;
+    if (userIsLoaded) diary = currentDate === diaryDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
 
     const addFoodOnClick = () => {
         if (diary) {
@@ -443,23 +446,22 @@ function SelectServingSize(props) {
     const inputOnChange = (e) => {
         let n = Number(e.target.value);
         setNumText(e.target.value);
-        if (n > 0 && n < 10001) {
+        if (n >= 0 && n <= 10000) {
             setNumServings(n);
         }
     };
 
-    const inputOnBlur = () => {
-        if (numText < 0) {
+    const inputOnBlur = (e) => {
+        let n = Number(e.target.value);
+        if (!n || n < 0) {
             setNumText(0);
-            setNumServings(1);
+            setNumServings(0);
             return;
-        } else if (numText > 10000) {
+        } else if (n > 10000) {
             setNumText(10000);
             setNumServings(10000);
             return;
         }
-        setNumServings(numText);
-        return;
     };
 
     const onUnitSelect = (selection) => {

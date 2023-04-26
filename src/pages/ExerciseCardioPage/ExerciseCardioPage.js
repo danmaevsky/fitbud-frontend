@@ -1,34 +1,36 @@
-import "./ExerciseStrengthPage.css";
+import "./ExerciseCardioPage.css";
 import backArrow from "assets/back-arrow.svg";
 import addLogPlus from "assets/add-food-plus.svg";
 import minusSign from "assets/minus-sign.svg";
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Form, Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useArray from "hooks/useArray";
 import FormInput from "components/FormInput";
 import { getCurrentDate } from "helpers/generalHelpers";
 import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
+import { CalculateBMR } from "helpers/fitnessHelpers";
 
-export default function ExerciseStrengthPage() {
+export default function ExerciseCardioPage() {
     const { exerciseId } = useParams();
     const location = useLocation();
 
     const [exerciseResponse, setExerciseResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
-    const [numSets, setNumSets] = useState(0);
+    const [durationMinutes, setDurationMinutes] = useState(0);
     const [kcal, setKcal] = useState(0);
-    const [weightKgArray, weightKgArrayMethods] = useArray([]);
-    const [repsArray, repsArrayMethods] = useArray([]);
     const [diaryDate, setDiaryDate] = useState(getCurrentDate());
 
     const userIsLoggedIn = IsUserLogged();
+    let BMR = 2000;
+    if (userIsLoggedIn) BMR = CalculateBMR(JSON.parse(window.localStorage.profile));
+    console.log("bmr", BMR);
 
     // fetching exercise object or loading from results
     useEffect(() => {
         let tempResponse = LookForExerciseInLocalStorage(exerciseId);
         if (!tempResponse) {
             let resStatus;
-            fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/strength/${exerciseId}`, {
+            fetch(`${process.env.REACT_APP_GATEWAY_URI}/exercise/cardio/${exerciseId}`, {
                 method: "GET",
             })
                 .then((res) => {
@@ -62,7 +64,7 @@ export default function ExerciseStrengthPage() {
             <div className="exercise-background-round round-background-decoration"></div>
             <div className="exercise-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="exercise-background-bottom-banner bottom-bot-banner-background-decoration"></div>
-            <div id="exercise-strength-island">
+            <div id="exercise-cardio-island">
                 <Link to={-1} id="exercise-island-back-arrow">
                     <img src={backArrow} alt="back arrow icon" />
                     Go Back
@@ -70,27 +72,18 @@ export default function ExerciseStrengthPage() {
                 {userIsLoggedIn && renderExerciseInfo ? (
                     <ExerciseInfo
                         exerciseResponse={exerciseResponse}
-                        numSets={numSets}
-                        setNumSets={setNumSets}
-                        repsArray={repsArray}
-                        repsArrayMethods={repsArrayMethods}
-                        weightKgArray={weightKgArray}
-                        weightKgArrayMethods={weightKgArrayMethods}
+                        BMR={BMR}
+                        durationMinutes={durationMinutes}
+                        setDurationMinutes={setDurationMinutes}
+                        setKcal={setKcal}
                     />
                 ) : null}
                 {!exerciseResponse ? "Loading..." : null}
                 {responseStatus !== 200 ? "404. No Exercises matching this ID!" : null}
                 {userIsLoggedIn && renderExerciseInfo ? (
                     <div id="exercise-strength-page-log-buttons">
-                        <CalorieSelector setKcal={setKcal} />
-                        <AddExerciseLogButton
-                            exerciseId={exerciseId}
-                            numSets={numSets}
-                            repsArray={repsArray}
-                            weightKgArray={weightKgArray}
-                            kcal={kcal}
-                            diaryDate={diaryDate}
-                        />
+                        <CalorieSelector kcal={kcal} setKcal={setKcal} />
+                        <AddExerciseLogButton exerciseId={exerciseId} durationMinutes={durationMinutes} kcal={kcal} diaryDate={diaryDate} />
                     </div>
                 ) : null}
             </div>
@@ -99,168 +92,69 @@ export default function ExerciseStrengthPage() {
 }
 
 function ExerciseInfo(props) {
-    const { exerciseResponse, numSets, setNumSets, repsArray, repsArrayMethods, weightKgArray, weightKgArrayMethods } = props;
-    let exerciseName = exerciseResponse.name;
-    let MET = exerciseResponse.MET;
+    const { exerciseResponse, BMR, durationMinutes, setDurationMinutes, setKcal } = props;
+    const MET = exerciseResponse.MET;
+    const exerciseName = exerciseResponse.name;
+
+    const [minutesText, setMinutesText] = useState("");
+
+    const MAX_MINUTES = 24 * 60;
+
+    let basalMinuteRate = BMR / 24 / 60;
+
+    const inputOnChange = (e) => {
+        let n = Number(e.target.value);
+        setMinutesText(e.target.value);
+        if (n >= 0 && n <= MAX_MINUTES) {
+            console.log("duration in proper domain");
+            let extraCaloriesBurned = Math.round((MET - 1) * basalMinuteRate * n);
+            console.log("proper domain extra calories", extraCaloriesBurned);
+            setDurationMinutes(n);
+            setKcal(extraCaloriesBurned);
+        }
+    };
+
+    const inputOnBlur = (e) => {
+        let n = Number(e.target.value);
+        if (!n || n < 0) {
+            let extraCaloriesBurned = Math.round((MET - 1) * basalMinuteRate * 0);
+            setMinutesText(0);
+            setDurationMinutes(0);
+            setKcal(extraCaloriesBurned);
+            return;
+        } else if (n > MAX_MINUTES) {
+            let extraCaloriesBurned = Math.round((MET - 1) * basalMinuteRate * MAX_MINUTES);
+            setMinutesText(MAX_MINUTES);
+            setDurationMinutes(MAX_MINUTES);
+            setKcal(extraCaloriesBurned);
+            return;
+        }
+    };
+
+    console.log("duration", durationMinutes);
+
     return (
         <div id="exercise-info">
             <h3>{exerciseName}</h3>
             <p>MET Value: {MET}</p>
-            <SelectExerciseSRW
-                numSets={numSets}
-                setNumSets={setNumSets}
-                repsArray={repsArray}
-                repsArrayMethods={repsArrayMethods}
-                weightKgArray={weightKgArray}
-                weightKgArrayMethods={weightKgArrayMethods}
-            />
-        </div>
-    );
-}
-
-function SelectExerciseSRW(props) {
-    const { numSets, setNumSets, repsArray, repsArrayMethods, weightKgArray, weightKgArrayMethods } = props;
-
-    let setSections = [];
-    for (let i = 0; i < numSets; i++) {
-        setSections.push(
-            <SetSection
-                key={`set-section-${i}`}
-                numSets={numSets}
-                setNumSets={setNumSets}
-                setIndex={i}
-                repsArray={repsArray}
-                repsArrayMethods={repsArrayMethods}
-                weightKgArray={weightKgArray}
-                weightKgArrayMethods={weightKgArrayMethods}
-            />
-        );
-    }
-
-    const numSetsMax = 10;
-    return (
-        <div id="exercise-page-sets">
-            {setSections}
-            {numSets < numSetsMax ? (
-                <AddSetButton
-                    addSetOnClick={() => {
-                        setNumSets(numSets + 1);
-                        repsArrayMethods.push(0);
-                        weightKgArrayMethods.push(0);
-                    }}
+            <div id="exercise-cardio-page-how-long">
+                <h4>How long did you do this exercise for?</h4>
+                <FormInput
+                    type="number"
+                    inputMode="decimal"
+                    placeholder="Duration in Minutes"
+                    value={minutesText}
+                    onClick={(e) => e.target.select()}
+                    onChange={inputOnChange}
+                    onBlur={inputOnBlur}
                 />
-            ) : null}
-        </div>
-    );
-}
-
-function SetSection(props) {
-    const { setIndex, numSets, setNumSets, repsArrayMethods, weightKgArrayMethods } = props;
-
-    const [numRepsText, setNumRepsText] = useState("");
-    const [numWeightText, setNumWeightText] = useState("");
-
-    const repMax = 200;
-    const weightMax = 2000;
-
-    const repsInputOnChange = (e) => {
-        let n = Number(e.target.value);
-        setNumRepsText(e.target.value);
-        if (n && n > 0 && n < repMax) {
-            repsArrayMethods.update(setIndex, Math.round(n));
-        }
-    };
-
-    const repsInputOnBlur = (e) => {
-        let n = Number(e.target.value);
-        if (!n || n < 1) {
-            setNumRepsText(1);
-            repsArrayMethods.update(setIndex, 1);
-            return;
-        } else if (n > repMax) {
-            setNumRepsText(repMax);
-            repsArrayMethods.update(setIndex, repMax);
-            return;
-        }
-
-        setNumRepsText(Math.round(n));
-    };
-
-    const weightInputOnChange = (e) => {
-        let n = Number(e.target.value);
-        setNumWeightText(e.target.value);
-        if (n > 0 && n < weightMax) {
-            weightKgArrayMethods.update(setIndex, n);
-        }
-    };
-
-    const weightInputOnBlur = (e) => {
-        let n = Number(e.target.value);
-        if (!n || n < 0) {
-            setNumWeightText(0);
-            weightKgArrayMethods.update(setIndex, n);
-            return;
-        } else if (n > weightMax) {
-            setNumWeightText(weightMax);
-            weightKgArrayMethods.update(setIndex, n);
-            return;
-        }
-    };
-
-    const removeSetOnClick = () => {
-        if (numSets > 0) {
-            setNumSets(numSets - 1);
-            repsArrayMethods.remove(setIndex);
-            weightKgArrayMethods.remove(setIndex);
-        }
-    };
-
-    return (
-        <div className="exercise-set-section">
-            <div className="exercise-set-header">
-                <h4>Set {setIndex + 1}</h4>
             </div>
-            <FormInput
-                type="number"
-                inputMode="numeric"
-                value={numRepsText}
-                placeholder="# Reps"
-                onClick={(e) => e.target.select()}
-                onChange={repsInputOnChange}
-                onBlur={repsInputOnBlur}
-            />
-            <FormInput
-                type="number"
-                inputMode="decimal"
-                value={numWeightText}
-                placeholder="# kg"
-                onClick={(e) => e.target.select()}
-                onChange={weightInputOnChange}
-                onBlur={weightInputOnBlur}
-            />
-            <div className="exercise-remove-set" onClick={removeSetOnClick}>
-                <button>
-                    <img src={minusSign} />
-                </button>
-            </div>
-        </div>
-    );
-}
-
-function AddSetButton(props) {
-    const { addSetOnClick } = props;
-    return (
-        <div className="exercise-add-set" onClick={addSetOnClick}>
-            <button>
-                <img src={addLogPlus} />
-            </button>
-            <label>Add Set</label>
         </div>
     );
 }
 
 function AddExerciseLogButton(props) {
-    const { exerciseId, numSets, repsArray, weightKgArray, kcal, diaryDate } = props;
+    const { exerciseId, durationMinutes, kcal, diaryDate } = props;
     const navigate = useNavigate();
 
     const currentDate = getCurrentDate();
@@ -274,13 +168,11 @@ function AddExerciseLogButton(props) {
         if (diary) {
             let diaryId = diary._id;
             let patchBody = {
-                type: "strength",
+                type: "cardio",
                 action: "addLog",
                 contents: {
                     exerciseId: exerciseId,
-                    sets: numSets,
-                    reps: repsArray,
-                    weightKg: weightKgArray,
+                    durationMinutes: durationMinutes,
                     kcal: kcal,
                 },
             };
@@ -308,17 +200,14 @@ function AddExerciseLogButton(props) {
                 });
         } else {
             let postBody = {
-                type: "strength",
+                type: "cardio",
                 action: "addLog",
                 contents: {
                     exerciseId: exerciseId,
-                    sets: numSets,
-                    reps: repsArray,
-                    weightKg: weightKgArray,
+                    durationMinutes: durationMinutes,
                     kcal: kcal,
                 },
             };
-            console.log(postBody);
 
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${diaryDate}`, {
                 method: "POST",
@@ -355,7 +244,7 @@ function AddExerciseLogButton(props) {
 }
 
 function CalorieSelector(props) {
-    const { setKcal } = props;
+    const { kcal, setKcal } = props;
     const [kcalText, setKcalText] = useState("");
 
     let calorieMax = 100000;
@@ -370,21 +259,30 @@ function CalorieSelector(props) {
 
     const inputOnBlur = (e) => {
         let n = Number(e.target.value);
-        if (!n || kcalText < 0) {
+        if (!n || n < 0) {
             setKcalText(0);
             setKcal(0);
             return;
-        } else if (kcalText > calorieMax) {
+        } else if (n > calorieMax) {
             setKcalText(calorieMax);
             setKcal(calorieMax);
             return;
         }
+
+        setKcalText(Math.round(n));
+        setKcal(Math.round(n));
     };
+
+    useEffect(() => {
+        setKcalText(kcal);
+    }, [kcal]);
+
+    console.log(kcal, kcalText);
 
     return (
         <FormInput
             type="number"
-            inputMode="decimal"
+            inputMode="numeric"
             placeholder="Calories"
             value={kcalText}
             onClick={(e) => e.target.select()}

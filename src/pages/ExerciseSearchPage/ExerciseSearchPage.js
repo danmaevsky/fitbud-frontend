@@ -18,7 +18,15 @@ export default function ExerciseSearchPage() {
                 setSearchStatus(res.status);
                 return res.json();
             })
-            .then((json) => setSearchResults(json));
+            .then((json) => {
+                json = json.map((res) => {
+                    return {
+                        ...res,
+                        exerciseType: exerciseType,
+                    };
+                });
+                setSearchResults(json);
+            });
     };
     const inputOnKeydown = (e) => {
         if (e.key === "Enter") {
@@ -91,8 +99,8 @@ function ExerciseSearchList(props) {
     let { searchResults, exerciseType } = props;
     return (
         <ul id="exercise-search-results-list">
-            {searchResults.map((searchResults, index) => (
-                <ExerciseSearchResult exerciseType={exerciseType} response={searchResults} key={`exercise-search-result-${index}`} />
+            {searchResults.map((searchResult, index) => (
+                <ExerciseSearchResult exerciseType={searchResult.exerciseType} response={searchResult} key={`exercise-search-result-${index}`} />
             ))}
             <li id="exercise-search-refine-message">
                 <h4>Didn't find what you were looking for? Consider refining your search!</h4>
@@ -105,15 +113,12 @@ function ExerciseSearchResult(props) {
     let { exerciseType, response } = props;
     let { _id, name, MET } = response;
 
-    // we need a state here so that the value does not mutate when the user selects a different exerciseType
-    const [exerciseTypeState, setExerciseTypeState] = useState(exerciseType);
-
     const navigate = useNavigate();
     const resultOnClick = () => {
-        if (exerciseTypeState === "strength") {
+        if (exerciseType === "strength") {
             navigate("/exercise/strength/" + _id);
         }
-        if (exerciseTypeState === "cardio") {
+        if (exerciseType === "cardio") {
             navigate("/exercise/cardio/" + _id);
         }
     };

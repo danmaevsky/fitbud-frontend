@@ -52,3 +52,8 @@ export async function authFetch(url, options, navigate) {
 export function IsUserLogged() {
     return Boolean(window.localStorage.profile && window.localStorage.accessToken && window.localStorage.refreshToken);
 }
+
+// helper for determining if all of the user's Diary has loaded in
+export function IsUserDiaryReady() {
+    return Boolean(window.localStorage.profile) && (Boolean(window.localStorage.CurrentDiary) || Boolean(window.localStorage.PrevDiary));
+}

@@ -23,6 +23,7 @@ import DiaryPage from "pages/DiaryPage";
 import ProfilePage from "pages/ProfilePage";
 import RecipeBuilderPage from "pages/RecipeBuilderPage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
+import ExerciseCardioPage from "pages/ExerciseCardioPage";
 
 function App() {
     return (
@@ -38,7 +39,6 @@ function App() {
                     <Route path="/food/:foodId" element={<FoodPage />} />
                     <Route path="/barcode" element={<BarcodeScanPage />} />
                     <Route path="/exercise" element={<ExerciseSearchPage />} />
-                    <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
                     <Route path="/forgotPassword" element={<ForgotPasswordEmailPage />} />
                     <Route path="/forgotPassword/:userId/:token" element={<ForgotPasswordPasswordPage />} />
                     <Route element={<AuthWrapper />}>
@@ -46,8 +46,10 @@ function App() {
                         <Route path="/diary" element={<DiaryPage />} />
                         <Route path="/edit-logs/food" element={<EditFoodLogPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
                         <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
+                        <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
+                        <Route path="/exercise/cardio/:exerciseId" element={<ExerciseCardioPage />} />
+                        <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
                     </Route>
                 </Routes>
             </div>
