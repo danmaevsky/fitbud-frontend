@@ -19,6 +19,8 @@ import AuthWrapper from "layouts/AuthWrapper";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
 import ProfilePage from "pages/ProfilePage";
+import RecipeBuilderPage from "pages/RecipeBuilderPage";
+import ChangePasswordPage from "pages/ChangePasswordPage";
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/diary" element={<DiaryPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
+            <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
           </Route>
         </Routes>
       </div>
