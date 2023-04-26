@@ -176,197 +176,197 @@ function AddFood(props) {
         type="Number"
         inputMode="decimal"
         placeholder="Biotin"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={biotin}
+        onChange={(e) => setBiotin(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Calcium"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={calcium}
+        onChange={(e) => setCalcium(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Cholesterol"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={cholesterol}
+        onChange={(e) => setCholesterol(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Dietary Fiber"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={dietaryFiber}
+        onChange={(e) => setDietaryFiber(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Folate"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={folate}
+        onChange={(e) => setFolate(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Iodine"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={iodine}
+        onChange={(e) => setIodine(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Iron"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={iron}
+        onChange={(e) => setIron(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Magnesium"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={magnesium}
+        onChange={(e) => setMagnesium(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Monounsaturated Fat"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={monounsaturatedFat}
+        onChange={(e) => setMonounsaturatedFat(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Niacin"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={niacin}
+        onChange={(e) => setNiacin(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Pantothenic Acid"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={pantothenicAcid}
+        onChange={(e) => setPantothenicAcid(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Phosphorus"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={phosphorus}
+        onChange={(e) => setPhosphorus(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Polyunsaturated Fat"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={polyunsaturatedFat}
+        onChange={(e) => setPolyunsaturatedFat(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Potassium"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={potassium}
+        onChange={(e) => potassium(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Riboflavin"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={riboflavin}
+        onChange={(e) => setRiboflavin(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Saturated Fat"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={saturatedFat}
+        onChange={(e) => setSaturatedFat(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Selenium"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={selenium}
+        onChange={(e) => setSelenium(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Sodium"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={sodium}
+        onChange={(e) => setSodium(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Sugar Alcohols"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={sugarAlcohols}
+        onChange={(e) => setSugarAlcohols(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Thiamin"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={thiamin}
+        onChange={(e) => setThiamin(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Total Sugar"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={totalSugar}
+        onChange={(e) => setTotalSugar(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Trans Fat"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={transFat}
+        onChange={(e) => setTransFat(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin A"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminA}
+        onChange={(e) => setVitaminA(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin B12"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminB12}
+        onChange={(e) => setVitaminB12(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin B6"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminB6}
+        onChange={(e) => setVitaminB6(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin C"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminC}
+        onChange={(e) => setVitaminC(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin D"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminD}
+        onChange={(e) => setVitaminD(e.target.value)}
       />
       <FormInput
         type="Number"
         inputMode="decimal"
         placeholder="Vitamin E"
-        value={addedSugar}
-        onChange={(e) => setAddedSugar(e.target.value)}
+        value={vitaminE}
+        onChange={(e) => setVitaminE(e.target.value)}
       />
     </div>
   );
