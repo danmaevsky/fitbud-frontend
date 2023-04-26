@@ -510,3 +510,23 @@ function RoundToNearestTwenty(x) {
 function RoundToNearestFive(x) {
     return Math.round(x / 5) * 5;
 }
+
+export function GetBuiltInUnits(defaultMetricUnit) {
+    if (defaultMetricUnit === "ml") {
+        return {
+            "1 mL": 1,
+            "1 L": 1000,
+            "1 tsp": 4.92892,
+            "1 tbsp": 14.7868,
+            "1 fl oz": 29.5735,
+            "1 cup": 236.588,
+        };
+    } else {
+        return {
+            "1 g": 1,
+            "1 kg": 1000,
+            "1 oz": 28,
+            "1 lb": 28 * 16,
+        };
+    }
+}

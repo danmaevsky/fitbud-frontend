@@ -12,13 +12,18 @@ import FoodSearchPage from "pages/FoodSearchPage";
 import FoodPage from "pages/FoodPage";
 import ExerciseSearchPage from "pages/ExerciseSearchPage";
 import BarcodeScanPage from "pages/BarcodeScanPage";
+import ForgotPasswordEmailPage from "pages/ForgotPasswordEmailPage";
+import ForgotPasswordPasswordPage from "pages/ForgotPasswordPasswordPage";
 // protected pages
 import AuthWrapper from "layouts/AuthWrapper";
-
+import EditFoodLogPage from "pages/EditFoodLogPage";
 import ExerciseStrengthPage from "pages/ExerciseStrengthPage";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
-import EditFoodLogPage from "pages/EditFoodLogPage";
+
+import ProfilePage from "pages/ProfilePage";
+import RecipeBuilderPage from "pages/RecipeBuilderPage";
+import ChangePasswordPage from "pages/ChangePasswordPage";
 
 function App() {
     return (
@@ -35,10 +40,17 @@ function App() {
                     <Route path="/barcode" element={<BarcodeScanPage />} />
                     <Route path="/exercise" element={<ExerciseSearchPage />} />
                     <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
+                    <Route path="/forgotPassword" element={<ForgotPasswordEmailPage />} />
+                    <Route
+                      path="/forgotPassword/:userId/:token"
+                      element={<ForgotPasswordPasswordPage />}
+                    />
                     <Route element={<AuthWrapper />}>
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                        <Route path="/diary" element={<DiaryPage />} />
-                        <Route path="editLogs/food" element={<EditFoodLogPage />} />
+                      <Route path="/dashboard" element={<DashboardPage />} />
+                      <Route path="/diary" element={<DiaryPage />} />
+                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
+                      <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
                     </Route>
                 </Routes>
             </div>

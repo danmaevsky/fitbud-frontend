@@ -5,7 +5,7 @@ import { authFetch, IsUserLogged } from "helpers/authHelpers";
 
 const foodRoutes = ["food", "barcode", "recipes"];
 const exerciseRoutes = ["exercise", "workouts"];
-const profileRoutes = ["profile", "signup"];
+const profileRoutes = ["profile", "signup", "forgotPassword"];
 const mainRoutes = ["dashboard", "diary", "home", "", "login"];
 
 function Navbar() {
