@@ -630,7 +630,6 @@ function ProfilePic(props) {
       `${process.env.REACT_APP_GATEWAY_URI}/profile/users/profilePicture`,
       {
         method: "GET",
-        body: file,
       },
       navigate
     )
@@ -649,7 +648,6 @@ function ProfilePic(props) {
       <div id="profile-container">
         <div id="profile-icon">
           <img src={imageURL} />
-          <br />
         </div>
         {editButton ? (
           <button onClick={() => toggleEditButton(false)}>Edit</button>
