@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ChangePassword.css";
 import FormInput from "components/FormInput";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { authFetch } from "helpers/authHelpers";
 
 export default function ChangePasswordPage() {
@@ -38,6 +38,8 @@ function ForgotPasswordVerifyToken(props) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleUpdatePasswordResponse = (res) => {
     if (res.status === 201) {
       setMessage("Password Successfully Updated");
@@ -48,12 +50,17 @@ function ForgotPasswordVerifyToken(props) {
     if (res.status === 401) {
       setMessage("Unauthorized");
       setIsAttemptingFetch(false);
-      throw new Error(400);
+      throw new Error(401);
     }
     if (res.status === 400) {
       setMessage("The Current Password is Incorrect");
       setIsAttemptingFetch(false);
       throw new Error(400);
+    }
+    if (res.status === 500) {
+      setMessage("Something went wrong. Try Again Later!");
+      setIsAttemptingFetch(false);
+      throw new Error(500);
     }
   };
 
@@ -74,7 +81,7 @@ function ForgotPasswordVerifyToken(props) {
       );
       setIsAttemptingFetch(false);
     } else {
-      authFetch(`${process.env.REACT_APP_GATEWAY_URI}/account/changePassowrd`, {
+      authFetch(`${process.env.REACT_APP_GATEWAY_URI}/account/changePassword`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,6 +89,7 @@ function ForgotPasswordVerifyToken(props) {
           newPassword: newPassword,
           confirmNewPassword: confirmNewPassword,
         }),
+        navigate,
       })
         .then(handleUpdatePasswordResponse)
         .then((res) => res.json())
