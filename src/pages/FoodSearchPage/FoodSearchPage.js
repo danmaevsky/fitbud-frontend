@@ -20,8 +20,8 @@ export default function FoodSearchPage() {
 
     const userIsLoggedIn = IsUserLogged();
 
-    const fetchResults = () => {
-        if (userIsLoggedIn && searchType === "user") {
+    const fetchResults = (override) => {
+        if (userIsLoggedIn && (override || searchType === "user")) {
             let userId = JSON.parse(window.localStorage.profile)._id;
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?userId=${userId}`, {
                 method: "GET",
@@ -54,7 +54,7 @@ export default function FoodSearchPage() {
             <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
-                <button title="Search!" id="food-search-page-searchbox-button" onClick={fetchResults}>
+                <button title="Search!" id="food-search-page-searchbox-button" onClick={() => fetchResults()}>
                     <img src={magnifyingGlass} alt="magnifying glass icon" />
                 </button>
                 <input
@@ -96,7 +96,10 @@ export default function FoodSearchPage() {
                         <button
                             id="food-search-page-choice-user"
                             className={`exercise-search-page-choice-button${searchType === "user" ? "-active" : ""}`}
-                            onClick={() => setSearchType("user")}
+                            onClick={() => {
+                                fetchResults(true);
+                                setSearchType("user");
+                            }}
                         >
                             My Foods
                         </button>
