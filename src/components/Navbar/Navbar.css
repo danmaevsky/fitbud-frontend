@@ -95,6 +95,16 @@
     font-size: 1.5rem;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+#navbar-profile-icon img {
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #navbar-profile-icon:hover {
