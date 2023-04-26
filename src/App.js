@@ -44,7 +44,7 @@ function App() {
                     <Route element={<AuthWrapper />}>
                         <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/diary" element={<DiaryPage />} />
-                        <Route path="/editLogs/food" element={<EditFoodLogPage />} />
+                        <Route path="/edit-logs/food" element={<EditFoodLogPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
                         <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
