@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import useLocalStorage from "hooks/useLocalStorage";
 import useWindowDimensions from "hooks/useWindowDimensions";
 import { authFetch } from "helpers/authHelpers";
-import { CalculateGoal, fetchDiaryHelper } from "helpers/fitnessHelpers";
+import { CalculateGoal, DiaryHasMealEntries, fetchDiaryHelper } from "helpers/fitnessHelpers";
 import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function DashboardPage() {
@@ -128,7 +128,7 @@ function DailySummary(props) {
     let carbGoal = profile.goals.macroBreakdown.carbs;
     let proteinGoal = profile.goals.macroBreakdown.protein;
     // No Diary Found, display Default
-    if (!currentDiary) {
+    if (!DiaryHasMealEntries(currentDiary)) {
         return (
             <div id="dashboard-daily-summary-island">
                 <h2 id="dashboard-daily-summary-header">Your Daily Summary</h2>
@@ -174,12 +174,70 @@ function DailySummary(props) {
         );
     }
 
+    let caloriesEaten = Math.round(currentDiary.totalDiaryNutritionalContents.kcal);
+    let fatEaten = Math.round(currentDiary.totalDiaryNutritionalContents.totalFat);
+    let carbEaten = Math.round(currentDiary.totalDiaryNutritionalContents.totalCarb);
+    let proteinEaten = Math.round(currentDiary.totalDiaryNutritionalContents.protein);
+    let caloriesBurned = currentDiary.exercise.totalBurnedCalories ? Math.round(currentDiary.exercise.totalBurnedCalories) : 0;
+
     return (
         <div id="dashboard-daily-summary-island">
-            <h3 id="dashboard-daily-summary-header">Your Daily Summary</h3>
-            <div id="dashboard-daily-summary-goal">
-                <label>Goal:</label>
-                <h4> {calorieGoal}</h4>
+            <h2 id="dashboard-daily-summary-header">Your Daily Summary</h2>
+            <div id="dashboard-daily-summary-calculation">
+                <div id="dashboard-daily-summary-goal">
+                    <label>Goal</label>
+                    <h4>{calorieGoal}</h4>
+                </div>
+                <label>-</label>
+                <div id="dashboard-daily-summary-food">
+                    <label>Food</label>
+                    <h4>{caloriesEaten}</h4>
+                </div>
+                <label>+</label>
+                <div id="dashboard-daily-summary-exercise">
+                    <label>Exercise</label>
+                    <h4>{caloriesBurned}</h4>
+                </div>
+                <label>=</label>
+                <div id="dashboard-daily-summary-remaining">
+                    <label>Remaining</label>
+                    <h4>{calorieGoal - caloriesEaten + caloriesBurned}</h4>
+                </div>
+            </div>
+            <div id="dashboard-daily-summary-charts">
+                <GoalCircle calorieGoal={calorieGoal + caloriesBurned} kcal={caloriesEaten} totalFat={0} totalCarb={0} protein={0} />
+                <div id="dashboard-daily-summary-macro-charts">
+                    <div id="dashboard-daily-summary-fat">
+                        <label>Fat Goal:</label>
+                        <MacroCircle
+                            calorieGoal={calorieGoal + caloriesBurned}
+                            kcal={caloriesEaten}
+                            macroType="Fat"
+                            totalMacro={fatEaten}
+                            macroGoal={fatGoal}
+                        />
+                    </div>
+                    <div id="dashboard-daily-summary-carbs">
+                        <label>Carb Goal:</label>
+                        <MacroCircle
+                            calorieGoal={calorieGoal + caloriesBurned}
+                            kcal={caloriesEaten}
+                            macroType="Carbs"
+                            totalMacro={carbEaten}
+                            macroGoal={carbGoal}
+                        />
+                    </div>
+                    <div id="dashboard-daily-summary-protein">
+                        <label>Protein Goal:</label>
+                        <MacroCircle
+                            calorieGoal={calorieGoal + caloriesBurned}
+                            kcal={caloriesEaten}
+                            macroType="Protein"
+                            totalMacro={proteinEaten}
+                            macroGoal={proteinGoal}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -313,7 +371,7 @@ function GoalCircle(props) {
         } else {
             // console.log("Curr undefined!");
         }
-    }, [windowDims, kcalComputed, protein, totalCarb, totalFat, elemHeight, elemWidth]);
+    }, [windowDims, kcalComputed, kcal, protein, totalCarb, totalFat, elemHeight, elemWidth]);
     return (
         <div id="goal-circle" style={{ width: elemWidth, height: elemHeight }}>
             <canvas ref={canvas} style={{ width: elemWidth, height: elemHeight }}></canvas>
@@ -532,7 +590,7 @@ function MacroCircle(props) {
         } else {
             // console.log("Curr undefined!");
         }
-    }, [windowDims, elemHeight, elemWidth]);
+    }, [windowDims, kcal, elemHeight, elemWidth]);
 
     return (
         <div className="dashboard-macro-circle" style={{ width: elemWidth, height: elemHeight }}>

@@ -2,7 +2,7 @@ import magnifyingGlass from "assets/magnifying-glass.svg";
 import clearTextX from "assets/clear-text-x.svg";
 import "./ExerciseSearchPage.css";
 import { useState, useRef } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
 export default function ExerciseSearchPage() {
@@ -78,19 +78,21 @@ export default function ExerciseSearchPage() {
             </div>
             <div id="exercise-search-island">
                 <p id="exercise-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
-                {searchResults.length > 0 ? <ExerciseSearchList searchResults={searchResults} /> : null}
+                {searchResults.length > 0 ? <ExerciseSearchList exerciseType={exerciseType} searchResults={searchResults} /> : null}
                 {searchStatus !== 200 ? <h3>Search came back empty! Consider refining your search.</h3> : null}
             </div>
         </div>
     );
 }
 
+/* Utility Functions */
+
 function ExerciseSearchList(props) {
-    let { searchResults } = props;
+    let { searchResults, exerciseType } = props;
     return (
         <ul id="exercise-search-results-list">
             {searchResults.map((searchResults, index) => (
-                <ExerciseSearchResult response={searchResults} key={`exercise-search-result-${index}`} />
+                <ExerciseSearchResult exerciseType={exerciseType} response={searchResults} key={`exercise-search-result-${index}`} />
             ))}
             <li id="exercise-search-refine-message">
                 <h4>Didn't find what you were looking for? Consider refining your search!</h4>
@@ -100,9 +102,21 @@ function ExerciseSearchList(props) {
 }
 
 function ExerciseSearchResult(props) {
-    let { _id, name, MET } = props.response;
+    let { exerciseType, response } = props;
+    let { _id, name, MET } = response;
 
-    const resultOnClick = () => {};
+    // we need a state here so that the value does not mutate when the user selects a different exerciseType
+    const [exerciseTypeState, setExerciseTypeState] = useState(exerciseType);
+
+    const navigate = useNavigate();
+    const resultOnClick = () => {
+        if (exerciseTypeState === "strength") {
+            navigate("/exercise/strength/" + _id);
+        }
+        if (exerciseTypeState === "cardio") {
+            navigate("/exercise/cardio/" + _id);
+        }
+    };
     return (
         <li className="exercise-search-result" onClick={resultOnClick}>
             <h4>{name}</h4>
@@ -110,5 +124,3 @@ function ExerciseSearchResult(props) {
         </li>
     );
 }
-
-/* Utility Functions */

@@ -1,0 +1,50 @@
+#food-log-page-log-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.25rem;
+}
+
+.food-log-page-log-button {
+    cursor: pointer;
+    background-color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+}
+
+.food-log-page-log-button:hover {
+    filter: brightness(0.95);
+}
+
+.food-log-page-log-button label {
+    cursor: pointer;
+}
+
+.food-log-page-log-button button {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: white;
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+}
+
+.food-log-page-log-button button svg {
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+#food-log-page-delete-log {
+    align-self: flex-start;
+}
