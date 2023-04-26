@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import "./ProfilePage.css";
 import { authFetch, IsUserLogged } from "helpers/authHelpers";
@@ -449,7 +449,8 @@ function Settings(props) {
       <p>
         If you would like to rename your meals, please enter them below. Leave
         the entries blank if you prefer the default names. Add names for meals 5
-        and 6 if you like to add more meals to your diaries.
+        and 6 if you like to add more meals to your diaries. Remove the names to
+        remove meals from your diary.
       </p>
       <UpdateFormInput
         type="text"
@@ -582,14 +583,19 @@ function ProfilePic(props) {
     setIsAttemptingPost(true);
     formData.append("image", file);
 
-    authFetch(
-      `${process.env.REACT_APP_GATEWAY_URI}/profile/users/profilePicture`,
+    fetch(
+      `${process.env.REACT_APP_PROFILE_PIC_URI}/profilePicture/${profile._id}`,
       {
         method: "POST",
         body: formData,
-      },
-      navigate
-    ).then(handleProfilePicUploadResponse);
+      }
+    )
+      .then(handleProfilePicUploadResponse)
+      .then((res) => res.json())
+      .catch((err) => {
+        console.log(err);
+        setIsAttemptingFetch(false);
+      });
 
     toggleEditButton(true);
   };
@@ -601,7 +607,7 @@ function ProfilePic(props) {
   const handleProfilePicUploadResponse = (res) => {
     if (res.status === 201) {
       setHasProfilePicture(true);
-      getProfilePic();
+      window.location.reload();
       return res.json();
     }
     // best way to cancel a Promise chain is to throw an error
@@ -635,9 +641,10 @@ function ProfilePic(props) {
         setIsAttemptingFetch(false);
       });
   };
-
-  if (hasProfilePicture) {
+  useEffect(() => {
     getProfilePic();
+  }, []);
+  if (hasProfilePicture) {
     return (
       <div id="profile-container">
         <div id="profile-icon">
@@ -665,8 +672,25 @@ function ProfilePic(props) {
   } else
     return (
       <div id="profile-container">
-        {profile.firstName[0].toUpperCase()}
-        <button>Edit</button>
+        <div id="default-profile-icon">
+          {profile.firstName[0].toUpperCase()}
+        </div>
+        {editButton ? (
+          <button onClick={() => toggleEditButton(false)}>Edit</button>
+        ) : (
+          <div>
+            <button onClick={handleClick}>Upload</button>
+            <input
+              id="upload-button"
+              type="file"
+              accept="image/*"
+              ref={hiddenFileInput}
+              onChange={fileSelected}
+              style={{ display: "none" }}
+            />
+            <button onClick={postProfilePic}>Submit</button>
+          </div>
+        )}
       </div>
     );
 }
