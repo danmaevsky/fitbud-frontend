@@ -8,8 +8,6 @@ import UpdateFormInput from "components/UpdateFormInput";
 import { getCurrentDate } from "helpers/generalHelpers";
 
 export default function ProfilePage() {
-  const [profilePic, setProfilePic] = useState(null);
-  const [profile, setProfile] = useLocalStorage("profile", null);
   const [goals100, setGoals100] = useState(true);
   const loggedIn = IsUserLogged();
 
@@ -46,8 +44,8 @@ function Settings(props) {
   const [isAttemptingFetch, setIsAttemptingFetch] = useState(false);
   const navigate = useNavigate();
 
-  const [height, setHeight] = useState(null);
-  const [currentWeight, setCurrentWeight] = useState(null);
+  const [height, setHeight] = useState("");
+  const [currentWeight, setCurrentWeight] = useState("");
   const [percentBodyFat, setPercentBodyFat] = useState("");
   const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
 
@@ -58,9 +56,9 @@ function Settings(props) {
   const [meal4, setMeal4] = useState(profile.preferences.mealNames[4]);
   const [meal5, setMeal5] = useState(profile.preferences.mealNames[5]);
 
-  const [carbGoalPercent, setCarbGoalPercent] = useState(null);
-  const [fatGoalPercent, setFatGoalPercent] = useState(null);
-  const [proteinGoalPercent, setProteinGoalPercent] = useState(null);
+  const [carbGoalPercent, setCarbGoalPercent] = useState("");
+  const [fatGoalPercent, setFatGoalPercent] = useState("");
+  const [proteinGoalPercent, setProteinGoalPercent] = useState("");
 
   const handleResponse = (res) => {
     if (res.status === 200) {
@@ -90,25 +88,28 @@ function Settings(props) {
       date: getCurrentDate(),
       birthdate: profile.birthdate,
       sex: profile.sex,
-      heightCm: height
-        ? unitPreference === "imperial"
-          ? height * 2.54
-          : height
-        : profile.heightCm,
+      heightCm:
+        height !== ""
+          ? unitPreference === "imperial"
+            ? height * 2.54
+            : height
+          : profile.heightCm,
       startWeightKg: profile.startWeightKg,
       startingPercentBodyFat: profile.startingPercentBodyFat,
       currentWeightKg: {
-        value: currentWeight
-          ? unitPreference === "imperial"
-            ? currentWeight / 2.2
-            : currentWeight
-          : profile.currentWeightKg.value,
+        value:
+          currentWeight !== ""
+            ? unitPreference === "imperial"
+              ? currentWeight / 2.2
+              : currentWeight
+            : profile.currentWeightKg.value,
         date: currentWeight ? getCurrentDate() : profile.currentWeightKg.date,
       },
       currentPercentBodyFat: {
-        value: percentBodyFat
-          ? percentBodyFat / 100
-          : profile.currentPercentBodyFat.value,
+        value:
+          percentBodyFat !== ""
+            ? percentBodyFat / 100
+            : profile.currentPercentBodyFat.value,
         date: percentBodyFat
           ? getCurrentDate()
           : profile.currentPercentBodyFat.date,
@@ -119,15 +120,18 @@ function Settings(props) {
         calorieGoal: profile.goals.calorieGoal,
         weightDelta: profile.goals.weightDelta,
         macroBreakdown: {
-          carbs: carbGoalPercent
-            ? carbGoalPercent / 100
-            : profile.goals.macroBreakdown.carbs,
-          fat: fatGoalPercent
-            ? fatGoalPercent / 100
-            : profile.goals.macroBreakdown.fat,
-          protein: proteinGoalPercent
-            ? proteinGoalPercent / 100
-            : profile.goals.macroBreakdown.protein,
+          carbs:
+            carbGoalPercent === ""
+              ? profile.goals.macroBreakdown.carbs
+              : carbGoalPercent / 100,
+          fat:
+            fatGoalPercent === ""
+              ? profile.goals.macroBreakdown.fat
+              : fatGoalPercent / 100,
+          protein:
+            proteinGoalPercent === ""
+              ? profile.goals.macroBreakdown.protein
+              : proteinGoalPercent / 100,
         },
       },
       preferences: {
@@ -138,9 +142,9 @@ function Settings(props) {
     };
 
     if (
-      profile.goals.macroBreakdown.carbs +
-        profile.goals.macroBreakdown.fat +
-        profile.goals.macroBreakdown.protein !==
+      updatedProfile.goals.macroBreakdown.carbs +
+        updatedProfile.goals.macroBreakdown.fat +
+        updatedProfile.goals.macroBreakdown.protein !==
       1
     ) {
       setGoals100(false);
@@ -246,6 +250,67 @@ function Settings(props) {
     return;
   };
 
+  const inputBodyFatPercentOnChange = (e) => {
+    let n = Number(e.target.value);
+    if (n === "") {
+      setPercentBodyFat("");
+    } else if (n >= 0 && n <= 100) {
+      setPercentBodyFat(e.target.value);
+    }
+  };
+
+  const inputBodyFatPercentOnBlur = () => {
+    if (percentBodyFat === "") {
+      setPercentBodyFat("");
+      return;
+    } else if (percentBodyFat <= 0) {
+      setPercentBodyFat(0);
+      return;
+    } else if (percentBodyFat >= 100) {
+      setPercentBodyFat(100);
+      return;
+    }
+    return;
+  };
+
+  const inputHeightOnChange = (e) => {
+    let n = Number(e.target.value);
+    if (n === "") {
+      setHeight("");
+    } else if (n >= 0) {
+      setHeight(e.target.value);
+    }
+  };
+
+  const inputHeightOnBlur = () => {
+    if (height === "") {
+      setHeight("");
+      return;
+    } else if (height <= 0) {
+      setHeight(0);
+      return;
+    }
+  };
+
+  const inputWeightOnChange = (e) => {
+    let n = Number(e.target.value);
+    if (n === "") {
+      setCurrentWeight("");
+    } else if (n >= 0) {
+      setCurrentWeight(e.target.value);
+    }
+  };
+
+  const inputWeightOnBlur = () => {
+    if (currentWeight === "") {
+      setCurrentWeight("");
+      return;
+    } else if (currentWeight <= 0) {
+      setCurrentWeight(0);
+      return;
+    }
+  };
+
   return (
     <div id="signup-form-3" className="signup-island-form">
       <ProfilePic profile={profile} />
@@ -259,13 +324,13 @@ function Settings(props) {
           }`}
           onClick={() => {
             setUnitPreference("imperial");
-            if (height === null || height === "") {
-              setHeight(null);
+            if (height === "") {
+              setHeight("");
             } else {
               setHeight(Math.round((height / 2.54) * 10) / 10);
             }
-            if (currentWeight === null || currentWeight === "") {
-              setCurrentWeight(null);
+            if (currentWeight === "") {
+              setCurrentWeight("");
             } else {
               setCurrentWeight(Math.round(currentWeight * 2.2 * 10) / 10);
             }
@@ -280,13 +345,13 @@ function Settings(props) {
           }`}
           onClick={() => {
             setUnitPreference("metric");
-            if (height === null || height === "") {
-              setHeight(null);
+            if (height === "") {
+              setHeight("");
             } else {
               setHeight(Math.round(height * 2.54 * 10) / 10);
             }
-            if (currentWeight === null || currentWeight === "") {
-              setCurrentWeight(null);
+            if (currentWeight === "") {
+              setCurrentWeight("");
             } else {
               setCurrentWeight(Math.round((currentWeight / 2.2) * 10) / 10);
             }
@@ -308,8 +373,9 @@ function Settings(props) {
           (unitPreference === "imperial" ? " inches" : " cm")
         }
         value={height}
-        onChange={(e) => setHeight(e.target.value)}
         onClick={(e) => e.target.select()}
+        onChange={inputHeightOnChange}
+        onBlur={inputHeightOnBlur}
       />
       <UpdateFormInput
         type="number"
@@ -322,8 +388,9 @@ function Settings(props) {
           (unitPreference === "imperial" ? " lbs" : " kg")
         }
         value={currentWeight}
-        onChange={(e) => setCurrentWeight(e.target.value)}
         onClick={(e) => e.target.select()}
+        onChange={inputWeightOnChange}
+        onBlur={inputWeightOnBlur}
       />
       <p>
         If you know it, giving us your % Body Fat allows us to use a more
@@ -341,12 +408,15 @@ function Settings(props) {
         label="% Body Fat (Optional)"
         placeholder={
           profile.currentPercentBodyFat.value
-            ? `${profile.currentPercentBodyFat.value}%`
+            ? `${
+                Math.round(profile.currentPercentBodyFat.value * 100 * 10) / 10
+              }%`
             : "Ex: 15%"
         }
         value={percentBodyFat}
-        onChange={(e) => setPercentBodyFat(e.target.value)}
         onClick={(e) => e.target.select()}
+        onChange={inputBodyFatPercentOnChange}
+        onBlur={inputBodyFatPercentOnBlur}
       />
       <h2> Activity Levels </h2>
       <p>
@@ -447,9 +517,8 @@ function Settings(props) {
       </ul>
       <h2> Meal Names </h2>
       <p>
-        If you would like to rename your meals, please enter them below. Leave
-        the entries blank if you prefer the default names. Add names for meals 5
-        and 6 if you like to add more meals to your diaries. Remove the names to
+        If you would like to rename your meals, please enter them below. Add names 
+        for meals 5 and 6 if you like to add more meals to your diaries. Remove the names to
         remove meals from your diary.
       </p>
       <UpdateFormInput
@@ -497,13 +566,15 @@ function Settings(props) {
       <h2> Macro Goals </h2>
       <p>
         Here you can set the percent breakdown of macros you would like to
-        acheive. The percent total must add up to 100%
+        achieve. The percent total must add up to 100%
       </p>
       <UpdateFormInput
         type="number"
         inputMode="decimal"
         label="Carbs"
-        placeholder={profile.goals.macroBreakdown.carbs * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.carbs * 100 * 10) / 10 + "%"
+        }
         value={carbGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputCarbOnChange}
@@ -513,7 +584,9 @@ function Settings(props) {
         type="number"
         inputMode="decimal"
         label="Fat"
-        placeholder={profile.goals.macroBreakdown.fat * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.fat * 100 * 10) / 10 + "%"
+        }
         value={fatGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputFatOnChange}
@@ -523,7 +596,9 @@ function Settings(props) {
         type="number"
         inputMode="decimal"
         label="Protein"
-        placeholder={profile.goals.macroBreakdown.protein * 100 + "%"}
+        placeholder={
+          Math.round(profile.goals.macroBreakdown.protein * 100 * 10) / 10 + "%"
+        }
         value={proteinGoalPercent}
         onClick={(e) => e.target.select()}
         onChange={inputProteinOnChange}

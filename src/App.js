@@ -25,6 +25,7 @@ import RecipeBuilderPage from "pages/RecipeBuilderPage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
 import ExerciseCardioPage from "pages/ExerciseCardioPage";
 import EditExerciseStrengthLogPage from "pages/EditExerciseStrengthLogPage";
+import CreateFoodPage from "pages/CreateFoodPage";
 
 function App() {
     return (
@@ -52,6 +53,7 @@ function App() {
                         <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
                         <Route path="/exercise/cardio/:exerciseId" element={<ExerciseCardioPage />} />
                         <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
+                        <Route path="/food/createFood" element={<CreateFoodPage />} />
                     </Route>
                 </Routes>
             </div>

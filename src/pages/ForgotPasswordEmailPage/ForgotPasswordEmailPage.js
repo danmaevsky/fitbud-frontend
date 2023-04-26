@@ -28,7 +28,9 @@ function ForgotPasswordEmail(props) {
 
   const handleResponse = (res) => {
     if (res.status === 201) {
-      setMessage("Reset Link has been Sent!");
+      setMessage(
+        "Reset Link has been Sent! Please check your spam if you do not see the email"
+      );
       return res.json();
     }
 
