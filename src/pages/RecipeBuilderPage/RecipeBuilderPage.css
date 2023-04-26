@@ -416,3 +416,35 @@
 #recipe-serving-input {
     max-width: 8ch;
 }
+
+#food-search-island {
+    -webkit-backdrop-filter: blur(0);
+    backdrop-filter: blur(0);
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 1rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    background-color: white;
+    min-width: 15rem;
+    width: 40vw;
+    max-width: 25rem;
+    min-height: 10.5rem;
+    margin: 2rem;
+    }
+
+    #recipe-food-searchbox-empty {
+        position: inherit;
+        box-sizing: border-box;
+        height: 3.75rem;
+        width: fit-content;
+        display: flex;
+        margin: 2rem;
+        margin-bottom: 0.5rem;
+        align-items: center;
+        border-radius: 30px;
+    }

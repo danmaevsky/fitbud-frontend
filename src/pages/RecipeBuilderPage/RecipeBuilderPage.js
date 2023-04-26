@@ -110,10 +110,10 @@ export default function RecipeBuilderPage() {
                     recipe={recipe}
                     recipeMethods={recipeMethods}
                 />
-				<div>
+				<>
 					{foodId !== "" || renderFoodInfo ? (
-						<>
-							<div id="dashboard-food-searchbox-empty"></div>
+						<div id="dashboard-widgets">
+							<div id="recipe-food-searchbox-empty"></div>
 							<div id="food-search-island">
 								<div id="food-island-buttons">
 									<button
@@ -149,16 +149,16 @@ export default function RecipeBuilderPage() {
 									/>
 								) : null}
 							</div>
-						</>
+						</div>
 					) : (
-						<div>
+						<>
 							<FoodSearchbox
 								foodId={foodId}
 								setFoodId={setFoodId}
 							/>
-						</div>
+						</>
 					)}
-				</div>
+				</>
 			</div>
 		</div>
 	);
