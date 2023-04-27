@@ -30,6 +30,7 @@
     height: 25rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
+    overflow-y: scroll;
     /* max-height: 50vh; */
 }
 
@@ -214,6 +215,22 @@
     overflow-x: hidden;
     margin-bottom: 1rem;
 }
+
+#Home-faq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: start;
+    padding: 1rem;
+    resize: inherit;
+    min-width: 20rem;
+    width: 40vw;
+    max-width: 40rem;
+    height: 10vh;
+    overflow-x: hidden;
+    margin-bottom: 1rem;
+}
+
 
 @media screen and (max-width: 800px) {
     #Home-island {
