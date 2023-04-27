@@ -13,6 +13,7 @@ import {
     fetchDiaryHelper,
     GetBuiltInUnits,
     DiaryHasMealEntries,
+    DiaryHasExerciseEntries,
 } from "helpers/fitnessHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
 import FormInput from "components/FormInput";
@@ -41,53 +42,8 @@ export default function DiaryPage() {
         }
     }, [dateSearchParam]);
 
-    if (!DiaryHasMealEntries(diary)) {
-        return (
-            <div className="page-body" id="diary-page-body">
-                <div className="default-background-round round-background-decoration"></div>
-                <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-                <div className="default-background-bottom-banner bottom-bot-banner-background-decoration" id="diary-page-bottom-banner">
-                    <FormInput
-                        id="diary-date-input"
-                        type="date"
-                        value={date}
-                        placeholder="Date"
-                        onChange={(e) => navigate("/diary?date=" + e.target.value)}
-                    />
-                </div>
-                <div id="diary-page-content">
-                    <div id="diary-calorie-calculation-island">
-                        <h3>Calories</h3>
-                        <div id="diary-calorie-calculation">
-                            <div id="diary-calorie-calculation-goal">
-                                <label>Goal</label>
-                                <h4> {calorieGoal}</h4>
-                            </div>
-                            <label>-</label>
-                            <div id="diary-calorie-calculation-food">
-                                <label>Food</label>
-                                <h4>0</h4>
-                            </div>
-                            <label>+</label>
-                            <div id="diary-calorie-calculation-exercise">
-                                <label>Exercise</label>
-                                <h4>0</h4>
-                            </div>
-                            <label>=</label>
-                            <div id="diary-calorie-calculation-exercise">
-                                <label>Remaining</label>
-                                <h4>{calorieGoal}</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <Diary diary={diary} profile={profile} date={date} />
-                </div>
-            </div>
-        );
-    }
-
-    let caloriesEaten = Math.round(diary.totalDiaryNutritionalContents.kcal);
-    let caloriesBurned = diary.exercise.totalBurnedCalories ? Math.round(diary.exercise.totalBurnedCalories) : 0;
+    let caloriesEaten = DiaryHasMealEntries(diary) ? Math.round(diary.totalDiaryNutritionalContents.kcal) : 0;
+    let caloriesBurned = DiaryHasExerciseEntries(diary) ? Math.round(diary.exercise.totalBurnedCalories) : 0;
 
     return (
         <div className="page-body" id="diary-page-body">

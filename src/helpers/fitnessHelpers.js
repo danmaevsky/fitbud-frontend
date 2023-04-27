@@ -330,6 +330,18 @@ export function DiaryHasMealEntries(currentDiary) {
     return true;
 }
 
+export function DiaryHasExerciseEntries(currentDiary) {
+    if (!currentDiary) {
+        return false;
+    }
+
+    if (!currentDiary.exercise.totalBurnedCalories) {
+        return false;
+    }
+
+    return true;
+}
+
 /* The returned processDiary will look like
 processedDiary := {}
 
