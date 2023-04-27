@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'logo-font';
+    font-family: "logo-font";
     src: url(fonts/BreeSerif-Regular.ttf);
 }
 #navbar {
@@ -149,7 +149,7 @@
     font-size: 1.125rem;
 }
 
-#navbar h1 {
+/* #navbar h1 {
     font-family: 'logo-font';
     font-size: xx-large;
-}
+} */
