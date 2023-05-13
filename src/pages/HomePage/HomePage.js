@@ -1,11 +1,10 @@
-
-import "./HomePage.css"
-import {useRef} from "react";
-import emailjs from '@emailjs/browser';
-import {useState} from "react";
-import {data} from "./data";
-import {BsPlus} from "react-icons/bs";
-import {BiMinus} from "react-icons/bi";
+import "./HomePage.css";
+import { useRef } from "react";
+import emailjs from "@emailjs/browser";
+import { useState } from "react";
+import { data } from "./data";
+import expandPlus from "assets/add-food-plus.svg";
+import collapseMinus from "assets/minus-sign.svg";
 
 export default function HomePage() {
     return (
@@ -14,12 +13,12 @@ export default function HomePage() {
             <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="Home-island">
-                <FAQ props={data}/>
+                <FAQ props={data} />
             </div>
-            
+
             <div id="Home-island-2">
                 <h1>Give us feedback!</h1>
-                <Contact/>
+                <Contact />
             </div>
         </div>
     );
@@ -28,69 +27,61 @@ function FAQ() {
     const [questions, setQuestions] = useState(data);
 
     return (
-        <div> 
+        <div>
             <h1>FAQ</h1>
             {questions.map((question) => (
-                <SingleQuestion {...question}/>
+                <SingleQuestion {...question} />
             ))}
         </div>
-    )
+    );
 }
 
-function SingleQuestion({ question, answer}) {
+function SingleQuestion({ question, answer }) {
     const [showAnswer, setShowAnswer] = useState(false);
 
-    return(
+    return (
         <div>
-            <div id="Home-page-buttons"> 
+            <div id="Home-page-buttons">
                 <h2 onClick={() => setShowAnswer(!showAnswer)}>{question}</h2>
                 {showAnswer && <p>{answer}</p>}
-                {
-                    showAnswer ? (<button><BiMinus onClick={() => setShowAnswer(!showAnswer)}/></button>) : (<button onClick={() => setShowAnswer(!showAnswer)}><BsPlus/></button>)
-                }
-                
+                {showAnswer ? (
+                    <button onClick={() => setShowAnswer(!showAnswer)}>
+                        <img src={collapseMinus} />
+                    </button>
+                ) : (
+                    <button onClick={() => setShowAnswer(!showAnswer)}>
+                        <img src={expandPlus} />
+                    </button>
+                )}
             </div>
-            
         </div>
-    )
+    );
 }
 
 function Contact() {
-    const form = useRef()
+    const form = useRef();
     const sendEmail = (e) => {
         e.preventDefault();
-    
-        emailjs.sendForm('service_qqmye07', 'template_dot0k74', form.current, 'W4VMuSxS9LhbFbIMI')
-          .then((result) => {
-              console.log(result.text);
-          }, (error) => {
-              console.log(error.text);
-          });
-          e.target.reset()
-      };
-    return(
-        <form id="Home-island-form" ref={form} onSubmit={sendEmail}> 
-            
-            <input id="HomePage-emailbox"
-            type="text"
-            placeholder='email address' 
-            name='email' 
-            required
-            ></input>
-            
-            <textarea id="HomePage-textarea"
-            type="text" 
-            placeholder='comments' 
-            name='message' 
-            required
-            ></textarea>
 
+        emailjs.sendForm("service_qqmye07", "template_dot0k74", form.current, "W4VMuSxS9LhbFbIMI").then(
+            (result) => {
+                console.log(result.text);
+            },
+            (error) => {
+                console.log(error.text);
+            }
+        );
+        e.target.reset();
+    };
+    return (
+        <form id="Home-island-form" ref={form} onSubmit={sendEmail}>
+            <input id="HomePage-emailbox" type="text" placeholder="email address" name="email" required></input>
+
+            <textarea id="HomePage-textarea" type="text" placeholder="comments" name="message" required></textarea>
 
             <div id="Home-page-buttons">
-            <button type='submit'>
-                Submit
-            </button>
+                <button type="submit">Submit</button>
             </div>
         </form>
-    )
+    );
 }
