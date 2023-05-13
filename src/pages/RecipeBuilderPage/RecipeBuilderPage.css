@@ -1,4 +1,4 @@
-#dashboard-page-body {
+#recipe-builder-page-body {
     position: relative;
     overflow: hidden;
     background-color: var(--default-primary-background);
@@ -10,145 +10,21 @@
     height: 100%;
 }
 
-#dashboard-page-content {
+#recipe-builder-page-content {
     z-index: 1;
     margin-top: -5rem;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-around;
+    flex-direction: row;
+    justify-content: center;
     align-items: flex-start;
     height: 80vh;
     max-height: 50rem;
     width: 100vw;
-    max-width: 80rem;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-#dashboard-daily-summary-island {
-    flex-shrink: 0;
-    backdrop-filter: blur(0);
-    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0rem;
-    border-radius: 1rem;
-    padding-left: 3vw;
-    padding-right: 3vw;
-    padding-top: 2vh;
-    padding-bottom: 2vh;
-    background-color: white;
-    min-width: 15rem;
-    width: 40vw;
-    max-width: 30rem;
-    min-height: 22.5rem;
-    margin: 2rem;
-}
-#dashboard-daily-summary-island h2 {
-    font-size: 1.5rem;
-    margin: 1rem;
-}
-
-#dashboard-daily-summary-calculation {
-    display: flex;
-    width: 90%;
-    justify-content: space-between;
-}
-
-#dashboard-daily-summary-calculation h4 {
-    font-size: 1.125rem;
-    margin: 0;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-#dashboard-daily-summary-charts {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    gap: 2rem;
-    margin: 1rem;
-}
-
-#dashboard-daily-summary-macro-charts {
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-}
-
-#goal-circle {
-    position: sticky;
-    display: flex;
-    justify-content: center;
-    flex-shrink: 0;
-}
-#goal-circle h4 {
-    font-size: 1.25rem;
-    padding: 0;
-    margin: 0;
-}
-#goal-circle h5 {
-    font-size: 1rem;
-    padding: 0;
-    margin: 0;
-}
-
-#goal-circle div {
-    z-index: 1;
-    padding: 0;
-    margin: 0;
-    top: 50%;
-    align-self: center;
-    justify-self: center;
-}
-#goal-circle canvas {
-    position: absolute;
-}
-.dashboard-macro-circle {
-    position: sticky;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.dashboard-macro-circle-inner-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.dashboard-macro-circle-inner-text h4 {
-    font-size: 1rem;
-    padding: 0;
-    margin: 0;
-}
-.dashboard-macro-circle p {
-    /* position: absolute; */
-    width: 5ch;
-    font-size: 0.75rem;
-    padding: 0;
-    margin: 0;
-}
-
-.dashboard-macro-circle div {
-    position: relative;
-    z-index: 1;
-    padding: 0;
-    margin: 0;
-    align-self: center;
-    justify-self: center;
-}
-.dashboard-macro-circle canvas {
-    position: absolute;
-}
-
-#dashboard-widgets {
+#recipe-builder-food-search {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -158,7 +34,7 @@
     z-index: 1;
 }
 
-#dashboard-food-searchbox {
+#recipe-builder-food-searchbox {
     position: inherit;
     box-sizing: border-box;
     height: 3.75rem;
@@ -171,7 +47,7 @@
     border-radius: 30px;
     border: 0.2rem solid var(--default-primary-border);
 }
-#dashboard-food-searchbox input {
+#recipe-builder-food-searchbox input {
     font-size: 1.125rem;
     outline: none;
     padding: 0;
@@ -182,7 +58,7 @@
     border: none;
     background-color: white;
 }
-#dashboard-food-searchbox button {
+#recipe-builder-food-searchbox button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -197,17 +73,17 @@
     border-radius: 50%;
 }
 
-#dashboard-food-searchbox button:hover {
+#recipe-builder-food-searchbox button:hover {
     background-color: var(--default-primary-background);
 }
-#dashboard-food-searchbox button img {
+#recipe-builder-food-searchbox button img {
     height: 1.5rem;
 }
-#dashboard-food-searchbox:focus-within {
+#recipe-builder-food-searchbox:focus-within {
     border: 0.2rem solid var(--default-tertiary-color);
 }
 
-#dashboard-search-island {
+#recipe-builder-search-island {
     backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
     display: flex;
@@ -218,115 +94,89 @@
     border-radius: 1rem;
     padding-left: 3vw;
     padding-right: 3vw;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     background-color: white;
     min-width: 15rem;
     width: 40vw;
     max-width: 25rem;
     min-height: 10.5rem;
-    height: 20vh;
+    height: 40vh;
     /* margin: 2rem; */
 }
 
-#dashboard-search-island img {
-    filter: opacity(0.4) grayscale(0.5);
-    height: 10rem;
+#recipe-builder-search-island ul {
+    list-style: none;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    max-height: 50vh;
+    width: 90%;
+    overflow: auto;
+    justify-self: flex-start;
 }
 
-#dashboard-search-island h3 {
-    z-index: 1;
-    margin-top: -2.5rem;
+#recipe-builder-search-island ul li {
+    transition: filter 0.1s;
+    cursor: pointer;
+    width: 85%;
+    padding: 0.25rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-bottom: 1rem;
+    background: var(--default-primary-background);
+    border-radius: 10px;
 }
 
-#dashboard-progress-island {
-    backdrop-filter: blur(0);
-    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 1rem;
-    padding-left: 3vw;
-    padding-right: 3vw;
-    background-color: white;
-    min-width: 15rem;
-    width: 40vw;
-    max-width: 25rem;
-    min-height: 10.5rem;
-    height: 35vh;
-    margin: 1rem;
-    margin-top: 2rem;
+#recipe-builder-search-island ul li:nth-child(odd) {
+    background: white;
 }
 
-#dashboard-daily-summary-charts label {
-    font-weight: 700;
+#recipe-builder-search-island ul li:hover {
+    filter: brightness(90%);
+}
+
+#recipe-builder-search-island ul li h4 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--default-primary-text);
     font-size: 1rem;
 }
 
-#dashboard-daily-summary-fat label {
-    color: var(--food-info-color-fat);
-}
-#dashboard-daily-summary-carbs label {
-    color: var(--food-info-color-carb);
-}
-#dashboard-daily-summary-protein label {
-    color: var(--food-info-color-protein);
+#recipe-builder-search-island ul li p {
+    padding: 0;
+    margin-bottom: 0.75rem;
+    margin-top: 0;
+    color: var(--default-secondary-text);
+    font-size: 0.75rem;
 }
 
-@media screen and (max-width: 800px) {
-    #dashboard-page-content {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    #dashboard-daily-summary-island {
-        width: 75vw;
-        max-width: 30rem;
-        /* height: 32.5rem; */
-        /* min-height: 25rem; */
-    }
-
-    #dashboard-food-searchbox input {
-        font-size: 1.5rem;
-        min-width: 13.125rem;
-        width: 50vw;
-        max-width: 35rem;
-        height: 2rem;
-        border: none;
-        background-color: white;
-    }
-
-    #dashboard-food-searchbox button {
-        margin-right: 1rem;
-        height: 3rem;
-        width: 3rem;
-    }
-
-    #dashboard-food-searchbox button img {
-        height: 1.5rem;
-    }
-
-    #dashboard-search-island {
-        width: 70vw;
-        max-width: 30rem;
-    }
-
-    #dashboard-progress-island {
-        margin-top: 5rem;
-        width: 70vw;
-        max-width: 30rem;
-    }
+#recipe-builder-search-island-number {
+    padding: 0;
+    margin: 0;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+    color: var(--default-secondary-text);
 }
 
-@media screen and (max-width: 400px) {
-    #dashboard-daily-summary-island {
-        width: 80vw;
-    }
-    #dashboard-search-island h3 {
-        font-size: 0.95rem;
-    }
+#recipe-builder-search-island #food-search-refine-message {
+    cursor: default;
+    text-align: center;
+    background-color: white;
+}
+#recipe-builder-search-island #recipe-builder-search-refine-message:hover {
+    filter: none;
+}
+
+#recipe-builder-search-island img {
+    filter: opacity(0.4) grayscale(0.5);
+    height: 25rem;
+}
+
+#recipe-builder-search-island h3 {
+    z-index: 1;
+    margin-top: -2.5rem;
 }
 
 #food-island-back-arrow {
@@ -415,4 +265,44 @@
 
 #recipe-serving-input {
     max-width: 8ch;
+}
+
+@media screen and (max-width: 800px) {
+    #recipe-builder-page-content {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    #recipe-builder-food-searchbox input {
+        font-size: 1.5rem;
+        min-width: 13.125rem;
+        width: 50vw;
+        max-width: 35rem;
+        height: 2rem;
+        border: none;
+        background-color: white;
+    }
+
+    #recipe-builder-food-searchbox button {
+        margin-right: 1rem;
+        height: 3rem;
+        width: 3rem;
+    }
+
+    #recipe-builder-food-searchbox button img {
+        height: 1.5rem;
+    }
+
+    #recipe-builder-search-island {
+        width: 70vw;
+        max-width: 30rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #recipe-builder-search-island h3 {
+        font-size: 0.95rem;
+    }
 }
