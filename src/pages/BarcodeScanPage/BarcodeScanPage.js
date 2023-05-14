@@ -4,10 +4,11 @@ import backArrow from "assets/back-arrow.svg";
 import { Html5Qrcode } from "html5-qrcode";
 import { useState, useEffect } from "react";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function BarcodeScanPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [showHelp, setShowHelp] = useState(false);
     const [showBarcodeScanner, setShowBarcodeScanner] = useState(true);
     const [showInputField, setShowInputField] = useState(false);
@@ -27,8 +28,18 @@ export default function BarcodeScanPage() {
         if (barcodeResponse) {
             if (barcodeStatus !== 200) {
             } else {
-                console.log("Redirect to Food");
-                navigate("/food/" + barcodeResponse._id);
+                if (location.state && location.state.from === "recipe-builder") {
+                    console.log("Redirect to Recipe Builder");
+                    navigate("/recipe-builder/", {
+                        state: {
+                            from: "recipe-builder-barcode",
+                            barcodeFoodId: barcodeResponse._id,
+                        },
+                    });
+                } else {
+                    console.log("Redirect to Food");
+                    navigate("/food/" + barcodeResponse._id);
+                }
             }
         }
     }, [barcodeResponse]);

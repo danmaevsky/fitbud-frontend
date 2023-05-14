@@ -261,15 +261,31 @@
     width: 40vw;
     max-width: 30rem;
     min-height: 12.5rem;
-    /* max-height: 70vh; */
+    max-height: 70vh;
     margin: 2rem;
+    overflow-y: auto;
 }
+
+#recipe-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 15rem;
+    width: 100%;
+    max-width: 40rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 #recipe-builder-main-island h2 {
     font-size: 1.5rem;
     margin: 1rem;
 }
 
 #recipe-builder-ingredients {
+    flex-shrink: 0;
+    margin-bottom: 0.25rem;
     width: 100%;
     max-height: 30vh;
     overflow-y: auto;
@@ -331,7 +347,7 @@
 }
 
 #recipe-inputs {
-    width: 100%;
+    width: 95%;
     display: flex;
     justify-content: space-between;
 }
@@ -418,6 +434,10 @@
     height: 1.125rem;
 }
 
+#recipe-builder-main-island #food-page-more-info {
+    width: 95%;
+}
+
 #recipe-builder-save-recipe-button {
     color: var(--default-primary-text);
     font-size: 1.35rem;
@@ -431,6 +451,10 @@
 #recipe-builder-save-recipe-button:hover {
     filter: brightness(90%);
     cursor: pointer;
+}
+
+#recipe-builder-error {
+    color: var(--exercise-primary-color);
 }
 
 @media screen and (max-width: 800px) {

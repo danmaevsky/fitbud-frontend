@@ -7,7 +7,7 @@ import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
 import DropdownMenu from "components/DropdownMenu";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeBuilderPage.css";
 import useSessionStorage from "hooks/useSessionStorage";
 import { useEffect, useRef, useState } from "react";
@@ -18,10 +18,19 @@ import useArray from "hooks/useArray";
 import { ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase, GetBuiltInUnits } from "helpers/fitnessHelpers";
 
 export default function RecipeBuilderPage() {
-    const navigate = useNavigate();
+    const location = useLocation();
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
-    const [foodId, setFoodId] = useState("");
+
+    // check if came from barcode scanner page
+    let defaultFoodId = "";
+    if (location.state) {
+        if (location.state.from === "recipe-builder-barcode") {
+            defaultFoodId = location.state.barcodeFoodId;
+        }
+    }
+    const [foodId, setFoodId] = useState(defaultFoodId);
+
     let renderFoodInfo = responseStatus === 200; // check if response code is good
     renderFoodInfo = renderFoodInfo && foodResponse && foodId === foodResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
     const [metricQuantity, setMetricQuantity] = useState(100);
@@ -66,7 +75,7 @@ export default function RecipeBuilderPage() {
             foodId: _id,
             servingName: servingName,
             numServings: numServings,
-            metricQuantity: metricQuantity,
+            quantityMetric: metricQuantity,
             brand: brand,
             foodName: foodName,
             defaultMetricUnit: defaultMetricUnit,
@@ -196,7 +205,7 @@ function FoodSearchbox(props) {
                         <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
-                    <button id="dashboard-food-searchbox-barcode-button" onClick={() => navigate("/barcode")}>
+                    <button id="dashboard-food-searchbox-barcode-button" onClick={() => navigate("/barcode", { state: { from: "recipe-builder" } })}>
                         <img src={barcodeScannerIcon} alt="barcode scanner icon" />
                     </button>
                 )}
@@ -223,8 +232,24 @@ function RecipeItems(props) {
     const [recipeNumServings, setRecipeNumServings] = useState(1);
     const [recipeNumServingsText, setRecipeNumServingsText] = useState("1");
     const [showMoreInfo, setShowMoreInfo] = useState(false);
+    const [recipeError, setRecipeError] = useState("");
 
     const saveUserRecipe = () => {
+        if (recipe.length < 1) {
+            setRecipeError("Cannot save an empty recipe!");
+            return;
+        }
+
+        if (!recipeName) {
+            setRecipeError("Recipe must have a name!");
+            return;
+        }
+
+        if (!recipeNumServings) {
+            setRecipeError("Enter a valid number of servings (1 - 10,000)!");
+            return;
+        }
+
         let recipeObject = {
             name: recipeName,
             ingredients: [],
@@ -242,6 +267,10 @@ function RecipeItems(props) {
 
         let resStatus;
 
+        console.log(recipeObject);
+
+        return;
+
         authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -254,6 +283,10 @@ function RecipeItems(props) {
             .then((res) => {
                 if (resStatus == 201) {
                     recipeMethods.clear();
+                    nutrientsMethods.clear();
+                    setRecipeError("");
+                    setRecipeName("");
+                    setRecipeNumServingsText("");
                 } else if (resStatus == 500) {
                     console.log("Backend Error ", resStatus);
                 }
@@ -290,77 +323,80 @@ function RecipeItems(props) {
 
     return (
         <div id="recipe-builder-main-island">
-            <h3 id="recipe-builder-main-header">Recipe Builder</h3>
-            {totalRecipeNutrients ? (
-                <>
-                    <MacroCircle
-                        kcal={totalRecipeNutrients.kcal}
-                        totalFat={totalRecipeNutrients.totalFat}
-                        totalCarb={totalRecipeNutrients.totalCarb}
-                        protein={totalRecipeNutrients.protein}
+            <div id="recipe-info">
+                <h3 id="recipe-builder-main-header">Recipe Builder</h3>
+                {totalRecipeNutrients ? (
+                    <>
+                        <MacroCircle
+                            kcal={totalRecipeNutrients.kcal}
+                            totalFat={totalRecipeNutrients.totalFat}
+                            totalCarb={totalRecipeNutrients.totalCarb}
+                            protein={totalRecipeNutrients.protein}
+                        />
+                        <div id="food-info-macros">
+                            <h5 id="food-info-macro-fat">
+                                Fat:
+                                <br />
+                                {totalRecipeNutrients.totalFat} g
+                            </h5>
+                            <h5 id="food-info-macro-carb">
+                                Carbs:
+                                <br />
+                                {totalRecipeNutrients.totalCarb} g
+                            </h5>
+                            <h5 id="food-info-macro-protein">
+                                Protein:
+                                <br />
+                                {totalRecipeNutrients.protein} g
+                            </h5>
+                        </div>
+                    </>
+                ) : null}
+                <div id="recipe-inputs">
+                    <UpdateFormInput
+                        type="text"
+                        id="recipe-name-input"
+                        label={"Recipe Name"}
+                        placeholder={"Recipe Name"}
+                        value={recipeName}
+                        onChange={(e) => setRecipeName(e.target.value)}
+                        onClick={(e) => e.target.select()}
                     />
-                    <div id="food-info-macros">
-                        <h5 id="food-info-macro-fat">
-                            Fat:
-                            <br />
-                            {totalRecipeNutrients.totalFat} g
-                        </h5>
-                        <h5 id="food-info-macro-carb">
-                            Carbs:
-                            <br />
-                            {totalRecipeNutrients.totalCarb} g
-                        </h5>
-                        <h5 id="food-info-macro-protein">
-                            Protein:
-                            <br />
-                            {totalRecipeNutrients.protein} g
-                        </h5>
-                    </div>
-                </>
-            ) : null}
-            <div id="recipe-inputs">
-                <UpdateFormInput
-                    type="text"
-                    id="recipe-name-input"
-                    label={"Recipe Name"}
-                    placeholder={"Recipe Name"}
-                    value={recipeName}
-                    onChange={(e) => setRecipeName(e.target.value)}
-                    onClick={(e) => e.target.select()}
-                />
-                <UpdateFormInput
-                    type="number"
-                    id="recipe-serving-input"
-                    inputMode="decimal"
-                    label={"Num. Servings"}
-                    placeholder={"Num. Servings"}
-                    value={recipeNumServingsText}
-                    onChange={recipeNumServingsInputOnChange}
-                    onBlur={recipeNumServingsInputOnBlur}
-                    onClick={(e) => e.target.select()}
-                />
-            </div>
-            <IngredientListRecipe recipe={recipe} recipeMethods={recipeMethods} nutrientsMethods={nutrientsMethods} />
-            {showMoreInfo && totalRecipeNutrients ? (
-                <>
-                    <FoodMoreInfo processedNutrients={totalRecipeNutrients} />
-                    <div id="recipe-info-show-less">
-                        <button onClick={() => setShowMoreInfo(false)}>
-                            <img id="food-info-show-less-arrow" src={showMoreDownArrow} alt="show less nutritional information icon" />
+                    <UpdateFormInput
+                        type="number"
+                        id="recipe-serving-input"
+                        inputMode="decimal"
+                        label={"Num. Servings"}
+                        placeholder={"Num. Servings"}
+                        value={recipeNumServingsText}
+                        onChange={recipeNumServingsInputOnChange}
+                        onBlur={recipeNumServingsInputOnBlur}
+                        onClick={(e) => e.target.select()}
+                    />
+                </div>
+                <IngredientListRecipe recipe={recipe} recipeMethods={recipeMethods} nutrientsMethods={nutrientsMethods} />
+                {showMoreInfo && totalRecipeNutrients ? (
+                    <>
+                        <FoodMoreInfo processedNutrients={totalRecipeNutrients} />
+                        <div id="recipe-info-show-less">
+                            <button onClick={() => setShowMoreInfo(false)}>
+                                <img id="food-info-show-less-arrow" src={showMoreDownArrow} alt="show less nutritional information icon" />
+                            </button>
+                        </div>
+                    </>
+                ) : totalRecipeNutrients ? (
+                    <div id="recipe-info-show-more" onClick={() => setShowMoreInfo(true)}>
+                        <h5>Show More Nutritional Information</h5>
+                        <button>
+                            <img id="food-info-show-more-arrow" src={showMoreDownArrow} alt="show more nutritional information icon" />
                         </button>
                     </div>
-                </>
-            ) : totalRecipeNutrients ? (
-                <div id="recipe-info-show-more" onClick={() => setShowMoreInfo(true)}>
-                    <h5>Show More Nutritional Information</h5>
-                    <button>
-                        <img id="food-info-show-more-arrow" src={showMoreDownArrow} alt="show more nutritional information icon" />
-                    </button>
-                </div>
-            ) : null}
-            <button id="recipe-builder-save-recipe-button" onClick={saveUserRecipe}>
-                Save Recipe
-            </button>
+                ) : null}
+                {recipeError ? <h4 id="recipe-builder-error">{recipeError}</h4> : null}
+                <button id="recipe-builder-save-recipe-button" onClick={saveUserRecipe}>
+                    Save Recipe
+                </button>
+            </div>
         </div>
     );
 }
