@@ -17,6 +17,7 @@ import {
 } from "helpers/fitnessHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
 import FormInput from "components/FormInput";
+import { authFetch } from "helpers/authHelpers";
 
 export default function DiaryPage() {
     const navigate = useNavigate();
@@ -108,6 +109,7 @@ function Diary(props) {
                     recipeLogs={diary[mealKey].recipeLogs}
                     calories={mealCalories}
                     date={date}
+                    diaryId={diary._id}
                 />
             );
         } else if (mealName && diary) {
@@ -120,11 +122,20 @@ function Diary(props) {
                     recipeLogs={diary[mealKey].recipeLogs}
                     calories={null}
                     date={date}
+                    diaryId={diary._id}
                 />
             );
         } else if (mealName) {
             diarySections.push(
-                <MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} recipeLogs={null} date={date} />
+                <MealSection
+                    key={"mealSection" + i}
+                    mealPosition={mealKey}
+                    mealName={mealName}
+                    foodLogs={null}
+                    recipeLogs={null}
+                    date={date}
+                    diaryId={diary._id}
+                />
             );
         }
     }
@@ -162,7 +173,7 @@ function Diary(props) {
 }
 
 function MealSection(props) {
-    const { mealPosition, mealName, calories, foodLogs, recipeLogs, date } = props;
+    const { mealPosition, mealName, calories, foodLogs, recipeLogs, date, diaryId } = props;
     const navigate = useNavigate();
 
     let foodItems = [];
@@ -244,6 +255,31 @@ function MealSection(props) {
             let recipeObject = recipeLog.recipeObject;
             let recipeName = recipeObject.name;
             let totalNutritionalContent = recipeLog.totalNutritionalContent;
+            if (!totalNutritionalContent) {
+                // since this is undefined or null, then you must have deleted the recipe. Send a request to delete this log
+                let patchBody = {
+                    type: "recipe",
+                    action: "deleteLog",
+                    contents: {
+                        mealPosition: mealPosition,
+                        logPosition: i,
+                    },
+                };
+                authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(patchBody),
+                })
+                    .then((res) => {
+                        if (res.status !== 200) {
+                            throw Error(res.status);
+                        }
+                    })
+                    .catch((err) => console.log("Error in Diary Page: failed to delete logs of now-deleted Recipe"));
+                continue;
+            }
             let calories = Math.round(totalNutritionalContent.kcal);
 
             foodItems.push(

@@ -1,0 +1,51 @@
+#recipe-island-buttons {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}
+
+#recipe-island-buttons button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#recipe-island-back-arrow {
+    font-weight: 700;
+    margin-left: 1vw;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--default-primary-text);
+    cursor: pointer;
+    background-color: white;
+    border: none;
+}
+
+#recipe-island-back-arrow img {
+    height: 1rem;
+    width: 1rem;
+}
+
+#recipe-island-delete {
+    color: var(--exercise-primary-color);
+    align-self: flex-end;
+    font-weight: 700;
+    margin-left: 1vw;
+    display: inline-flex;
+    align-items: top;
+    gap: 0.25rem;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+}
+
+#recipe-island-delete .delete-log-button-icon {
+    height: 1.75rem;
+    width: 1.75rem;
+}

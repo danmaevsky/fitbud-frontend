@@ -2,6 +2,7 @@ import "./RecipePage.css";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
 import addFoodPlus from "assets/add-food-plus.svg";
+import DeleteLogButtonIcon from "components/DeleteLogButtonIcon";
 import DropdownMenu from "components/DropdownMenu";
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -21,6 +22,7 @@ import { getCurrentDate } from "helpers/generalHelpers";
 export default function RecipePage() {
     const { recipeId } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [recipeResponse, setRecipeResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
@@ -59,16 +61,36 @@ export default function RecipePage() {
     let renderRecipeInfo = responseStatus === 200; // check if response code is good
     renderRecipeInfo = renderRecipeInfo && recipeResponse && recipeId === recipeResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
 
+    const deleteRecipe = () => {
+        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/${recipeId}`, {
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    navigate(-1);
+                } else {
+                    throw Error(res.status);
+                }
+            })
+            .catch((err) => console.log(err));
+    };
+
     return (
         <div id="food-page-body">
             <div className="food-background-round round-background-decoration"></div>
             <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-island">
-                <Link to={-1} id="food-island-back-arrow">
-                    <img src={backArrow} alt="back arrow" />
-                    Go Back
-                </Link>
+                <div id="recipe-island-buttons">
+                    <Link to={-1} id="recipe-island-back-arrow">
+                        <img src={backArrow} alt="back arrow" />
+                        Go Back
+                    </Link>
+                    <button id="recipe-island-delete" onClick={deleteRecipe}>
+                        Delete Recipe
+                        <DeleteLogButtonIcon />
+                    </button>
+                </div>
                 {renderRecipeInfo ? (
                     <RecipeInfo
                         recipeResponse={recipeResponse}
@@ -106,6 +128,7 @@ function RecipeInfo(props) {
     let recipeName = recipeResponse.name;
     let recipeDate = ConvertTimestampToDate(recipeResponse.timestamp);
     let nutrients = ProcessRecipeNutritionalContents(recipeResponse, numServings);
+    nutrients = nutrients ? nutrients : {};
 
     return (
         <div id="food-info">
@@ -389,10 +412,10 @@ function AddFoodLogButton(props) {
 
     return (
         <div id="food-page-add-food-log" onClick={addFoodOnClick}>
+            <label>Add to Diary</label>
             <button>
                 <img src={addFoodPlus} />
             </button>
-            <label>Add to Diary</label>
         </div>
     );
 }

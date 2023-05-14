@@ -97,7 +97,7 @@ export default function RecipeSearchPage() {
                 ) : (
                     <>
                         <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
-                        {recipes.length <= 0 ? <h3>You don't have any recipes to look at yet!</h3> : null}
+                        <h3>You don't have any recipes to look at yet!</h3>
                     </>
                 )}
             </div>
