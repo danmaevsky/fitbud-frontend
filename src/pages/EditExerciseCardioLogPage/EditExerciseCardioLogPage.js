@@ -33,11 +33,11 @@ export default function EditExerciseCardioLogPage() {
         date = location.state.date;
         diary = date === currentDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
         exerciseLog = diary["exercise"].cardioLogs[logPosition];
-        exerciseResponse = exerciseLog.exerciseObject;
+        exerciseResponse = exerciseLog ? exerciseLog.exerciseObject : null;
 
         // set initial values
-        initialDurationMinutes = exerciseLog.durationMinutes;
-        initialKcal = exerciseLog.kcal;
+        initialDurationMinutes = exerciseLog ? exerciseLog.durationMinutes : initialDurationMinutes;
+        initialKcal = exerciseLog ? exerciseLog.kcal : initialKcal;
     }
 
     console.log("initialD", initialDurationMinutes);
@@ -46,7 +46,7 @@ export default function EditExerciseCardioLogPage() {
     const [kcal, setKcal] = useState(initialKcal);
 
     useEffect(() => {
-        if (!location.state) {
+        if (!location.state || !exerciseLog) {
             navigate(-1, { state: null });
         } else {
             setDurationMinutes(initialDurationMinutes);
@@ -54,7 +54,7 @@ export default function EditExerciseCardioLogPage() {
         }
     }, []);
 
-    if (!location.state) {
+    if (!location.state || !exerciseLog) {
         return (
             <div id="exercise-strength-page-body">
                 <div className="default-background-round round-background-decoration"></div>

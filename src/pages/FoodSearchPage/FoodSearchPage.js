@@ -97,7 +97,7 @@ export default function FoodSearchPage() {
                             id="food-search-page-choice-user"
                             className={`exercise-search-page-choice-button${searchType === "user" ? "-active" : ""}`}
                             onClick={() => {
-                                fetchResults(true);
+                                fetchResults(true); // override true so that when My Foods is clicked, it automatically sends GET
                                 setSearchType("user");
                             }}
                         >

@@ -154,8 +154,8 @@ export default function RecipeBuilderPage() {
 function FoodSearchbox(props) {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
-    const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchStatus, setSearchStatus] = useState(200);
     const searchBoxRef = useRef(null);
     const { foodId, setFoodId } = props;
 
@@ -230,7 +230,7 @@ function RecipeItems(props) {
     const { recipe, recipeMethods, nutrients, nutrientsMethods } = props;
     const [recipeName, setRecipeName] = useState("");
     const [recipeNumServings, setRecipeNumServings] = useState(1);
-    const [recipeNumServingsText, setRecipeNumServingsText] = useState("1");
+    const [recipeNumServingsText, setRecipeNumServingsText] = useState("");
     const [showMoreInfo, setShowMoreInfo] = useState(false);
     const [recipeError, setRecipeError] = useState("");
 
@@ -268,8 +268,6 @@ function RecipeItems(props) {
         let resStatus;
 
         console.log(recipeObject);
-
-        return;
 
         authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
             method: "POST",

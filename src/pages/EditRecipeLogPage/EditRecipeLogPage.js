@@ -1,4 +1,4 @@
-import "./EditFoodLogPage.css";
+import "./EditRecipeLogPage.css";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
 import DropdownMenu from "components/DropdownMenu";
@@ -7,13 +7,20 @@ import { useState, useEffect, useRef } from "react";
 import useSessionStorage from "hooks/useSessionStorage";
 import useLocalStorage from "hooks/useLocalStorage";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import { ToTitleCase, ProcessNutritionalContents, ProcessFoodName, ProcessUnit, GetBuiltInUnits } from "helpers/fitnessHelpers";
+import {
+    ToTitleCase,
+    ProcessNutritionalContents,
+    ProcessFoodName,
+    ProcessUnit,
+    GetBuiltInUnits,
+    ProcessRecipeNutritionalContents,
+} from "helpers/fitnessHelpers";
 import { getCurrentDate } from "helpers/generalHelpers";
-import { authFetch } from "helpers/authHelpers";
+import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
 import SaveLogButtonIcon from "components/SaveLogButtonIcon";
 import DeleteLogButtonIcon from "components/DeleteLogButtonIcon";
 
-export default function EditFoodLogPage() {
+export default function EditRecipeLogPage() {
     // Basically the FoodPage but with blue background and reads from localStorage instead of GET request
     const location = useLocation();
     const navigate = useNavigate();
@@ -22,44 +29,32 @@ export default function EditFoodLogPage() {
     const currentDate = getCurrentDate();
 
     console.log(searchParams);
-    let mealPosition, logPosition, date, foodLog, foodResponse, diary;
+    let mealPosition, logPosition, date, recipeLog, recipeResponse, diary;
     let initialNumServings = 1;
-    let initialServingName = "";
-    let initialMetricQuantity = 100;
 
     if (location.state) {
         mealPosition = location.state.mealPosition;
         logPosition = location.state.logPosition;
         date = location.state.date;
         diary = date === currentDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
-        foodLog = diary[mealPosition].foodLogs[logPosition];
-        foodResponse = foodLog ? foodLog.foodObject : null;
+        recipeLog = diary[mealPosition].recipeLogs[logPosition];
+        recipeResponse = recipeLog ? recipeLog.recipeObject : null;
 
         // set initial values
-        initialNumServings = foodLog ? foodLog.numServings : initialNumServings;
-        initialServingName = foodLog ? foodLog.servingName : initialServingName;
-        initialMetricQuantity = foodLog ? foodLog.quantityMetric : initialMetricQuantity;
+        initialNumServings = recipeLog ? recipeLog.numServings : initialNumServings;
     }
 
-    console.log("initialNumServing", initialNumServings);
-
     const [numServings, setNumServings] = useState(initialNumServings);
-    const [servingName, setServingName] = useState(initialServingName);
-    const [metricQuantity, setMetricQuantity] = useState(initialMetricQuantity);
-
-    console.log(servingName);
 
     useEffect(() => {
-        if (!location.state || !foodLog) {
+        if (!location.state || !recipeLog) {
             navigate(-1, { state: null });
         } else {
             setNumServings(initialNumServings);
-            setServingName(initialServingName);
-            setMetricQuantity(initialMetricQuantity);
         }
     }, []);
 
-    if (!location.state || !foodLog) {
+    if (!location.state || !recipeLog) {
         return (
             <div id="food-page-body">
                 <div className="default-background-round round-background-decoration"></div>
@@ -81,26 +76,16 @@ export default function EditFoodLogPage() {
                     Go Back
                 </Link>
 
-                <FoodInfo
-                    foodResponse={foodResponse}
-                    numServings={numServings}
-                    setNumServings={setNumServings}
-                    servingName={servingName}
-                    setServingName={setServingName}
-                    metricQuantity={metricQuantity}
-                    setMetricQuantity={setMetricQuantity}
-                />
-                {!foodResponse ? "Loading..." : null}
+                <RecipeInfo recipeResponse={recipeResponse} numServings={numServings} setNumServings={setNumServings} />
+                {!recipeResponse ? "Loading..." : null}
                 <div id="food-log-page-log-buttons">
                     <DeleteFoodLogButton mealPosition={mealPosition} logPosition={logPosition} date={date} diary={diary} />
-                    <SaveFoodLogButton
+                    <SaveRecipeLogButton
                         mealPosition={mealPosition}
                         logPosition={logPosition}
                         date={date}
-                        foodId={foodResponse._id}
-                        servingName={servingName}
+                        recipeId={recipeResponse._id}
                         numServings={numServings}
-                        quantityMetric={metricQuantity}
                         diary={diary}
                     />
                 </div>
@@ -109,27 +94,29 @@ export default function EditFoodLogPage() {
     );
 }
 
-function FoodInfo(props) {
+function RecipeInfo(props) {
+    const { recipeResponse, numServings, setNumServings } = props;
     const [showMoreInfo, setShowMoreInfo] = useState(false);
-    const { foodResponse, numServings, setNumServings, servingName, setServingName, metricQuantity, setMetricQuantity } = props;
 
-    const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
-    const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
+    // const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
+    // const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
 
-    useEffect(() => {
-        setMetricQuantity(defaultMetricQuantity);
-    }, []);
+    // useEffect(() => {
+    //     setMetricQuantity(defaultMetricQuantity);
+    // }, []);
 
-    const defaultUnitRounding = metricQuantity === Math.round(foodResponse.servingQuantity / 0.01) * 0.01;
+    // let foodName = ProcessFoodName(foodResponse.name);
+    // let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
+    // let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
 
-    let foodName = ProcessFoodName(foodResponse.name);
-    let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
-    let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
+    let recipeName = recipeResponse.name;
+    let recipeDate = ConvertTimestampToDate(recipeResponse.timestamp);
+    let nutrients = ProcessRecipeNutritionalContents(recipeResponse, numServings);
 
     return (
         <div id="food-info">
-            <h3>{foodName}</h3>
-            <p>{brand}</p>
+            <h3>{recipeName}</h3>
+            <p>{recipeDate}</p>
             <div id="food-info-overview">
                 <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
                 <div id="food-info-macros">
@@ -150,16 +137,7 @@ function FoodInfo(props) {
                     </h5>
                 </div>
             </div>
-            <SelectServingSize
-                householdServingName={foodResponse.servingName}
-                defaultServingQuantity={defaultMetricQuantity}
-                defaultMetricUnit={defaultMetricUnit}
-                setMetricQuantity={setMetricQuantity}
-                numServings={numServings}
-                setNumServings={setNumServings}
-                servingName={servingName}
-                setServingName={setServingName}
-            />
+            <SelectServingSize setNumServings={setNumServings} />
             {showMoreInfo ? (
                 <>
                     <FoodMoreInfo processedNutrients={nutrients} />
@@ -335,174 +313,34 @@ function FoodMoreInfo(props) {
     );
 }
 
-function SaveFoodLogButton(props) {
-    const { mealPosition, logPosition, date, foodId, servingName, numServings, quantityMetric, diary } = props;
-    const navigate = useNavigate();
-
-    const currentDate = getCurrentDate();
-    console.log("save food log");
-
-    const saveFoodOnClick = () => {
-        if (diary) {
-            let diaryId = diary._id;
-            let patchBody = {
-                type: "food",
-                action: "updateLog",
-                contents: {
-                    mealPosition: mealPosition,
-                    logPosition: logPosition,
-                    foodId: foodId,
-                    servingName: servingName,
-                    numServings: numServings,
-                    quantityMetric: quantityMetric,
-                },
-            };
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(patchBody),
-            })
-                .then((res) => {
-                    if (res.status === 200) {
-                        if (date === currentDate) {
-                            navigate("/diary");
-                        } else {
-                            navigate("/diary/?date=" + date);
-                        }
-                    } else {
-                        throw Error(res.status);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
-    return (
-        <div id="food-log-page-save-log" className="food-log-page-log-button" onClick={saveFoodOnClick}>
-            <label>Save Changes</label>
-            <button>
-                <SaveLogButtonIcon />
-            </button>
-        </div>
-    );
-}
-
-function DeleteFoodLogButton(props) {
-    const { mealPosition, logPosition, date, diary } = props;
-    const navigate = useNavigate();
-    const currentDate = getCurrentDate();
-
-    const deleteFoodOnClick = () => {
-        if (diary) {
-            let diaryId = diary._id;
-            let patchBody = {
-                type: "food",
-                action: "deleteLog",
-                contents: {
-                    mealPosition: mealPosition,
-                    logPosition: logPosition,
-                },
-            };
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(patchBody),
-            })
-                .then((res) => {
-                    if (res.status === 200) {
-                        if (date === currentDate) {
-                            navigate("/diary");
-                        } else {
-                            navigate("/diary/?date=" + date);
-                        }
-                    } else {
-                        throw Error(res.status);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
-    return (
-        <div id="food-log-page-delete-log" className="food-log-page-log-button" onClick={deleteFoodOnClick}>
-            <button>
-                <DeleteLogButtonIcon />
-            </button>
-            <label>Delete Log</label>
-        </div>
-    );
-}
-
 function SelectServingSize(props) {
     // needs to understand if food is measured in grams or milliliters by default
     // needs to preserve the default unit from the database
     // needs to create a range of appropriate units
-    const {
-        householdServingName,
-        defaultServingQuantity,
-        defaultMetricUnit,
-        setMetricQuantity,
-        numServings,
-        setNumServings,
-        servingName,
-        setServingName,
-    } = props;
+    const { setNumServings } = props;
 
-    const [numText, setNumText] = useState(numServings);
-
-    let units = {};
-    let defaultUnitName = `${defaultServingQuantity} ${ProcessUnit(defaultMetricUnit)}`;
-    if (householdServingName) {
-        defaultUnitName += ` (${ToTitleCase(householdServingName)})`;
-    }
-    units[defaultUnitName] = defaultServingQuantity;
-    let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
-
-    units = {
-        ...units,
-        ...builtInUnits,
-    };
+    const [numText, setNumText] = useState(1);
 
     const inputOnChange = (e) => {
         let n = Number(e.target.value);
         setNumText(e.target.value);
-        if (n > 0 && n < 10001) {
+        if (n >= 0 && n <= 10000) {
             setNumServings(n);
         }
     };
 
-    const inputOnBlur = () => {
-        if (numText < 0) {
+    const inputOnBlur = (e) => {
+        let n = Number(e.target.value);
+        if (!n || n < 0) {
             setNumText(0);
-            setNumServings(1);
+            setNumServings(0);
             return;
-        } else if (numText > 10000) {
+        } else if (n > 10000) {
             setNumText(10000);
             setNumServings(10000);
             return;
         }
-        setNumServings(numText);
-        return;
     };
-
-    const onUnitSelect = (selection) => {
-        setMetricQuantity(units[selection]);
-        setServingName(selection);
-    };
-
-    useEffect(() => {
-        // determine initial unit
-        let initialServingName = householdServingName ? householdServingName : ProcessUnit(defaultMetricUnit);
-        setServingName(initialServingName);
-    }, []);
 
     return (
         <div id="food-page-serving-selector">
@@ -515,15 +353,6 @@ function SelectServingSize(props) {
                     onClick={(e) => e.target.select()}
                     onChange={inputOnChange}
                     onBlur={inputOnBlur}
-                />
-            </div>
-            <div id="food-page-serving-size-selector">
-                <p>Serving Size:</p>
-                <DropdownMenu
-                    options={Object.keys(units)}
-                    listItemClass="food-serving-dropdown-item"
-                    onSelect={onUnitSelect}
-                    initialSelection={servingName}
                 />
             </div>
         </div>
@@ -629,4 +458,114 @@ function MacroCircle(props) {
             </div>
         </div>
     );
+}
+
+function SaveRecipeLogButton(props) {
+    const { mealPosition, logPosition, date, recipeId, numServings, diary } = props;
+    const navigate = useNavigate();
+
+    const currentDate = getCurrentDate();
+    console.log("save recipe log");
+
+    const saveRecipeOnClick = () => {
+        if (diary) {
+            let diaryId = diary._id;
+            let patchBody = {
+                type: "recipe",
+                action: "updateLog",
+                contents: {
+                    mealPosition: mealPosition,
+                    logPosition: logPosition,
+                    numServings: numServings,
+                    recipeId: recipeId,
+                },
+            };
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(patchBody),
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    return (
+        <div id="food-log-page-save-log" className="food-log-page-log-button" onClick={saveRecipeOnClick}>
+            <label>Save Changes</label>
+            <button>
+                <SaveLogButtonIcon />
+            </button>
+        </div>
+    );
+}
+
+function DeleteFoodLogButton(props) {
+    const { mealPosition, logPosition, date, diary } = props;
+    const navigate = useNavigate();
+    const currentDate = getCurrentDate();
+
+    const deleteRecipeOnClick = () => {
+        if (diary) {
+            let diaryId = diary._id;
+            let patchBody = {
+                type: "recipe",
+                action: "deleteLog",
+                contents: {
+                    mealPosition: mealPosition,
+                    logPosition: logPosition,
+                },
+            };
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(patchBody),
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        if (date === currentDate) {
+                            navigate("/diary");
+                        } else {
+                            navigate("/diary/?date=" + date);
+                        }
+                    } else {
+                        throw Error(res.status);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    };
+
+    return (
+        <div id="food-log-page-delete-log" className="food-log-page-log-button" onClick={deleteRecipeOnClick}>
+            <button>
+                <DeleteLogButtonIcon />
+            </button>
+            <label>Delete Log</label>
+        </div>
+    );
+}
+
+function ConvertTimestampToDate(timestamp) {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dateObj = new Date(timestamp);
+    return `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 }

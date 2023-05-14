@@ -105,6 +105,7 @@ function Diary(props) {
                     mealPosition={mealKey}
                     mealName={mealName}
                     foodLogs={diary[mealKey].foodLogs}
+                    recipeLogs={diary[mealKey].recipeLogs}
                     calories={mealCalories}
                     date={date}
                 />
@@ -116,12 +117,15 @@ function Diary(props) {
                     mealPosition={mealKey}
                     mealName={mealName}
                     foodLogs={diary[mealKey].foodLogs}
+                    recipeLogs={diary[mealKey].recipeLogs}
                     calories={null}
                     date={date}
                 />
             );
         } else if (mealName) {
-            diarySections.push(<MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} date={date} />);
+            diarySections.push(
+                <MealSection key={"mealSection" + i} mealPosition={mealKey} mealName={mealName} foodLogs={null} recipeLogs={null} date={date} />
+            );
         }
     }
 
@@ -158,7 +162,7 @@ function Diary(props) {
 }
 
 function MealSection(props) {
-    const { mealPosition, mealName, calories, foodLogs, date } = props;
+    const { mealPosition, mealName, calories, foodLogs, recipeLogs, date } = props;
     const navigate = useNavigate();
 
     let foodItems = [];
@@ -210,6 +214,50 @@ function MealSection(props) {
         }
     }
 
+    if (recipeLogs) {
+        console.log("recipeLogs", recipeLogs);
+        for (let i = 0; i < recipeLogs.length; i++) {
+            const recipeLogOnClick = () => {
+                const currentDate = getCurrentDate();
+                if (date === currentDate) {
+                    navigate("/edit-logs/recipe", {
+                        state: {
+                            mealPosition: mealPosition,
+                            logPosition: i,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                } else {
+                    navigate(`/edit-logs/recipe`, {
+                        state: {
+                            mealPosition: mealPosition,
+                            logPosition: i,
+                            date: date,
+                        },
+                        replace: false,
+                    });
+                }
+            };
+
+            let recipeLog = recipeLogs[i];
+            let recipeObject = recipeLog.recipeObject;
+            let recipeName = recipeObject.name;
+            let totalNutritionalContent = recipeLog.totalNutritionalContent;
+            let calories = Math.round(totalNutritionalContent.kcal);
+
+            foodItems.push(
+                <div key={`${mealName}-recipe-item-${i}`} className="diary-section-item" onClick={recipeLogOnClick}>
+                    <div className="diary-section-item-name">
+                        <h4>{recipeName}</h4>
+                        <p>Created {ConvertTimestampToDate(recipeObject.timestamp)} </p>
+                    </div>
+                    <h4>{calories}</h4>
+                </div>
+            );
+        }
+    }
+
     const addFoodOnClick = (e) => {
         e.stopPropagation();
         navigate("/food", {
@@ -240,7 +288,6 @@ function MealSection(props) {
 function ExerciseSection(props) {
     const { exerciseLogs, date, calories } = props;
     const navigate = useNavigate();
-    console.log(exerciseLogs);
 
     let exerciseItems = [];
     if (exerciseLogs) {
@@ -347,4 +394,10 @@ function CreateServingText(foodLog) {
     } else {
         return `${numServings} servings`;
     }
+}
+
+function ConvertTimestampToDate(timestamp) {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dateObj = new Date(timestamp);
+    return `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 }

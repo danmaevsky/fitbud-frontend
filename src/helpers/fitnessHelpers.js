@@ -156,6 +156,12 @@ export async function getAllDiaryEntries(diary, navigate) {
                 })
                 .then((json) => {
                     processedDiary[meal].recipeLogs[i].recipeObject = json;
+
+                    let totalNutritionalContent = {};
+
+                    totalNutritionalContent = ProcessRecipeNutritionalContents(json, log.numServings);
+
+                    processedDiary[meal].recipeLogs[i].totalNutritionalContent = totalNutritionalContent;
                 })
                 .catch((error) => {
                     console.log(error, resStatus);
@@ -255,9 +261,15 @@ function CountNutrientsPerMeal(diary) {
                 totalMealNutrients = log.totalNutritionalContent;
             }
         }
-        // for (let i = 0; i < diary[meal].recipeLogs.length; i++) {
-        //     let log = diary[meal].recipeLogs[i];
-        // }
+
+        for (let i = 0; i < diary[meal].recipeLogs.length; i++) {
+            let log = diary[meal].recipeLogs[i];
+            if (totalMealNutrients) {
+                totalMealNutrients = AddNutrients(totalMealNutrients, log.totalNutritionalContent);
+            } else {
+                totalMealNutrients = log.totalNutritionalContent;
+            }
+        }
 
         diary[meal].totalMealNutritionalContent = totalMealNutrients;
         if (totalMealNutrients) {
@@ -286,9 +298,20 @@ function CountNutrientsPerMeal(diary) {
 
 function AddNutrients(nutrients1, nutrients2) {
     let sum = {};
-    Object.keys(nutrients1).forEach((nutrient) => {
-        sum[nutrient] = Number(nutrients1[nutrient]) + Number(nutrients2[nutrient]);
-    });
+    if (nutrients1 && !nutrients2) {
+        Object.keys(nutrients1).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients1[nutrient]);
+        });
+    } else if (!nutrients1 && nutrients2) {
+        Object.keys(nutrients2).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients2[nutrient]);
+        });
+    } else {
+        Object.keys(nutrients1).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients1[nutrient]) + Number(nutrients2[nutrient]);
+        });
+    }
+
     return sum;
 }
 
@@ -493,6 +516,29 @@ export function ProcessNutritionalContents(nutritionalContents, metricQuantity, 
     nutrients.kcal = nutrients.kcal > 25_000 ? nutrients.kcal.toExponential(2) : nutrients.kcal.toFixed(0);
     // console.log(nutrients);
     return nutrients;
+}
+
+export function TallyRecipeNutrients(nutrients, recipeNumServings, numServings) {
+    let totalRecipeNutrients = null;
+    for (let i = 0; i < nutrients.length; i++) {
+        totalRecipeNutrients = AddNutrients(totalRecipeNutrients, nutrients[i]);
+    }
+
+    if (totalRecipeNutrients) {
+        Object.keys(totalRecipeNutrients).forEach((nutrient) => {
+            let precision = nutrient === "kcal" ? 0 : 1;
+            totalRecipeNutrients[nutrient] = ((Number(totalRecipeNutrients[nutrient]) / recipeNumServings) * numServings).toFixed(precision);
+        });
+    }
+    return totalRecipeNutrients;
+}
+
+export function ProcessRecipeNutritionalContents(recipeResponse, numServings) {
+    let nutrients = recipeResponse.ingredients.map((ingredient) => {
+        return ProcessNutritionalContents(ingredient.food.nutritionalContent, ingredient.quantityMetric, ingredient.numServings, false);
+    });
+
+    return TallyRecipeNutrients(nutrients, recipeResponse.numServings, numServings);
 }
 
 export function GetBuiltInUnits(defaultMetricUnit) {

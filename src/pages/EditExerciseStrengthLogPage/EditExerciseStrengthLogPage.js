@@ -32,13 +32,13 @@ export default function EditExerciseStrengthLogPage() {
         date = location.state.date;
         diary = date === currentDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
         exerciseLog = diary["exercise"].strengthLogs[logPosition];
-        exerciseResponse = exerciseLog.exerciseObject;
+        exerciseResponse = exerciseLog ? exerciseLog.exerciseObject : null;
 
         // set initial values
-        initialNumSets = exerciseLog.sets;
-        initialRepsArray = exerciseLog.reps;
-        initialWeightKgArray = exerciseLog.weightKg;
-        initialKcal = exerciseLog.kcal;
+        initialNumSets = exerciseLog ? exerciseLog.sets : initialNumSets;
+        initialRepsArray = exerciseLog ? exerciseLog.reps : initialRepsArray;
+        initialWeightKgArray = exerciseLog ? exerciseLog.weightKg : initialWeightKgArray;
+        initialKcal = exerciseLog ? exerciseLog.kcal : initialKcal;
     }
 
     const [numSets, setNumSets] = useState(initialNumSets);
@@ -47,7 +47,7 @@ export default function EditExerciseStrengthLogPage() {
     const [kcal, setKcal] = useState(initialKcal);
 
     useEffect(() => {
-        if (!location.state) {
+        if (!location.state || !exerciseLog) {
             navigate(-1, { state: null });
         } else {
             setNumSets(initialNumSets);
@@ -57,7 +57,7 @@ export default function EditExerciseStrengthLogPage() {
         }
     }, []);
 
-    if (!location.state) {
+    if (!location.state || !exerciseLog) {
         return (
             <div id="exercise-strength-page-body">
                 <div className="default-background-round round-background-decoration"></div>

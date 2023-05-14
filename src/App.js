@@ -16,14 +16,17 @@ import ForgotPasswordEmailPage from "pages/ForgotPasswordEmailPage";
 import ForgotPasswordPasswordPage from "pages/ForgotPasswordPasswordPage";
 // protected pages
 import AuthWrapper from "layouts/AuthWrapper";
-import EditFoodLogPage from "pages/EditFoodLogPage";
 import ExerciseStrengthPage from "pages/ExerciseStrengthPage";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
 import ProfilePage from "pages/ProfilePage";
+import RecipeSearchPage from "pages/RecipeSearchPage";
 import RecipeBuilderPage from "pages/RecipeBuilderPage";
+import RecipePage from "pages/RecipePage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
 import ExerciseCardioPage from "pages/ExerciseCardioPage";
+import EditFoodLogPage from "pages/EditFoodLogPage";
+import EditRecipeLogPage from "pages/EditRecipeLogPage";
 import EditExerciseStrengthLogPage from "pages/EditExerciseStrengthLogPage";
 import EditExerciseCardioLogPage from "pages/EditExerciseCardioLogPage";
 import CreateFoodPage from "pages/CreateFoodPage";
@@ -50,10 +53,13 @@ function App() {
                         <Route path="/edit-logs/food" element={<EditFoodLogPage />} />
                         <Route path="/edit-logs/strength" element={<EditExerciseStrengthLogPage />} />
                         <Route path="/edit-logs/cardio" element={<EditExerciseCardioLogPage />} />
+                        <Route path="/edit-logs/recipe" element={<EditRecipeLogPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
                         <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
                         <Route path="/exercise/cardio/:exerciseId" element={<ExerciseCardioPage />} />
+                        <Route path="/recipes" element={<RecipeSearchPage />} />
+                        <Route path="/recipes/:recipeId" element={<RecipePage />} />
                         <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
                         <Route path="/food/createFood" element={<CreateFoodPage />} />
                     </Route>

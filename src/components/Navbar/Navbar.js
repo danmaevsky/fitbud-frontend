@@ -193,8 +193,9 @@ function ProfileMenu(props) {
         <div id="navbar-profile-menu" className={navbarClass}>
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/diary">Diary</Link>
+            <Link to="/recipes">Recipes</Link>
+            <Link to="/workouts">Workouts</Link>
             <Link to="/profile">Profile</Link>
-            <Link to="/recipe-builder">Create a Recipe</Link>
             <p onClick={logoutOnClick}>Logout</p>
         </div>
     );

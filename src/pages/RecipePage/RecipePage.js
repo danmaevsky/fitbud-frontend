@@ -1,135 +1,116 @@
-import "./EditFoodLogPage.css";
+import "./RecipePage.css";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
+import addFoodPlus from "assets/add-food-plus.svg";
 import DropdownMenu from "components/DropdownMenu";
-import { Link, useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import useSessionStorage from "hooks/useSessionStorage";
-import useLocalStorage from "hooks/useLocalStorage";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useWindowDimensions from "hooks/useWindowDimensions";
-import { ToTitleCase, ProcessNutritionalContents, ProcessFoodName, ProcessUnit, GetBuiltInUnits } from "helpers/fitnessHelpers";
+import {
+    GetBuiltInUnits,
+    ProcessFoodName,
+    ProcessNutritionalContents,
+    ProcessRecipeNutritionalContents,
+    ProcessUnit,
+    ToTitleCase,
+} from "helpers/fitnessHelpers";
+import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
+import useSessionStorage from "hooks/useSessionStorage";
 import { getCurrentDate } from "helpers/generalHelpers";
-import { authFetch } from "helpers/authHelpers";
-import SaveLogButtonIcon from "components/SaveLogButtonIcon";
-import DeleteLogButtonIcon from "components/DeleteLogButtonIcon";
 
-export default function EditFoodLogPage() {
-    // Basically the FoodPage but with blue background and reads from localStorage instead of GET request
+export default function RecipePage() {
+    const { recipeId } = useParams();
     const location = useLocation();
-    const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
 
-    const currentDate = getCurrentDate();
+    const [recipeResponse, setRecipeResponse] = useState(null);
+    const [responseStatus, setResponseStatus] = useState(200);
+    const [numServings, setNumServings] = useState(1);
+    const [mealPosition, setMealPosition] = useState("meal1");
+    const [diaryDate, setDiaryDate] = useState(getCurrentDate());
 
-    console.log(searchParams);
-    let mealPosition, logPosition, date, foodLog, foodResponse, diary;
-    let initialNumServings = 1;
-    let initialServingName = "";
-    let initialMetricQuantity = 100;
+    const userIsLoggedIn = IsUserLogged();
 
-    if (location.state) {
-        mealPosition = location.state.mealPosition;
-        logPosition = location.state.logPosition;
-        date = location.state.date;
-        diary = date === currentDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
-        foodLog = diary[mealPosition].foodLogs[logPosition];
-        foodResponse = foodLog ? foodLog.foodObject : null;
-
-        // set initial values
-        initialNumServings = foodLog ? foodLog.numServings : initialNumServings;
-        initialServingName = foodLog ? foodLog.servingName : initialServingName;
-        initialMetricQuantity = foodLog ? foodLog.quantityMetric : initialMetricQuantity;
-    }
-
-    console.log("initialNumServing", initialNumServings);
-
-    const [numServings, setNumServings] = useState(initialNumServings);
-    const [servingName, setServingName] = useState(initialServingName);
-    const [metricQuantity, setMetricQuantity] = useState(initialMetricQuantity);
-
-    console.log(servingName);
-
+    // fetching food object
     useEffect(() => {
-        if (!location.state || !foodLog) {
-            navigate(-1, { state: null });
-        } else {
-            setNumServings(initialNumServings);
-            setServingName(initialServingName);
-            setMetricQuantity(initialMetricQuantity);
+        let resStatus;
+        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/${recipeId}`, {
+            method: "GET",
+        })
+            .then((res) => {
+                resStatus = res.status;
+                return res.json();
+            })
+            .then((json) => {
+                setResponseStatus(resStatus);
+                setRecipeResponse(json);
+            });
+    }, [recipeId]);
+
+    // seeing if user came from the diary page
+    useEffect(() => {
+        if (location.state) {
+            if (location.state.mealPosition && location.state.date) {
+                setMealPosition(location.state.mealPosition);
+                setDiaryDate(location.state.date);
+            }
         }
     }, []);
 
-    if (!location.state || !foodLog) {
-        return (
-            <div id="food-page-body">
-                <div className="default-background-round round-background-decoration"></div>
-                <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-                <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
-                <div id="food-island"></div>
-            </div>
-        );
-    }
+    let renderRecipeInfo = responseStatus === 200; // check if response code is good
+    renderRecipeInfo = renderRecipeInfo && recipeResponse && recipeId === recipeResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
 
     return (
         <div id="food-page-body">
-            <div className="default-background-round round-background-decoration"></div>
-            <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+            <div className="food-background-round round-background-decoration"></div>
+            <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-island">
                 <Link to={-1} id="food-island-back-arrow">
                     <img src={backArrow} alt="back arrow" />
                     Go Back
                 </Link>
-
-                <FoodInfo
-                    foodResponse={foodResponse}
-                    numServings={numServings}
-                    setNumServings={setNumServings}
-                    servingName={servingName}
-                    setServingName={setServingName}
-                    metricQuantity={metricQuantity}
-                    setMetricQuantity={setMetricQuantity}
-                />
-                {!foodResponse ? "Loading..." : null}
-                <div id="food-log-page-log-buttons">
-                    <DeleteFoodLogButton mealPosition={mealPosition} logPosition={logPosition} date={date} diary={diary} />
-                    <SaveFoodLogButton
-                        mealPosition={mealPosition}
-                        logPosition={logPosition}
-                        date={date}
-                        foodId={foodResponse._id}
-                        servingName={servingName}
+                {renderRecipeInfo ? (
+                    <RecipeInfo
+                        recipeResponse={recipeResponse}
                         numServings={numServings}
-                        quantityMetric={metricQuantity}
-                        diary={diary}
+                        setNumServings={setNumServings}
+                        mealPosition={mealPosition}
+                        setMealPosition={setMealPosition}
                     />
-                </div>
+                ) : null}
+                {!recipeResponse ? "Loading..." : null}
+                {responseStatus !== 200 ? "404. No foods matching this ID!" : null}
+                {userIsLoggedIn && renderRecipeInfo ? (
+                    <AddFoodLogButton recipeId={recipeId} numServings={numServings} mealPosition={mealPosition} diaryDate={diaryDate} />
+                ) : null}
             </div>
         </div>
     );
 }
 
-function FoodInfo(props) {
+function RecipeInfo(props) {
+    const { recipeResponse, numServings, setNumServings, mealPosition, setMealPosition } = props;
     const [showMoreInfo, setShowMoreInfo] = useState(false);
-    const { foodResponse, numServings, setNumServings, servingName, setServingName, metricQuantity, setMetricQuantity } = props;
 
-    const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
-    const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
+    // const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
+    // const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
 
-    useEffect(() => {
-        setMetricQuantity(defaultMetricQuantity);
-    }, []);
+    // useEffect(() => {
+    //     setMetricQuantity(defaultMetricQuantity);
+    // }, []);
 
-    const defaultUnitRounding = metricQuantity === Math.round(foodResponse.servingQuantity / 0.01) * 0.01;
+    // let foodName = ProcessFoodName(foodResponse.name);
+    // let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
+    // let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
 
-    let foodName = ProcessFoodName(foodResponse.name);
-    let brand = foodResponse.brandName ? ToTitleCase(foodResponse.brandName) : foodResponse.brandOwner ? ToTitleCase(foodResponse.brandOwner) : null;
-    let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
+    let recipeName = recipeResponse.name;
+    let recipeDate = ConvertTimestampToDate(recipeResponse.timestamp);
+    let nutrients = ProcessRecipeNutritionalContents(recipeResponse, numServings);
 
     return (
         <div id="food-info">
-            <h3>{foodName}</h3>
-            <p>{brand}</p>
+            <h3>{recipeName}</h3>
+            <p>{recipeDate}</p>
             <div id="food-info-overview">
                 <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
                 <div id="food-info-macros">
@@ -150,16 +131,7 @@ function FoodInfo(props) {
                     </h5>
                 </div>
             </div>
-            <SelectServingSize
-                householdServingName={foodResponse.servingName}
-                defaultServingQuantity={defaultMetricQuantity}
-                defaultMetricUnit={defaultMetricUnit}
-                setMetricQuantity={setMetricQuantity}
-                numServings={numServings}
-                setNumServings={setNumServings}
-                servingName={servingName}
-                setServingName={setServingName}
-            />
+            <SelectServingSize setNumServings={setNumServings} mealPosition={mealPosition} setMealPosition={setMealPosition} />
             {showMoreInfo ? (
                 <>
                     <FoodMoreInfo processedNutrients={nutrients} />
@@ -335,28 +307,29 @@ function FoodMoreInfo(props) {
     );
 }
 
-function SaveFoodLogButton(props) {
-    const { mealPosition, logPosition, date, foodId, servingName, numServings, quantityMetric, diary } = props;
+function AddFoodLogButton(props) {
+    const { recipeId, numServings, mealPosition, diaryDate } = props;
     const navigate = useNavigate();
 
     const currentDate = getCurrentDate();
-    console.log("save food log");
+    const userIsLoaded = IsUserDiaryReady();
 
-    const saveFoodOnClick = () => {
+    let diary = null;
+    if (userIsLoaded) diary = currentDate === diaryDate ? JSON.parse(window.localStorage.CurrentDiary) : JSON.parse(window.localStorage.PrevDiary);
+
+    const addFoodOnClick = () => {
         if (diary) {
             let diaryId = diary._id;
             let patchBody = {
-                type: "food",
-                action: "updateLog",
+                type: "recipe",
+                action: "addLog",
                 contents: {
                     mealPosition: mealPosition,
-                    logPosition: logPosition,
-                    foodId: foodId,
-                    servingName: servingName,
+                    recipeId: recipeId,
                     numServings: numServings,
-                    quantityMetric: quantityMetric,
                 },
             };
+
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
                 method: "PATCH",
                 headers: {
@@ -366,10 +339,10 @@ function SaveFoodLogButton(props) {
             })
                 .then((res) => {
                     if (res.status === 200) {
-                        if (date === currentDate) {
+                        if (diaryDate === currentDate) {
                             navigate("/diary");
                         } else {
-                            navigate("/diary/?date=" + date);
+                            navigate("/diary/?date=" + diaryDate);
                         }
                     } else {
                         throw Error(res.status);
@@ -378,48 +351,31 @@ function SaveFoodLogButton(props) {
                 .catch((error) => {
                     console.log(error);
                 });
-        }
-    };
-
-    return (
-        <div id="food-log-page-save-log" className="food-log-page-log-button" onClick={saveFoodOnClick}>
-            <label>Save Changes</label>
-            <button>
-                <SaveLogButtonIcon />
-            </button>
-        </div>
-    );
-}
-
-function DeleteFoodLogButton(props) {
-    const { mealPosition, logPosition, date, diary } = props;
-    const navigate = useNavigate();
-    const currentDate = getCurrentDate();
-
-    const deleteFoodOnClick = () => {
-        if (diary) {
-            let diaryId = diary._id;
-            let patchBody = {
-                type: "food",
-                action: "deleteLog",
+        } else {
+            let postBody = {
+                type: "recipe",
+                action: "addLog",
                 contents: {
                     mealPosition: mealPosition,
-                    logPosition: logPosition,
+                    recipeId: recipeId,
+                    numServings: numServings,
                 },
             };
-            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/${diaryId}`, {
-                method: "PATCH",
+            console.log(postBody);
+
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/diary/?date=${diaryDate}`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(patchBody),
+                body: JSON.stringify(postBody),
             })
                 .then((res) => {
-                    if (res.status === 200) {
-                        if (date === currentDate) {
+                    if (res.status === 201) {
+                        if (diaryDate === currentDate) {
                             navigate("/diary");
                         } else {
-                            navigate("/diary/?date=" + date);
+                            navigate("/diary/?date=" + diaryDate);
                         }
                     } else {
                         throw Error(res.status);
@@ -432,11 +388,11 @@ function DeleteFoodLogButton(props) {
     };
 
     return (
-        <div id="food-log-page-delete-log" className="food-log-page-log-button" onClick={deleteFoodOnClick}>
+        <div id="food-page-add-food-log" onClick={addFoodOnClick}>
             <button>
-                <DeleteLogButtonIcon />
+                <img src={addFoodPlus} />
             </button>
-            <label>Delete Log</label>
+            <label>Add to Diary</label>
         </div>
     );
 }
@@ -445,64 +401,60 @@ function SelectServingSize(props) {
     // needs to understand if food is measured in grams or milliliters by default
     // needs to preserve the default unit from the database
     // needs to create a range of appropriate units
-    const {
-        householdServingName,
-        defaultServingQuantity,
-        defaultMetricUnit,
-        setMetricQuantity,
-        numServings,
-        setNumServings,
-        servingName,
-        setServingName,
-    } = props;
+    const { setNumServings, mealPosition, setMealPosition } = props;
 
-    const [numText, setNumText] = useState(numServings);
-
-    let units = {};
-    let defaultUnitName = `${defaultServingQuantity} ${ProcessUnit(defaultMetricUnit)}`;
-    if (householdServingName) {
-        defaultUnitName += ` (${ToTitleCase(householdServingName)})`;
-    }
-    units[defaultUnitName] = defaultServingQuantity;
-    let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
-
-    units = {
-        ...units,
-        ...builtInUnits,
-    };
+    const [numText, setNumText] = useState(1);
 
     const inputOnChange = (e) => {
         let n = Number(e.target.value);
         setNumText(e.target.value);
-        if (n > 0 && n < 10001) {
+        if (n >= 0 && n <= 10000) {
             setNumServings(n);
         }
     };
 
-    const inputOnBlur = () => {
-        if (numText < 0) {
+    const inputOnBlur = (e) => {
+        let n = Number(e.target.value);
+        if (!n || n < 0) {
             setNumText(0);
-            setNumServings(1);
+            setNumServings(0);
             return;
-        } else if (numText > 10000) {
+        } else if (n > 10000) {
             setNumText(10000);
             setNumServings(10000);
             return;
         }
-        setNumServings(numText);
-        return;
     };
 
-    const onUnitSelect = (selection) => {
-        setMetricQuantity(units[selection]);
-        setServingName(selection);
-    };
+    let mealNames;
+    let mealOptions;
+    const userIsLoggedIn = IsUserLogged();
 
-    useEffect(() => {
-        // determine initial unit
-        let initialServingName = householdServingName ? householdServingName : ProcessUnit(defaultMetricUnit);
-        setServingName(initialServingName);
-    }, []);
+    if (userIsLoggedIn) {
+        mealNames = JSON.parse(window.localStorage.profile).preferences.mealNames;
+        mealNames = {
+            meal1: mealNames[0],
+            meal2: mealNames[1],
+            meal3: mealNames[2],
+            meal4: mealNames[3],
+            meal5: mealNames[4],
+            meal6: mealNames[5],
+        };
+        mealOptions = Object.values(mealNames)
+            .slice()
+            .filter((name) => Boolean(name));
+    }
+
+    const onMealSelect = (selection) => {
+        let i = Object.values(mealNames).indexOf(selection);
+
+        if (i < 0) {
+            return;
+        }
+
+        let mealPosition = "meal" + (i + 1);
+        setMealPosition(mealPosition);
+    };
 
     return (
         <div id="food-page-serving-selector">
@@ -517,15 +469,17 @@ function SelectServingSize(props) {
                     onBlur={inputOnBlur}
                 />
             </div>
-            <div id="food-page-serving-size-selector">
-                <p>Serving Size:</p>
-                <DropdownMenu
-                    options={Object.keys(units)}
-                    listItemClass="food-serving-dropdown-item"
-                    onSelect={onUnitSelect}
-                    initialSelection={servingName}
-                />
-            </div>
+            {userIsLoggedIn ? (
+                <div id="food-page-meal-position-selector">
+                    <p>Meal:</p>
+                    <DropdownMenu
+                        options={mealOptions}
+                        listItemClass="meal-name-dropdown-item"
+                        onSelect={onMealSelect}
+                        initialSelection={mealNames[mealPosition]}
+                    />
+                </div>
+            ) : null}
         </div>
     );
 }
@@ -629,4 +583,10 @@ function MacroCircle(props) {
             </div>
         </div>
     );
+}
+
+function ConvertTimestampToDate(timestamp) {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dateObj = new Date(timestamp);
+    return `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 }
