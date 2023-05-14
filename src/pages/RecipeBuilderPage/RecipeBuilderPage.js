@@ -1,5 +1,6 @@
 import magnifyingGlass from "assets/magnifying-glass.svg";
 import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
+import minusSign from "assets/minus-sign.svg";
 import plusSign from "assets/add-food-plus.svg";
 import clearTextX from "assets/clear-text-x.svg";
 import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
@@ -10,24 +11,14 @@ import { useNavigate } from "react-router-dom";
 import "./RecipeBuilderPage.css";
 import useSessionStorage from "hooks/useSessionStorage";
 import { useEffect, useRef, useState } from "react";
-import useLocalStorage from "hooks/useLocalStorage";
 import useWindowDimensions from "hooks/useWindowDimensions";
 import { authFetch } from "helpers/authHelpers";
-import { CalculateGoal, fetchDiaryHelper } from "helpers/fitnessHelpers";
-import { getCurrentDate } from "helpers/generalHelpers";
 import UpdateFormInput from "components/UpdateFormInput";
 import useArray from "hooks/useArray";
 import { ProcessFoodName, ProcessNutritionalContents, ProcessUnit, ToTitleCase, GetBuiltInUnits } from "helpers/fitnessHelpers";
 
 export default function RecipeBuilderPage() {
     const navigate = useNavigate();
-    const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
-    const [profile, setProfile] = useLocalStorage("profile", null);
-    const [displayFood, setDisplayFood] = useState(false);
-    const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
-    const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
-    const searchBoxRef = useRef(null);
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
     const [foodId, setFoodId] = useState("");
@@ -36,11 +27,14 @@ export default function RecipeBuilderPage() {
     const [metricQuantity, setMetricQuantity] = useState(100);
     const [numServings, setNumServings] = useState(1);
     const [servingName, setServingName] = useState("");
-    const [recipe, recipeMethods] = useArray([]);
     const [foodName, setFoodName] = useState("");
     const [brand, setBrand] = useState("");
     const [defaultMetricUnit, setDefaultMetricUnit] = useState("g");
     const [householdServingName, setHouseholdServingName] = useState("");
+    const [processedNutrients, setProcessedNutrients] = useState(null);
+
+    const [recipe, recipeMethods] = useArray([]);
+    const [nutrients, nutrientsMethods] = useArray([]);
 
     useEffect(() => {
         let resStatus;
@@ -57,18 +51,17 @@ export default function RecipeBuilderPage() {
             });
     }, [foodId]);
 
-    useEffect(() => {
-        const currentDate = getCurrentDate();
-
-        // if (!currentDiary) {
-        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-        // } else if (currentDiary && currentDiary.timestamp.split("T")[0] !== currentDate) {
-        //     fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-        // }
-        fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
-    }, []);
-
-    const addFoodToRecipe = (_id, metricQuantity, numServings, servingName, brand, foodName, householdServingName, defaultMetricUnit) => {
+    const addFoodToRecipe = (
+        _id,
+        metricQuantity,
+        numServings,
+        servingName,
+        brand,
+        foodName,
+        householdServingName,
+        defaultMetricUnit,
+        processedNutrients
+    ) => {
         recipeMethods.push({
             foodId: _id,
             servingName: servingName,
@@ -79,72 +72,71 @@ export default function RecipeBuilderPage() {
             defaultMetricUnit: defaultMetricUnit,
             householdServingName: householdServingName,
         });
+        nutrientsMethods.push(processedNutrients);
     };
 
     return (
         <div id="recipe-builder-page-body">
-            <div className="default-background-round round-background-decoration"></div>
-            <div className="default-background-top-banner bottom-top-banner-background-decoration"></div>
-            <div className="default-background-bottom-banner bottom-bot-banner-background-decoration"></div>
+            <div className="food-background-round round-background-decoration"></div>
+            <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
+            <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="recipe-builder-page-content">
                 <div>
                     {foodId !== "" || renderFoodInfo ? (
-                        <>
-                            <div id="dashboard-food-searchbox-empty"></div>
-                            <div id="food-search-island">
-                                <div id="food-island-buttons">
-                                    <button
-                                        id="food-island-back-arrow"
-                                        onClick={() => {
-                                            setFoodId("");
-                                        }}
-                                    >
-                                        <img src={backArrow} alt="back arrow" />
-                                        Go Back
-                                    </button>
-                                    <button
-                                        id="food-island-add"
-                                        onClick={() =>
-                                            addFoodToRecipe(
-                                                foodId,
-                                                metricQuantity,
-                                                numServings,
-                                                servingName,
-                                                brand,
-                                                foodName,
-                                                householdServingName,
-                                                defaultMetricUnit
-                                            )
-                                        }
-                                    >
-                                        <img src={plusSign} alt="add arrow" />
-                                        Add Food
-                                    </button>
-                                </div>
-                                {renderFoodInfo ? (
-                                    <FoodInfo
-                                        foodResponse={foodResponse}
-                                        metricQuantity={metricQuantity}
-                                        setMetricQuantity={setMetricQuantity}
-                                        numServings={numServings}
-                                        setNumServings={setNumServings}
-                                        servingName={servingName}
-                                        setServingName={setServingName}
-                                        setFoodName={setFoodName}
-                                        setBrand={setBrand}
-                                        setDefaultMetricUnit={setDefaultMetricUnit}
-                                        setHouseholdServingName={setHouseholdServingName}
-                                    />
-                                ) : null}
+                        <div id="recipe-builder-food-island">
+                            <div id="recipe-builder-food-island-buttons">
+                                <button
+                                    id="recipe-builder-food-island-back-arrow"
+                                    onClick={() => {
+                                        setFoodId("");
+                                    }}
+                                >
+                                    <img src={backArrow} alt="back arrow" />
+                                    Go Back
+                                </button>
+                                <button
+                                    id="recipe-builder-food-island-add"
+                                    onClick={() => {
+                                        addFoodToRecipe(
+                                            foodId,
+                                            metricQuantity,
+                                            numServings,
+                                            servingName,
+                                            brand,
+                                            foodName,
+                                            householdServingName,
+                                            defaultMetricUnit,
+                                            processedNutrients
+                                        );
+                                        setFoodId("");
+                                    }}
+                                >
+                                    <img src={plusSign} alt="add arrow" />
+                                    Add Food
+                                </button>
                             </div>
-                        </>
-                    ) : (
-                        <div>
-                            <FoodSearchbox foodId={foodId} setFoodId={setFoodId} />
+                            {renderFoodInfo ? (
+                                <FoodInfo
+                                    foodResponse={foodResponse}
+                                    metricQuantity={metricQuantity}
+                                    setMetricQuantity={setMetricQuantity}
+                                    numServings={numServings}
+                                    setNumServings={setNumServings}
+                                    servingName={servingName}
+                                    setServingName={setServingName}
+                                    setFoodName={setFoodName}
+                                    setBrand={setBrand}
+                                    setDefaultMetricUnit={setDefaultMetricUnit}
+                                    setHouseholdServingName={setHouseholdServingName}
+                                    setProcessedNutrients={setProcessedNutrients}
+                                />
+                            ) : null}
                         </div>
+                    ) : (
+                        <FoodSearchbox foodId={foodId} setFoodId={setFoodId} />
                     )}
                 </div>
-                <RecipeItems recipe={recipe} recipeMethods={recipeMethods} />
+                <RecipeItems recipe={recipe} recipeMethods={recipeMethods} nutrients={nutrients} nutrientsMethods={nutrientsMethods} />
             </div>
         </div>
     );
@@ -226,9 +218,11 @@ function FoodSearchbox(props) {
 }
 
 function RecipeItems(props) {
-    const { recipe, recipeMethods } = props;
+    const { recipe, recipeMethods, nutrients, nutrientsMethods } = props;
     const [recipeName, setRecipeName] = useState("");
     const [recipeNumServings, setRecipeNumServings] = useState(1);
+    const [recipeNumServingsText, setRecipeNumServingsText] = useState("1");
+    const [showMoreInfo, setShowMoreInfo] = useState(false);
 
     const saveUserRecipe = () => {
         let recipeObject = {
@@ -269,10 +263,61 @@ function RecipeItems(props) {
             });
     };
 
+    let totalRecipeNutrients = TallyRecipeNutrients(nutrients, recipeNumServings);
+
+    const recipeNumServingsInputOnChange = (e) => {
+        let n = Number(e.target.value);
+        setRecipeNumServingsText(e.target.value);
+        if (n > 0 && n <= 10000) {
+            setRecipeNumServings(n);
+        }
+    };
+
+    const recipeNumServingsInputOnBlur = (e) => {
+        let n = Number(e.target.value);
+        if (!n || n <= 0) {
+            setRecipeNumServingsText(1);
+            setRecipeNumServings(1);
+            return;
+        } else if (n > 10000) {
+            setRecipeNumServingsText(10000);
+            setRecipeNumServings(10000);
+            return;
+        }
+
+        setRecipeNumServingsText(n);
+    };
+
     return (
-        <div id="dashboard-daily-summary-island">
-            <h3 id="dashboard-daily-summary-header">Recipe Builder</h3>
-            <div id="dashboard-daily-summary-goal"></div>
+        <div id="recipe-builder-main-island">
+            <h3 id="recipe-builder-main-header">Recipe Builder</h3>
+            {totalRecipeNutrients ? (
+                <>
+                    <MacroCircle
+                        kcal={totalRecipeNutrients.kcal}
+                        totalFat={totalRecipeNutrients.totalFat}
+                        totalCarb={totalRecipeNutrients.totalCarb}
+                        protein={totalRecipeNutrients.protein}
+                    />
+                    <div id="food-info-macros">
+                        <h5 id="food-info-macro-fat">
+                            Fat:
+                            <br />
+                            {totalRecipeNutrients.totalFat} g
+                        </h5>
+                        <h5 id="food-info-macro-carb">
+                            Carbs:
+                            <br />
+                            {totalRecipeNutrients.totalCarb} g
+                        </h5>
+                        <h5 id="food-info-macro-protein">
+                            Protein:
+                            <br />
+                            {totalRecipeNutrients.protein} g
+                        </h5>
+                    </div>
+                </>
+            ) : null}
             <div id="recipe-inputs">
                 <UpdateFormInput
                     type="text"
@@ -287,15 +332,35 @@ function RecipeItems(props) {
                     type="number"
                     id="recipe-serving-input"
                     inputMode="decimal"
-                    label={"Num Servings"}
-                    placeholder={"Num Servings"}
-                    value={recipeNumServings}
-                    onChange={(e) => setRecipeNumServings(e.target.value)}
+                    label={"Num. Servings"}
+                    placeholder={"Num. Servings"}
+                    value={recipeNumServingsText}
+                    onChange={recipeNumServingsInputOnChange}
+                    onBlur={recipeNumServingsInputOnBlur}
                     onClick={(e) => e.target.select()}
                 />
             </div>
-            <IngredientListRecipe recipe={recipe} recipeMethods={recipeMethods} />
-            <button onClick={saveUserRecipe}>Save Recipe</button>
+            <IngredientListRecipe recipe={recipe} recipeMethods={recipeMethods} nutrientsMethods={nutrientsMethods} />
+            {showMoreInfo && totalRecipeNutrients ? (
+                <>
+                    <FoodMoreInfo processedNutrients={totalRecipeNutrients} />
+                    <div id="recipe-info-show-less">
+                        <button onClick={() => setShowMoreInfo(false)}>
+                            <img id="food-info-show-less-arrow" src={showMoreDownArrow} alt="show less nutritional information icon" />
+                        </button>
+                    </div>
+                </>
+            ) : totalRecipeNutrients ? (
+                <div id="recipe-info-show-more" onClick={() => setShowMoreInfo(true)}>
+                    <h5>Show More Nutritional Information</h5>
+                    <button>
+                        <img id="food-info-show-more-arrow" src={showMoreDownArrow} alt="show more nutritional information icon" />
+                    </button>
+                </div>
+            ) : null}
+            <button id="recipe-builder-save-recipe-button" onClick={saveUserRecipe}>
+                Save Recipe
+            </button>
         </div>
     );
 }
@@ -314,6 +379,7 @@ function FoodInfo(props) {
         setBrand,
         setDefaultMetricUnit,
         setHouseholdServingName,
+        setProcessedNutrients,
     } = props;
     const defaultMetricQuantity = foodResponse.servingQuantity ? foodResponse.servingQuantity.toFixed(2) : 100;
     const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
@@ -324,7 +390,6 @@ function FoodInfo(props) {
     let nutrients = ProcessNutritionalContents(foodResponse.nutritionalContent, metricQuantity, numServings, defaultUnitRounding);
 
     useEffect(() => {
-        console.log("effect used");
         setNumServings(1);
         setMetricQuantity(defaultMetricQuantity);
         setServingName(defaultMetricUnit);
@@ -333,6 +398,10 @@ function FoodInfo(props) {
         setDefaultMetricUnit(defaultMetricUnit);
         setHouseholdServingName(foodResponse.servingName);
     }, [foodResponse]);
+
+    useEffect(() => {
+        setProcessedNutrients(nutrients);
+    }, [foodResponse, metricQuantity, numServings]);
 
     return (
         <div id="food-info">
@@ -600,7 +669,6 @@ function SelectServingSize(props) {
 
     useEffect(() => {
         // determine initial unit
-        // console.log(setServingName)
         let initialServingName = householdServingName ? householdServingName : ProcessUnit(defaultMetricUnit);
         setServingName(initialServingName);
     }, []);
@@ -766,7 +834,7 @@ function FoodSearchResult(props) {
 }
 
 function IngredientListRecipe(props) {
-    const { recipe, recipeMethods } = props;
+    const { recipe, recipeMethods, nutrientsMethods } = props;
     let ingredientElements = [];
 
     for (let i = 0; i < recipe.length; i++) {
@@ -779,16 +847,17 @@ function IngredientListRecipe(props) {
                 metricQuantity={recipe[i].metricQuantity}
                 idx={i}
                 recipeMethods={recipeMethods}
+                nutrientsMethods={nutrientsMethods}
                 key={i}
             />
         );
     }
 
-    return <div>{ingredientElements}</div>;
+    return <div id="recipe-builder-ingredients">{ingredientElements}</div>;
 }
 
 function Ingredient(props) {
-    const { foodName, servingName, numServings, brand, metricQuantity, idx, recipeMethods } = props;
+    const { foodName, servingName, numServings, brand, metricQuantity, idx, recipeMethods, nutrientsMethods } = props;
 
     let numServingsText = CreateServingText(props);
 
@@ -799,9 +868,15 @@ function Ingredient(props) {
                 <p>
                     {brand ? brand + "," : null} {numServingsText}
                 </p>
-                <button onClick={() => recipeMethods.remove(idx)}>
-                    <img></img>
-                    Delete
+            </div>
+            <div className="recipe-section-remove-item">
+                <button
+                    onClick={() => {
+                        recipeMethods.remove(idx);
+                        nutrientsMethods.remove(idx);
+                    }}
+                >
+                    <img src={minusSign} />
                 </button>
             </div>
         </div>
@@ -821,8 +896,6 @@ function CreateServingText(foodLog) {
     let builtInUnits = GetBuiltInUnits(defaultMetricUnit);
 
     let servingWords = servingName.split(" ");
-
-    console.log(servingName);
 
     if (householdServingName && servingName === householdServingName) {
         // Here we need to strip the number from the servingName if there is one and multiply it by numServings
@@ -845,4 +918,40 @@ function CreateServingText(foodLog) {
     } else {
         return `${numServings} servings`;
     }
+}
+
+function AddNutrients(nutrients1, nutrients2) {
+    let sum = {};
+    if (nutrients1 && !nutrients2) {
+        Object.keys(nutrients1).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients1[nutrient]);
+        });
+    } else if (!nutrients1 && nutrients2) {
+        Object.keys(nutrients2).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients2[nutrient]);
+        });
+    } else {
+        Object.keys(nutrients1).forEach((nutrient) => {
+            sum[nutrient] = Number(nutrients1[nutrient]) + Number(nutrients2[nutrient]);
+        });
+    }
+
+    return sum;
+}
+
+function TallyRecipeNutrients(nutrients, recipeNumServings) {
+    let totalRecipeNutrients = null;
+    console.log(nutrients);
+    for (let i = 0; i < nutrients.length; i++) {
+        totalRecipeNutrients = AddNutrients(totalRecipeNutrients, nutrients[i]);
+    }
+
+    if (totalRecipeNutrients) {
+        Object.keys(totalRecipeNutrients).forEach((nutrient) => {
+            let precision = nutrient === "kcal" ? 0 : 1;
+            totalRecipeNutrients[nutrient] = (Number(totalRecipeNutrients[nutrient]) / recipeNumServings).toFixed(precision);
+        });
+    }
+
+    return totalRecipeNutrients;
 }
