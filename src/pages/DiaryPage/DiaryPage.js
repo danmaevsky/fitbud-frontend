@@ -134,7 +134,7 @@ function Diary(props) {
                     foodLogs={null}
                     recipeLogs={null}
                     date={date}
-                    diaryId={diary._id}
+                    diaryId={null}
                 />
             );
         }
@@ -255,7 +255,7 @@ function MealSection(props) {
             let recipeObject = recipeLog.recipeObject;
             let recipeName = recipeObject.name;
             let totalNutritionalContent = recipeLog.totalNutritionalContent;
-            if (!totalNutritionalContent) {
+            if (!totalNutritionalContent && diaryId) {
                 // since this is undefined or null, then you must have deleted the recipe. Send a request to delete this log
                 let patchBody = {
                     type: "recipe",
