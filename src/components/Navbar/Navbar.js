@@ -3,10 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { authFetch, IsUserLogged } from "helpers/authHelpers";
 
-const foodRoutes = ["food", "barcode", "recipes", "recipe-builder"];
+const foodRoutes = ["food", "barcode", "home", "", "recipes", "recipe-builder"];
 const exerciseRoutes = ["exercise", "workouts"];
 const profileRoutes = ["profile", "signup", "forgotPassword"];
-const mainRoutes = ["dashboard", "diary", "home", "", "login"];
+const mainRoutes = ["dashboard", "diary", "login"];
 
 function Navbar() {
     const location = useLocation();

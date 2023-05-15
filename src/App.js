@@ -37,8 +37,8 @@ function App() {
             <Navbar />
             <div className="body">
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/" element={<FoodSearchPage />} />
+                    <Route path="/home" element={<FoodSearchPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/food" element={<FoodSearchPage />} />

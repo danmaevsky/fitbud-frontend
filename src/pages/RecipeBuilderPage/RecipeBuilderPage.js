@@ -42,8 +42,10 @@ export default function RecipeBuilderPage() {
     const [householdServingName, setHouseholdServingName] = useState("");
     const [processedNutrients, setProcessedNutrients] = useState(null);
 
-    const [recipe, recipeMethods] = useArray([]);
-    const [nutrients, nutrientsMethods] = useArray([]);
+    const [recipeCopy, setRecipeCopy] = useSessionStorage("recipeCopy-RecipeBuilder", []);
+    const [recipe, recipeMethods] = useArray(recipeCopy);
+    const [nutrientsCopy, setNutrientsCopy] = useSessionStorage("nutrientsCopy-RecipeBuilder", []);
+    const [nutrients, nutrientsMethods] = useArray(nutrientsCopy);
 
     useEffect(() => {
         let resStatus;
@@ -82,7 +84,14 @@ export default function RecipeBuilderPage() {
             householdServingName: householdServingName,
         });
         nutrientsMethods.push(processedNutrients);
+        setNumServings(1);
+        setServingName("");
     };
+
+    useEffect(() => {
+        setRecipeCopy(recipe.slice());
+        setNutrientsCopy(nutrients.slice());
+    }, [recipe, nutrients]);
 
     return (
         <div id="recipe-builder-page-body">
@@ -878,7 +887,7 @@ function IngredientListRecipe(props) {
                 servingName={recipe[i].servingName}
                 numServings={recipe[i].numServings}
                 brand={recipe[i].brand}
-                metricQuantity={recipe[i].metricQuantity}
+                metricQuantity={recipe[i].quantityMetric}
                 idx={i}
                 recipeMethods={recipeMethods}
                 nutrientsMethods={nutrientsMethods}
@@ -918,8 +927,6 @@ function Ingredient(props) {
 }
 
 function CreateServingText(foodLog) {
-    // OUTDATED
-
     let numServings = foodLog.numServings;
     let servingName = foodLog.servingName;
     let quantityMetric = foodLog.metricQuantity;
@@ -945,6 +952,8 @@ function CreateServingText(foodLog) {
         // Here we simply need to check if it is a metric unit or not
         let servingUnit = ProcessUnit(servingWords[1]);
         if (servingUnit === "g" || servingUnit === "mL" || servingName === "g" || servingName === "mL") {
+            console.log("numServings:", numServings);
+            console.log("quantityMetric:", quantityMetric);
             return `${numServings * quantityMetric} ${servingUnit || servingName}`;
         } else {
             return `${numServings} ${servingUnit}`;
