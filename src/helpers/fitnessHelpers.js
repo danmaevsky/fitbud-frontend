@@ -19,11 +19,13 @@ export function CalculateBMR(profile) {
     let bmr = 0;
     if (profile.currentPercentBodyFat.value && profile.currentWeightKg.value) {
         bmr = Katch_McArdle(profile.currentWeightKg.value, profile.currentPercentBodyFat.value);
+        // console.log("BMR calculated with Katch-McArdle");
     } else if (profile.currentWeightKg.value && profile.heightCm && profile.sex) {
         let birthYear = profile.birthdate.substring(0, 4);
         let currYear = new Date().getFullYear();
         let age = Number(currYear) - Number(birthYear);
         bmr = StJeor_Mifflin(profile.currentWeightKg.value, profile.heightCm, age, profile.sex);
+        // console.log("BMR calculated with St.Jeor-Mifflin");
     } else {
         bmr = 2000;
     }

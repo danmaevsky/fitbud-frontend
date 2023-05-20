@@ -1,4 +1,4 @@
-#signup-page-body {
+#profile-page-body {
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -11,7 +11,7 @@
     height: 100%;
 }
 
-#signup-island {
+#profile-island {
     position: inherit;
     backdrop-filter: blur(0);
     filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.363));
@@ -29,53 +29,38 @@
     background-color: white;
     min-width: 15rem;
     width: 60vw;
-    max-width: 30rem;
+    max-width: 32.5rem;
     min-height: 20rem;
     height: 70vh;
-    max-height: 35rem;
+    max-height: 45rem;
     /* max-height: 50vh; */
 }
 
-#signup-island p {
+#profile-island p {
     font-size: 1.125rem;
 }
 
-#signup-island-header {
+#profile-island-header {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     height: 4rem;
 }
 
-#signup-island-header h2 {
+#profile-island-header h2 {
     padding: 0;
     margin: 0;
     font-size: 1.5rem;
 }
 
-#signup-now-message {
-    padding: 0;
-    margin: 0;
-    /* height: 1rem; */
-}
-
-#signup-message-error {
+#profile-message-error {
     color: var(--default-error-color);
     padding: 0;
     margin: 0;
     /* height: 1rem; */
 }
 
-#signup-island hr {
-    padding: 0;
-    margin: 0;
-    /* margin-top: -10%; */
-    width: 75%;
-    max-width: 30ch;
-    border: 1px solid var(--default-secondary-text);
-}
-
-.signup-island-form {
+.profile-island-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,13 +68,15 @@
     overflow-y: auto;
     height: 70%;
     padding: 1rem;
+    margin: 0.1rem;
+    gap: 2rem;
 }
 
-.signup-island-form .form-input {
+.profile-island-form .form-input {
     width: 85%;
 }
 
-.signup-island-form input {
+.profile-island-form input {
     font-size: 1.125rem;
     padding: 1rem;
     height: 3.5rem;
@@ -99,25 +86,22 @@
     border-radius: 5px;
 }
 
-#signup-form-1 {
-    margin: 2rem;
-    gap: 1.75rem;
-    height: 60%;
+#profile-metrics {
+    display: flex;
+    gap: 0.75rem;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
-#signup-form-2 {
-    margin: 1rem;
-    gap: 1.125rem;
-}
-
-#signup-form-sex-label {
+#profile-form-unit-label {
     padding: 0;
     margin: 0;
     color: var(--default-secondary-text);
     font-size: 1rem;
 }
 
-.signup-form-choices {
+.profile-form-choices {
     margin: 0;
     z-index: 1;
     padding: 0.4rem;
@@ -128,7 +112,7 @@
     border-radius: 10px;
 }
 
-.signup-form-choices button {
+.profile-form-choices button {
     font-size: 1.125rem;
     font-weight: 700;
     display: inline-flex;
@@ -142,7 +126,7 @@
     transition: filter 0.1s, background-color 0.1s, color 0.1s;
 }
 
-.signup-form-choice-left {
+.profile-form-choice-left {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
@@ -152,18 +136,18 @@
     border-bottom-right-radius: 5px;
 }
 
-.signup-form-choice-button {
+.profile-form-choice-button {
     cursor: pointer;
     background-color: white;
     border: none;
     color: var(--default-primary-text);
 }
 
-.signup-form-choice-button:active {
+.profile-form-choice-button:active {
     filter: brightness(0.9);
 }
 
-.signup-form-choice-button-active {
+.profile-form-choice-button-active {
     cursor: default;
     border: none;
     filter: brightness(1.1);
@@ -172,36 +156,7 @@
     color: white;
 }
 
-#signup-form-sex-choices {
-    margin-top: -0.5rem;
-}
-
-#signup-form-2 input[type="date"] {
-    color: var(--default-primary-text);
-    display: block;
-    background-color: white;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-#signup-form-3 {
-    margin: 0.1rem;
-    gap: 2rem;
-}
-
-#signup-form-3 .signup-form-choices {
-    margin-top: -1.5rem;
-}
-
-#signup-form-4 {
-    margin-top: 1rem;
-}
-
-#signup-form-4 .form-input {
-    margin-top: 2rem;
-}
-
-#signup-activity-levels-list {
+#profile-activity-levels-list {
     align-self: flex-start;
     padding: 0;
     margin: 0;
@@ -211,23 +166,23 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
-    width: 80%;
+    width: 90%;
 }
 
-#signup-activity-levels-list li {
+#profile-activity-levels-list li {
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.signup-activity-level {
+.profile-activity-level {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.signup-activity-button {
+.profile-activity-button {
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -239,44 +194,110 @@
     background-color: white;
 }
 
-.signup-activity-button.active {
+.profile-activity-button.active {
     background-color: var(--profile-primary-color);
 }
 
-.signup-activity-level h5 {
+.profile-activity-level h5 {
     text-align: left;
     font-size: 1.5rem;
     padding: 0;
     margin: 0;
 }
 
-.signup-activity-level p {
+.profile-activity-level p {
     padding: 0;
     margin: 0;
     margin-top: 0.25rem;
     text-align: left;
 }
 
-#signup-summary {
+#profile-meal-names {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    gap: 0.75rem;
 }
 
-.signup-value-summary {
+#profile-meal-names h2 {
+    margin-bottom: 0;
+}
+
+#profile-macro-goals {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#profile-macro-goals h2 {
+    margin-bottom: 0;
+}
+
+#profile-fitness-goals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#profile-fitness-goals h2 {
+    margin-bottom: 0;
+}
+
+#profile-weekly-goal {
+    width: 85%;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    width: 90%;
 }
 
-.signup-value-summary .signup-summary-value {
-    text-align: right;
-    word-wrap: break-word;
-    width: 50%;
+#profile-weekly-goal label {
+    font-size: 1.125rem;
+    color: var(--default-primary-text);
+    font-weight: 600;
 }
 
-#create-account-button {
+#profile-weekly-goal .dropdown-menu-list {
+    cursor: pointer;
+    font-size: 1.25rem;
+    /* font-family: "Varela Round"; */
+    color: black;
+    border: 2px solid;
+    border-color: var(--default-primary-border);
+    background-color: white;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 3.5rem;
+    transition: filter 0.1s;
+}
+
+#profile-weekly-goal .dropdown-menu-list:hover {
+    transition: filter 0.1s;
+    filter: brightness(90%);
+}
+
+.weight-delta-option {
+    transition: filter 0.1s;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    min-height: 1rem;
+    width: 8rem;
+    padding: 0.5rem;
+    justify-content: flex-end;
+    font-size: 1.25rem;
+    border-radius: 3px;
+}
+
+.weight-delta-option:hover {
+    transition: filter 0.1s;
+    filter: brightness(90%);
+}
+
+#save-changes-button,
+#change-password-button {
     transition: filter 0.1s;
     cursor: pointer;
     display: inline-flex;
@@ -297,72 +318,14 @@
     font-weight: bold;
 }
 
-#create-account-button:hover {
+#create-account-button:hover,
+#change-password-button:hover {
     filter: brightness(1.1);
 }
 
-#create-account-button:active {
+#create-account-button:active,
+#change-password-button:active {
     filter: brightness(0.9);
-}
-
-#signup-nav-buttons {
-    display: flex;
-    gap: 0.5rem;
-    position: absolute;
-    bottom: 3rem;
-    align-self: flex-end;
-    justify-self: flex-end;
-}
-
-#signup-nav-buttons button {
-    position: absolute;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: filter 0.1s;
-    cursor: pointer;
-    color: white;
-    background-color: var(--profile-primary-color);
-    /* height: 2.5rem;
-    width: 3.5rem; */
-    padding: 1rem;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-}
-
-#signup-nav-buttons button:hover {
-    filter: brightness(1.1);
-}
-
-#signup-nav-buttons button:active {
-    filter: brightness(0.9);
-}
-
-#signup-nav-back {
-    top: -3rem;
-    left: -10rem;
-}
-
-#signup-nav-next {
-    top: -3rem;
-    left: -5rem;
-}
-
-#signup-indicator-dots {
-    position: absolute;
-    bottom: 0.75rem;
-    height: 1.5rem;
-}
-
-#signup-indicator-dots .signup-indicator-dot-default {
-    fill: var(--default-secondary-background);
-}
-
-#signup-indicator-dots .signup-indicator-dot-current {
-    transition: r 0.1s, cx 0.1s;
-    /* transition: cx 0.01s; */
-    fill: var(--profile-secondary-color);
 }
 
 #profile-icon {
@@ -379,7 +342,7 @@
     overflow: hidden;
     content: cover;
     border: 0.33rem solid white;
-} 
+}
 
 #profile-icon img {
     align-items: center;
@@ -466,21 +429,21 @@
 }
 
 @media screen and (max-width: 800px) {
-    #signup-island {
+    #profile-island {
         width: 70vw;
         max-width: 30rem;
     }
 
-    #signup-island a {
+    #profile-island a {
         height: 1.75rem;
     }
 
-    .signup-island-form input {
+    .profile-island-form input {
         font-size: 1.35rem;
         height: 4rem;
     }
 
-    #signup-island-form button {
+    #profile-island-form button {
         height: 1.75rem;
     }
 }
