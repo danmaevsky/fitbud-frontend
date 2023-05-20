@@ -432,6 +432,7 @@
     #profile-island {
         width: 70vw;
         max-width: 30rem;
+        max-height: 35rem;
     }
 
     #profile-island a {
