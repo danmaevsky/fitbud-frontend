@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 import { ToTitleCase, ProcessFoodName } from "helpers/fitnessHelpers";
 import { IsUserLogged, authFetch } from "helpers/authHelpers";
+import useLocalStorage from "hooks/useLocalStorage";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();
@@ -17,6 +18,8 @@ export default function FoodSearchPage() {
     const [searchType, setSearchType] = useState("full");
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
+
+    const [myFoods, setMyFoods] = useLocalStorage("MyFoods", []);
 
     const userIsLoggedIn = IsUserLogged();
 
@@ -30,7 +33,10 @@ export default function FoodSearchPage() {
                     setSearchStatus(res.status);
                     return res.json();
                 })
-                .then((json) => setSearchResults(json));
+                .then((json) => {
+                    setMyFoods(json);
+                    setSearchResults(json);
+                });
         } else {
             fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
                 .then((res) => {
@@ -99,6 +105,7 @@ export default function FoodSearchPage() {
                             onClick={() => {
                                 fetchResults(true); // override true so that when My Foods is clicked, it automatically sends GET
                                 setSearchType("user");
+                                setSearchResults(myFoods);
                             }}
                         >
                             My Foods
