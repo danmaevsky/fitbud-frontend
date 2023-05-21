@@ -23,6 +23,7 @@ import ProfilePage from "pages/ProfilePage";
 import RecipeSearchPage from "pages/RecipeSearchPage";
 import RecipeBuilderPage from "pages/RecipeBuilderPage";
 import RecipePage from "pages/RecipePage";
+import WorkoutSearchPage from "pages/WorkoutSearchPage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
 import ExerciseCardioPage from "pages/ExerciseCardioPage";
 import EditFoodLogPage from "pages/EditFoodLogPage";
@@ -59,8 +60,9 @@ function App() {
                         <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
                         <Route path="/exercise/cardio/:exerciseId" element={<ExerciseCardioPage />} />
                         <Route path="/recipes" element={<RecipeSearchPage />} />
-                        <Route path="/recipes/:recipeId" element={<RecipePage />} />
                         <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
+                        <Route path="/recipes/:recipeId" element={<RecipePage />} />
+                        <Route path="/workouts" element={<WorkoutSearchPage />} />
                         <Route path="/food/createFood" element={<CreateFoodPage />} />
                     </Route>
                 </Routes>
