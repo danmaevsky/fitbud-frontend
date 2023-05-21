@@ -123,7 +123,7 @@ function Settings(props) {
             },
             activityLevel: activityLevel,
             goals: {
-                weightGoal: weightGoal !== "" ? weightGoal : profile.goals.weightGoal,
+                weightGoal: weightGoal !== "" ? (unitPreference === "imperial" ? weightGoal / 2.2 : weightGoal) : profile.goals.weightGoal,
                 calorieGoal: calorieGoal === "" ? null : calorieGoal,
                 weightDelta: weightDelta !== "" ? weightDelta : profile.goals.weightDelta,
                 macroBreakdown: {
