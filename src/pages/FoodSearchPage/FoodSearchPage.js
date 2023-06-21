@@ -178,25 +178,37 @@ function FoodSearchIsland(props) {
     };
 
     let list;
+    let emptyDefault;
     if (searchType === "recipe") {
         list = <RecipeSearchList searchResults={[...searchResults].sort(sortFunction)} />;
+        emptyDefault = (
+            <>
+                <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                <h3>You don't have any recipes to look at yet!</h3>
+            </>
+        );
     } else if (searchType === "user") {
-        list = <FoodSearchList searchResults={[...searchResults].sort(sortFunction)} />;
+        list = <FoodSearchList searchResults={[...searchResults].sort(sortFunction)} myFoods={true} />;
+        emptyDefault = (
+            <>
+                <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                <h3>You haven't submitted any foods yet!</h3>
+            </>
+        );
     } else {
         list = <FoodSearchList searchResults={searchResults} />;
+        emptyDefault = (
+            <>
+                <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                {searchStatus !== 200 ? null : <h3>Search for a Food or Scan a Barcode!</h3>}
+            </>
+        );
     }
 
     return (
         <div id="food-search-island">
             <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
-            {searchResults.length > 0 ? (
-                list
-            ) : (
-                <>
-                    <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
-                    {searchStatus !== 200 ? null : <h3>Search for a Food or Scan a Barcode!</h3>}
-                </>
-            )}
+            {searchResults.length > 0 ? list : emptyDefault}
             {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
             <button
                 id="food-search-page-submit-food-button"
@@ -209,15 +221,17 @@ function FoodSearchIsland(props) {
 }
 
 function FoodSearchList(props) {
-    let { searchResults } = props;
+    let { searchResults, myFoods } = props;
     return (
         <ul id="food-search-results-list">
             {searchResults.map((searchResults, index) => (
                 <FoodSearchResult response={searchResults} key={`food-search-result-${index}`} />
             ))}
-            <li id="food-search-refine-message">
-                <h4>Didn't find what you were looking for? Consider refining your search!</h4>
-            </li>
+            {!myFoods ? (
+                <li id="food-search-refine-message">
+                    <h4>Didn't find what you were looking for? Consider refining your search!</h4>
+                </li>
+            ) : null}
         </ul>
     );
 }
