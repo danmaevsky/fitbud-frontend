@@ -87,7 +87,7 @@
     min-width: 6rem;
     width: 7rem;
     max-width: 10rem;
-    height: 3rem;
+    padding: 0.25rem;
     background-color: white;
     transition: filter 0.1s;
 }
@@ -97,7 +97,7 @@
     border-bottom-left-radius: 5px;
 }
 
-#food-search-page-choice-user {
+#food-search-page-choice-recipe {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -110,8 +110,8 @@
     justify-content: center;
     box-sizing: content-box;
     padding: 1rem;
-    /* margin-top: -10%; */
-    width: 5rem;
+    margin-top: 2rem;
+    width: 50%;
     height: 2rem;
     max-width: 12rem;
     border: solid 2px;
@@ -140,7 +140,7 @@
     max-width: 40rem;
     min-height: 20vh;
     height: 35rem;
-    max-height: 45vh;
+    max-height: 50vh;
 }
 
 #food-search-island ul {

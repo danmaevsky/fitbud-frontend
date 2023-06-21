@@ -193,7 +193,7 @@ function ProfileMenu(props) {
         <div id="navbar-profile-menu" className={navbarClass}>
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/diary">Diary</Link>
-            <Link to="/recipes">Recipes</Link>
+            {/* <Link to="/recipes">Recipes</Link> */}
             <Link to="/workouts">Workouts</Link>
             <Link to="/profile">Profile</Link>
             <p onClick={logoutOnClick}>Logout</p>
@@ -206,10 +206,11 @@ function clearSearchState(topLevelPath) {
         return;
     }
 
-    if (topLevelPath !== "food") {
+    if (topLevelPath !== "food" && topLevelPath !== "recipes") {
         window.sessionStorage.removeItem("FoodSearchPageText");
         window.sessionStorage.removeItem("FoodSearchPageResults");
         window.sessionStorage.removeItem("FoodSearchPageStatus");
+        window.sessionStorage.removeItem("FoodSearchPageType");
     }
 
     if (topLevelPath !== "exercise") {

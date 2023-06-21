@@ -12,19 +12,19 @@ import useLocalStorage from "hooks/useLocalStorage";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();
-    const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchType, setSearchType] = useState("full");
+    const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", "full");
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
 
     const [myFoods, setMyFoods] = useLocalStorage("MyFoods", []);
+    const [recipes, setRecipes] = useLocalStorage("Recipes", []);
 
     const userIsLoggedIn = IsUserLogged();
 
     const fetchResults = (override) => {
-        if (userIsLoggedIn && (override || searchType === "user")) {
+        if (userIsLoggedIn && override === "user") {
             let userId = JSON.parse(window.localStorage.profile)._id;
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?userId=${userId}`, {
                 method: "GET",
@@ -37,18 +37,35 @@ export default function FoodSearchPage() {
                     setMyFoods(json);
                     setSearchResults(json);
                 });
+        } else if (userIsLoggedIn && override === "recipe") {
+            // userId is pulled from access token in the backend
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
+                method: "GET",
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((json) => {
+                    setSearchResults(json);
+                    setRecipes(json);
+                });
         } else {
             fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
                 .then((res) => {
                     setSearchStatus(res.status);
                     return res.json();
                 })
-                .then((json) => setSearchResults(json));
+                .then((json) => {
+                    setSearchType("full");
+                    setSearchResults(json);
+                });
         }
     };
     const inputOnKeydown = (e) => {
         if (e.key === "Enter") {
-            fetchResults();
+            if (searchType === "full") {
+                fetchResults();
+            }
             return;
         }
         return;
@@ -60,7 +77,15 @@ export default function FoodSearchPage() {
             <div className="food-background-top-banner bottom-top-banner-background-decoration"></div>
             <div className="food-background-bottom-banner bottom-bot-banner-background-decoration"></div>
             <div id="food-search-page-searchbox">
-                <button title="Search!" id="food-search-page-searchbox-button" onClick={() => fetchResults()}>
+                <button
+                    title="Search!"
+                    id="food-search-page-searchbox-button"
+                    onClick={() => {
+                        if (searchType === "full") {
+                            fetchResults();
+                        }
+                    }}
+                >
                     <img src={magnifyingGlass} alt="magnifying glass icon" />
                 </button>
                 <input
@@ -97,37 +122,88 @@ export default function FoodSearchPage() {
                             className={`exercise-search-page-choice-button${searchType === "full" ? "-active" : ""}`}
                             onClick={() => setSearchType("full")}
                         >
-                            Full Search
+                            All
                         </button>
                         <button
                             id="food-search-page-choice-user"
                             className={`exercise-search-page-choice-button${searchType === "user" ? "-active" : ""}`}
                             onClick={() => {
-                                fetchResults(true); // override true so that when My Foods is clicked, it automatically sends GET
+                                fetchResults("user"); // override true so that when My Foods is clicked, it automatically sends GET
                                 setSearchType("user");
                                 setSearchResults(myFoods);
                             }}
                         >
                             My Foods
                         </button>
+                        <button
+                            id="food-search-page-choice-recipe"
+                            className={`exercise-search-page-choice-button${searchType === "recipe" ? "-active" : ""}`}
+                            onClick={() => {
+                                fetchResults("recipe"); // override true so that when My Foods is clicked, it automatically sends GET
+                                setSearchType("recipe");
+                                setSearchResults(recipes);
+                            }}
+                        >
+                            My Recipes
+                        </button>
                     </div>
-                    <button id="food-search-page-submit-food-button" onClick={() => navigate("/food/createFood")}>
-                        Submit a Food!
-                    </button>
                 </div>
             ) : null}
-            <div id="food-search-island">
-                <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
-                {searchResults.length > 0 ? (
-                    <FoodSearchList searchResults={searchResults} />
-                ) : (
-                    <>
-                        <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
-                        {searchStatus !== 200 ? null : <h3>Search for a Food or Scan a Barcode!</h3>}
-                    </>
-                )}
-                {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
-            </div>
+            <FoodSearchIsland searchResults={searchResults} searchText={searchText} searchType={searchType} searchStatus={searchStatus} />
+        </div>
+    );
+}
+
+function FoodSearchIsland(props) {
+    const { searchResults, searchText, searchType, searchStatus } = props;
+
+    const navigate = useNavigate();
+
+    const sortFunction = (recipeA, recipeB) => {
+        // if no search text, then sort by timestamp
+        if (searchText) {
+            let LevA = LevenshteinDistance(searchText, recipeA.name);
+            let LevB = LevenshteinDistance(searchText, recipeB.name);
+
+            if (recipeA.name.length > recipeB.name.length) {
+                LevA -= recipeA.name.length - recipeB.name.length;
+            } else {
+                LevB -= recipeB.name.length - recipeA.name.length;
+            }
+
+            return LevA - LevB;
+        } else {
+            return new Date(recipeB.timestamp).getTime() - new Date(recipeA.timestamp).getTime();
+        }
+    };
+
+    let list;
+    if (searchType === "recipe") {
+        list = <RecipeSearchList searchResults={[...searchResults].sort(sortFunction)} />;
+    } else if (searchType === "user") {
+        list = <FoodSearchList searchResults={[...searchResults].sort(sortFunction)} />;
+    } else {
+        list = <FoodSearchList searchResults={searchResults} />;
+    }
+
+    return (
+        <div id="food-search-island">
+            <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
+            {searchResults.length > 0 ? (
+                list
+            ) : (
+                <>
+                    <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                    {searchStatus !== 200 ? null : <h3>Search for a Food or Scan a Barcode!</h3>}
+                </>
+            )}
+            {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
+            <button
+                id="food-search-page-submit-food-button"
+                onClick={() => navigate(searchType === "recipe" ? "/recipe-builder" : "/food/createFood")}
+            >
+                {searchType === "recipe" ? "Create a Recipe!" : "Submit a Food!"}
+            </button>
         </div>
     );
 }
@@ -165,4 +241,69 @@ function FoodSearchResult(props) {
             <p>{brand}</p>
         </li>
     );
+}
+
+function RecipeSearchList(props) {
+    let { searchResults } = props;
+    return (
+        <ul id="recipe-search-results-list">
+            {searchResults.map((searchResults, index) => (
+                <RecipeSearchResult response={searchResults} key={`food-search-result-${index}`} />
+            ))}
+            {/* <li id="food-search-refine-message">
+                <h4>Didn't find what you were looking for? Consider refining your search!</h4>
+            </li> */}
+        </ul>
+    );
+}
+
+function RecipeSearchResult(props) {
+    let { _id, name, timestamp } = props.response;
+    const location = useLocation();
+
+    const navigate = useNavigate();
+
+    const resultOnClick = () => {
+        navigate("/recipes/" + _id, {
+            state: location.state,
+        });
+    };
+    return (
+        <li className="recipe-search-result" onClick={resultOnClick}>
+            <h4>{name}</h4>
+            <p>{ConvertTimestampToDate(timestamp)}</p>
+        </li>
+    );
+}
+
+// Courtesy of https://www.tutorialspoint.com/levenshtein-distance-in-javascript
+// I have implemented this algorithm before in Python, did not want to waste time converting it to JavaScript
+function LevenshteinDistance(str1 = "", str2 = "") {
+    const track = Array(str2.length + 1)
+        .fill(null)
+        .map(() => Array(str1.length + 1).fill(null));
+    for (let i = 0; i <= str1.length; i += 1) {
+        track[0][i] = i;
+    }
+    for (let j = 0; j <= str2.length; j += 1) {
+        track[j][0] = j;
+    }
+    for (let j = 1; j <= str2.length; j += 1) {
+        for (let i = 1; i <= str1.length; i += 1) {
+            const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            track[j][i] = Math.min(
+                track[j][i - 1] + 1, // deletion
+                track[j - 1][i] + 1, // insertion
+                track[j - 1][i - 1] + indicator // substitution
+            );
+        }
+    }
+    // console.log(str2, ":", track[str2.length][str1.length]);
+    return track[str2.length][str1.length];
+}
+
+function ConvertTimestampToDate(timestamp) {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dateObj = new Date(timestamp);
+    return `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 }
