@@ -31,34 +31,44 @@ export default function FoodSearchPage() {
                 method: "GET",
             })
                 .then((res) => {
-                    setSearchStatus(res.status);
+                    if (res.status !== 200) {
+                        throw new Error(res.status);
+                    }
                     return res.json();
                 })
                 .then((json) => {
                     setMyFoods(json);
-                });
+                })
+                .catch((err) => console.log(err));
         } else if (userIsLoggedIn && override === "recipe") {
             // userId is pulled from access token in the backend
             authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
                 method: "GET",
             })
                 .then((res) => {
-                    setSearchStatus(res.status);
+                    if (res.status !== 200) {
+                        throw new Error(res.status);
+                    }
                     return res.json();
                 })
                 .then((json) => {
                     setRecipes(json);
-                });
+                })
+                .catch((err) => console.log(err));
         } else {
             fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
                 .then((res) => {
                     setSearchStatus(res.status);
+                    if (res.status !== 200) {
+                        throw new Error(res.status);
+                    }
                     return res.json();
                 })
                 .then((json) => {
                     setSearchType("full");
                     setSearchResults(json);
-                });
+                })
+                .catch((err) => console.log(err));
         }
     };
     const inputOnKeydown = (e) => {
@@ -232,7 +242,7 @@ function FoodSearchIsland(props) {
         <div id="food-search-island">
             <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
             {searchResults.length > 0 ? list : emptyDefault}
-            {searchStatus !== 200 ? <h3>Search came back empty!</h3> : null}
+            {searchStatus !== 200 && searchType === "full" ? <h3>Search came back empty!</h3> : null}
             <button
                 id="food-search-page-submit-food-button"
                 onClick={() => navigate(searchType === "recipe" ? "/recipe-builder" : "/food/createFood")}

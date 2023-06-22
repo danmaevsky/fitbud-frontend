@@ -52,7 +52,7 @@
 }
 
 #login-message-error {
-    color: var(--default-error-red);
+    color: var(--default-error-color);
     padding: 0;
     margin: 0;
     /* height: 1rem; */
