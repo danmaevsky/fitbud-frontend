@@ -14,14 +14,20 @@ export default function BarcodeScanPage() {
     const [showInputField, setShowInputField] = useState(true);
     const [barcodeResponse, setBarcodeResponse] = useState(null);
     const [barcodeStatus, setBarcodeStatus] = useState(200);
+    const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive barcode on-success spam
 
     const fetchResults = (decodedText, decodedResult) => {
+        if (isAttemptingFetch) {
+            return;
+        }
+        setIsAttemptingFetch(true);
         fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?barcode=${encodeURIComponent(decodedText)}`)
             .then((res) => {
                 setBarcodeStatus(res.status);
                 return res.json();
             })
-            .then((json) => setBarcodeResponse(json));
+            .then((json) => setBarcodeResponse(json))
+            .then(() => setIsAttemptingFetch(false));
     };
 
     useEffect(() => {
