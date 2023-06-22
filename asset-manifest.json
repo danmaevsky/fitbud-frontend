@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/fitbud-frontend/static/css/main.e8d0b868.css",
-    "main.js": "/fitbud-frontend/static/js/main.3ad3b64e.js",
+    "main.css": "/fitbud-frontend/static/css/main.e22818cb.css",
+    "main.js": "/fitbud-frontend/static/js/main.16ffd095.js",
     "static/js/27.27dd4fb7.chunk.js": "/fitbud-frontend/static/js/27.27dd4fb7.chunk.js",
     "static/media/BreeSerif-Regular.ttf": "/fitbud-frontend/static/media/BreeSerif-Regular.751eb941c0e1335ad247.ttf",
     "static/media/food-search-placeholder.svg": "/fitbud-frontend/static/media/food-search-placeholder.e6d1bd59c8a8f5214d912e9f22659b9b.svg",
@@ -15,7 +15,7 @@
     "static/media/minus-sign.svg": "/fitbud-frontend/static/media/minus-sign.e9880a10e4877e38eedd1e826db05752.svg"
   },
   "entrypoints": [
-    "static/css/main.e8d0b868.css",
-    "static/js/main.3ad3b64e.js"
+    "static/css/main.e22818cb.css",
+    "static/js/main.16ffd095.js"
   ]
 }
