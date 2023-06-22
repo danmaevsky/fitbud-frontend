@@ -106,13 +106,14 @@
     transition: background-color 0.1s;
     cursor: pointer;
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     box-sizing: content-box;
     padding: 1rem;
     margin-top: 2rem;
     width: 50%;
-    height: 2rem;
+    height: 1.75rem;
     max-width: 12rem;
     border: solid 2px;
     border-color: white;

@@ -35,7 +35,6 @@ export default function FoodSearchPage() {
                 })
                 .then((json) => {
                     setMyFoods(json);
-                    setSearchResults(json);
                 });
         } else if (userIsLoggedIn && override === "recipe") {
             // userId is pulled from access token in the backend
@@ -43,10 +42,10 @@ export default function FoodSearchPage() {
                 method: "GET",
             })
                 .then((res) => {
+                    setSearchStatus(res.status);
                     return res.json();
                 })
                 .then((json) => {
-                    setSearchResults(json);
                     setRecipes(json);
                 });
         } else {
@@ -70,6 +69,21 @@ export default function FoodSearchPage() {
         }
         return;
     };
+
+    let list;
+    switch (searchType) {
+        case "full":
+            list = searchResults;
+            break;
+        case "user":
+            list = myFoods;
+            break;
+        case "recipe":
+            list = recipes;
+            break;
+        default:
+            list = searchResults;
+    }
 
     return (
         <div id="food-search-page-body">
@@ -130,7 +144,6 @@ export default function FoodSearchPage() {
                             onClick={() => {
                                 fetchResults("user"); // override true so that when My Foods is clicked, it automatically sends GET
                                 setSearchType("user");
-                                setSearchResults(myFoods);
                             }}
                         >
                             My Foods
@@ -139,9 +152,8 @@ export default function FoodSearchPage() {
                             id="food-search-page-choice-recipe"
                             className={`exercise-search-page-choice-button${searchType === "recipe" ? "-active" : ""}`}
                             onClick={() => {
-                                fetchResults("recipe"); // override true so that when My Foods is clicked, it automatically sends GET
+                                fetchResults("recipe"); // override true so that when Recipes is clicked, it automatically sends GET
                                 setSearchType("recipe");
-                                setSearchResults(recipes);
                             }}
                         >
                             My Recipes
@@ -149,7 +161,7 @@ export default function FoodSearchPage() {
                     </div>
                 </div>
             ) : null}
-            <FoodSearchIsland searchResults={searchResults} searchText={searchText} searchType={searchType} searchStatus={searchStatus} />
+            <FoodSearchIsland searchResults={list} searchText={searchText} searchType={searchType} searchStatus={searchStatus} />
         </div>
     );
 }
@@ -160,23 +172,25 @@ function FoodSearchIsland(props) {
     const navigate = useNavigate();
 
     const sortFunction = (recipeA, recipeB) => {
-        // if no search text, then sort by timestamp
         if (searchText) {
+            // sort by Levenshtein Distance
             let LevA = LevenshteinDistance(searchText, recipeA.name);
             let LevB = LevenshteinDistance(searchText, recipeB.name);
 
+            // normalizing the Levenshtein Distance so that smaller strings are not given advantage
             if (recipeA.name.length > recipeB.name.length) {
                 LevA -= recipeA.name.length - recipeB.name.length;
             } else {
                 LevB -= recipeB.name.length - recipeA.name.length;
             }
-
             return LevA - LevB;
         } else {
+            // otherwise just sort by timestamp
             return new Date(recipeB.timestamp).getTime() - new Date(recipeA.timestamp).getTime();
         }
     };
 
+    // dynamically change which list shows up
     let list;
     let emptyDefault;
     if (searchType === "recipe") {
