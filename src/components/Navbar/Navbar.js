@@ -191,7 +191,7 @@ function ProfileMenu(props) {
             navigate
         ).then((res) => {
             resStatus = res.status;
-            if (res.status === 200) {
+            if (res.status === 200 || res.status === 404) {
                 window.localStorage.clear();
                 window.sessionStorage.clear();
                 navigate("/");
