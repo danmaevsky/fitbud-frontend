@@ -88,36 +88,36 @@ function BarcodeScanner(props) {
 
         if (!isMobile) {
             setIsMobile(false);
-            return () => "";
-        }
-        html5QrCode = new Html5Qrcode(elementId);
-        Html5Qrcode.getCameras()
-            .then((devs) => {
-                setDevices(devs);
-            })
-            .then(() => {
-                let aspectRatio = 0.5;
-                let qrBoxRatio = 0.45;
-                html5QrCode.start(
-                    { facingMode: "environment" },
-                    {
-                        qrbox: (viewfinderWidth, viewfinderHeight) => {
-                            return { width: 0.85 * viewfinderWidth, height: qrBoxRatio * 0.85 * viewfinderWidth };
+        } else {
+            html5QrCode = new Html5Qrcode(elementId);
+            Html5Qrcode.getCameras()
+                .then((devs) => {
+                    setDevices(devs);
+                })
+                .then(() => {
+                    let aspectRatio = 0.5;
+                    let qrBoxRatio = 0.45;
+                    html5QrCode.start(
+                        { facingMode: "environment" },
+                        {
+                            qrbox: (viewfinderWidth, viewfinderHeight) => {
+                                return { width: 0.85 * viewfinderWidth, height: qrBoxRatio * 0.85 * viewfinderWidth };
+                            },
+                            aspectRatio: aspectRatio,
                         },
-                        aspectRatio: aspectRatio,
-                    },
-                    onSuccess,
-                    () => "Goodbye World"
-                );
-                setShowHelp(true);
-                setTimeout(() => html5QrCode.applyVideoConstrains({ focusMode: "continuous" }), 2000);
-            });
+                        onSuccess,
+                        () => "Goodbye World"
+                    );
+                    setShowHelp(true);
+                    setTimeout(() => html5QrCode.applyVideoConstrains({ focusMode: "continuous" }), 2000);
+                });
 
-        return () => {
-            if (html5QrCode.isScanning) {
-                html5QrCode.stop().then(html5QrCode.clear);
-            }
-        };
+            return () => {
+                if (html5QrCode.isScanning) {
+                    html5QrCode.stop().then(html5QrCode.clear);
+                }
+            };
+        }
     }, []);
 
     // useEffect(() => {
