@@ -11,7 +11,7 @@ export default function BarcodeScanPage() {
     const location = useLocation();
     const [showHelp, setShowHelp] = useState(false);
     const [showBarcodeScanner, setShowBarcodeScanner] = useState(true);
-    const [showInputField, setShowInputField] = useState(false);
+    const [showInputField, setShowInputField] = useState(true);
     const [barcodeResponse, setBarcodeResponse] = useState(null);
     const [barcodeStatus, setBarcodeStatus] = useState(200);
 
@@ -38,7 +38,7 @@ export default function BarcodeScanPage() {
                     });
                 } else {
                     console.log("Redirect to Food");
-                    navigate("/food/" + barcodeResponse._id);
+                    navigate("/food/" + barcodeResponse._id, { state: location.state });
                 }
             }
         }
@@ -47,7 +47,6 @@ export default function BarcodeScanPage() {
     useEffect(() => {
         if (barcodeStatus !== 200) {
             setShowBarcodeScanner(false);
-            setShowInputField(false);
             setShowHelp(false);
         }
     }, [barcodeStatus]);
@@ -62,28 +61,35 @@ export default function BarcodeScanPage() {
                     <img src={backArrow} />
                     Go Back
                 </Link>
-                {showBarcodeScanner ? (
-                    <BarcodeScanner
-                        elementId={"barcode-scanner"}
-                        setShowHelp={setShowHelp}
-                        setShowInputField={setShowInputField}
-                        onSuccess={fetchResults}
-                    />
-                ) : null}
+                {showBarcodeScanner ? <BarcodeScanner elementId={"barcode-scanner"} setShowHelp={setShowHelp} onSuccess={fetchResults} /> : null}
                 {showHelp ? <p>Having trouble? Try aligning the barcode with the left edge of the box!</p> : null}
                 {showInputField ? <ManualBarcodeInput setBarcodeResponse={setBarcodeResponse} setBarcodeStatus={setBarcodeStatus} /> : null}
-                {barcodeStatus !== 200 ? "404 Not Found. Search came back empty!" : null}
+                {barcodeStatus !== 200
+                    ? "Search came back empty! This could mean that a food with the scanned barcode does not exist in our database, or that the code was scanned incorrectly. You can try manually inputting the code if you'd like."
+                    : null}
             </div>
         </div>
     );
 }
 
 function BarcodeScanner(props) {
-    const { elementId, setShowHelp, setShowInputField, onSuccess } = props;
+    const { elementId, setShowHelp, onSuccess } = props;
     const windowDims = useWindowDimensions();
     const [devices, setDevices] = useState([]);
+    const [isMobile, setIsMobile] = useState(true);
+
     let html5QrCode;
     useEffect(() => {
+        // feature detection for checking if mobile device (UA sniffing is not recommended, so that is why I feature detect first)
+        let isMobile =
+            window.screen.orientation.angle > 0 ||
+            window.devicePixelRatio > 1 ||
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (!isMobile) {
+            setIsMobile(false);
+            return () => "";
+        }
         html5QrCode = new Html5Qrcode(elementId);
         Html5Qrcode.getCameras()
             .then((devs) => {
@@ -103,10 +109,7 @@ function BarcodeScanner(props) {
                     onSuccess,
                     () => "Goodbye World"
                 );
-                setTimeout(() => setShowHelp(true), 5000);
-                setTimeout(() => {
-                    setShowInputField(true);
-                }, 15000);
+                setShowHelp(true);
                 setTimeout(() => html5QrCode.applyVideoConstrains({ focusMode: "continuous" }), 2000);
             });
 
@@ -128,6 +131,11 @@ function BarcodeScanner(props) {
     return (
         <div id="barcode-scanner-container">
             <div id={elementId} />
+            {!isMobile ? (
+                <p id="barcode-desktop-not-supported-message">
+                    Sorry, barcode scanning is not supported on desktops. You can still manually input the barcode if you'd like!
+                </p>
+            ) : null}
         </div>
     );
 }
@@ -157,6 +165,7 @@ function ManualBarcodeInput(props) {
                 type="text"
                 placeholder="Search Barcode"
                 value={barcode}
+                inputMode="numeric"
                 onChange={(e) => setBarcode(e.target.value)}
                 onKeyDown={inputOnKeydown}
             ></input>

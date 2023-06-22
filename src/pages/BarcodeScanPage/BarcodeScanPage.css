@@ -31,6 +31,7 @@
 }
 
 #barcode-scanner-container {
+    display: flex;
     width: 30rem;
     height: 30rem;
 }
@@ -82,6 +83,10 @@
 }
 #barcode-page-searchbox:focus-within {
     border: 0.2rem solid var(--default-primary-color);
+}
+
+#barcode-desktop-not-supported-message {
+    align-self: center;
 }
 
 @media screen and (max-width: 800px) {
