@@ -193,8 +193,8 @@ function FoodSearchIsland(props) {
     const sortFunction = (recipeA, recipeB) => {
         if (searchText) {
             // sort by Levenshtein Distance
-            let LevA = LevenshteinDistance(searchText, recipeA.name);
-            let LevB = LevenshteinDistance(searchText, recipeB.name);
+            let LevA = LevenshteinDistance(searchText, recipeA.name.toLowerCase());
+            let LevB = LevenshteinDistance(searchText, recipeB.name.toLowerCase());
 
             // normalizing the Levenshtein Distance so that smaller strings are not given advantage
             if (recipeA.name.length > recipeB.name.length) {
