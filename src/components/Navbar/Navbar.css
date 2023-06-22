@@ -49,12 +49,43 @@
     cursor: pointer;
     transition: background-color 0.1s;
     padding: 1rem;
+    position: relative;
 }
 
 #navbar ul a:hover,
 #navbar ul p:hover {
-    background-color: #c7c7c7;
     padding: 1rem;
+}
+
+#navbar ul a::after {
+    content: "";
+    position: absolute;
+    right: 10%;
+    left: 10%;
+    bottom: 0.5rem;
+    height: 0.125rem;
+    background: #ffffff;
+    transition: -webkit-transform 0.25s ease;
+    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+}
+
+#navbar ul a:hover::after,
+#navbar ul a.nav-active::after {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    right: 10%;
+    left: 10%;
+    bottom: 0.5rem;
+    height: 0.125rem;
+    transition: -webkit-transform 0.25s ease;
+    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
 }
 
 #navbar li {
