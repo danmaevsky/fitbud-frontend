@@ -115,7 +115,14 @@ function FoodInfo(props) {
             <h3>{foodName}</h3>
             <p>{brand}</p>
             <div id="food-info-overview">
-                <MacroCircle kcal={nutrients.kcal} totalFat={nutrients.totalFat} totalCarb={nutrients.totalCarb} protein={nutrients.protein} />
+                <MacroCircle
+                    kcal={nutrients.kcal}
+                    totalFat={nutrients.totalFat}
+                    totalCarb={nutrients.totalCarb}
+                    protein={nutrients.protein}
+                    dietaryFiber={nutrients.dietaryFiber}
+                    sugarAlcohols={nutrients.sugarAlcohols}
+                />
                 <div id="food-info-macros">
                     <h5 id="food-info-macro-fat">
                         Fat:
@@ -543,8 +550,8 @@ function SelectServingSize(props) {
 }
 
 function MacroCircle(props) {
-    const { kcal, totalFat, totalCarb, protein } = props;
-    const kcalComputed = 9 * totalFat + 4 * totalCarb + 4 * protein;
+    const { kcal, totalFat, totalCarb, protein, dietaryFiber, sugarAlcohols } = props;
+    const kcalComputed = 9 * totalFat + 4 * (totalCarb - dietaryFiber - sugarAlcohols) + 4 * protein;
     const windowDims = useWindowDimensions();
     const canvas = useRef(null);
 
@@ -632,6 +639,7 @@ function MacroCircle(props) {
             // console.log("Curr undefined!");
         }
     }, [windowDims, kcalComputed, protein, totalCarb, totalFat, elemHeight, elemWidth]);
+
     return (
         <div id="macro-circle" style={{ width: elemWidth, height: elemHeight }}>
             <canvas ref={canvas} style={{ width: elemWidth, height: elemHeight }}></canvas>
