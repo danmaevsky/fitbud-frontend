@@ -49,7 +49,9 @@ function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/login">Login</Link>
+                        <Link className={topLevelPath === "login" ? "nav-active" : null} to="/login">
+                            Login
+                        </Link>
                     </li>
                 </ul>
             </nav>

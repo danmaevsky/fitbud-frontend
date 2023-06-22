@@ -12,6 +12,7 @@ import useLocalStorage from "hooks/useLocalStorage";
 
 export default function FoodSearchPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
     const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", "full");
@@ -123,7 +124,15 @@ export default function FoodSearchPage() {
                         <img src={clearTextX} alt="clear text icon X" />
                     </button>
                 ) : (
-                    <button title="Scan a Barcode!" id="food-search-page-searchbox-button" onClick={() => navigate("/barcode")}>
+                    <button
+                        title="Scan a Barcode!"
+                        id="food-search-page-searchbox-button"
+                        onClick={() =>
+                            navigate("/barcode", {
+                                state: location.state,
+                            })
+                        }
+                    >
                         <img src={barcodeScannerIcon} alt="barcode scanner icon" />
                     </button>
                 )}
