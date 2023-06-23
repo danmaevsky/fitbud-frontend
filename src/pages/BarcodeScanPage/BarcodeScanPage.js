@@ -88,7 +88,7 @@ function BarcodeScanner(props) {
     useEffect(() => {
         // feature detection for checking if mobile device (UA sniffing is not recommended, so that is why I feature detect first)
         let isMobile =
-            (window.screen.orientation.angle != 0 && navigator.maxTouchPoints > 0 && screen.width <= 800) ||
+            (window.screen.orientation.angle != 0 && navigator.maxTouchPoints > 0 && document.documentElement.clientWidth <= 800) ||
             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         console.log("orientation check:", window.screen.orientation.angle > 0);
         console.log("user agent sniff:", /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
