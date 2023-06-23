@@ -15,6 +15,7 @@ export default function BarcodeScanPage() {
     const [barcodeResponse, setBarcodeResponse] = useState(null);
     const [barcodeStatus, setBarcodeStatus] = useState(200);
     const [isAttemptingFetch, setIsAttemptingFetch] = useState(false); // prevent excessive barcode on-success spam
+    const [isMobile, setIsMobile] = useState(true);
 
     const fetchResults = (decodedText, decodedResult) => {
         if (isAttemptingFetch) {
@@ -67,8 +68,15 @@ export default function BarcodeScanPage() {
                     <img src={backArrow} />
                     Go Back
                 </Link>
-                {showBarcodeScanner ? <BarcodeScanner elementId={"barcode-scanner"} setShowHelp={setShowHelp} onSuccess={fetchResults} /> : null}
+                {showBarcodeScanner ? (
+                    <BarcodeScanner elementId={"barcode-scanner"} setShowHelp={setShowHelp} setIsMobile={setIsMobile} onSuccess={fetchResults} />
+                ) : null}
                 {showHelp ? <p>Having trouble? Try aligning the barcode with the left edge of the box!</p> : null}
+                {!isMobile ? (
+                    <p id="barcode-desktop-not-supported-message">
+                        Sorry, barcode scanning is not supported on desktops. You can still manually input the barcode if you'd like!
+                    </p>
+                ) : null}
                 {showInputField ? <ManualBarcodeInput setBarcodeResponse={setBarcodeResponse} setBarcodeStatus={setBarcodeStatus} /> : null}
                 {barcodeStatus !== 200
                     ? "Search came back empty! This could mean that a food with the scanned barcode does not exist in our database, or that the code was scanned incorrectly. You can try manually inputting the code if you'd like."
@@ -79,19 +87,16 @@ export default function BarcodeScanPage() {
 }
 
 function BarcodeScanner(props) {
-    const { elementId, setShowHelp, onSuccess } = props;
+    const { elementId, setShowHelp, setIsMobile, onSuccess } = props;
     const windowDims = useWindowDimensions();
     const [devices, setDevices] = useState([]);
-    const [isMobile, setIsMobile] = useState(true);
 
     let html5QrCode;
     useEffect(() => {
         // feature detection for checking if mobile device (UA sniffing is not recommended, so that is why I feature detect first)
         let isMobile =
-            (window.screen.orientation.angle != 0 && navigator.maxTouchPoints > 0 && document.documentElement.clientWidth <= 800) ||
+            (window.screen.orientation.angle != 0 && navigator.maxTouchPoints > 0 && window.screen.width <= 800) ||
             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        console.log("orientation check:", window.screen.orientation.angle > 0);
-        console.log("user agent sniff:", /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
         if (!isMobile) {
             setIsMobile(false);
@@ -138,11 +143,6 @@ function BarcodeScanner(props) {
     return (
         <div id="barcode-scanner-container">
             <div id={elementId} />
-            {!isMobile ? (
-                <p id="barcode-desktop-not-supported-message">
-                    Sorry, barcode scanning is not supported on desktops. You can still manually input the barcode if you'd like!
-                </p>
-            ) : null}
         </div>
     );
 }
