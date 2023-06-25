@@ -82,18 +82,23 @@ export default function FoodSearchPage() {
     };
 
     let list;
+    let placeholderText;
     switch (searchType) {
         case "full":
             list = searchResults;
+            placeholderText = "Search Foods";
             break;
         case "user":
             list = myFoods;
+            placeholderText = "Search Your Foods";
             break;
         case "recipe":
             list = recipes;
+            placeholderText = "Search Recipes";
             break;
         default:
             list = searchResults;
+            placeholderText = "Search Foods";
     }
 
     return (
@@ -116,7 +121,7 @@ export default function FoodSearchPage() {
                 <input
                     id="food-search-page-searchbox-input"
                     type="text"
-                    placeholder="Search Food"
+                    placeholder={placeholderText}
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={inputOnKeydown}
