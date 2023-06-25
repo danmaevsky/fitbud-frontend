@@ -72,6 +72,8 @@ export default function FoodSearchPage() {
                     setSearchResults(json);
                 })
                 .catch((err) => {
+                    setSearchType("all");
+
                     setSearchResults([]);
                     console.log(err);
                 });
