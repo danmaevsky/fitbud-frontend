@@ -15,7 +15,7 @@ export default function FoodSearchPage() {
     const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", "full");
+    const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", "recents");
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
 
@@ -55,7 +55,10 @@ export default function FoodSearchPage() {
                     setRecipes(json);
                 })
                 .catch((err) => console.log(err));
+        } else if (userIsLoggedIn && override === "recents") {
+            // API call to retrieve a user's recently added foods
         } else {
+            // both "recents" and "all" mode
             fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
                 .then((res) => {
                     setSearchStatus(res.status);
@@ -65,15 +68,18 @@ export default function FoodSearchPage() {
                     return res.json();
                 })
                 .then((json) => {
-                    setSearchType("full");
+                    setSearchType("all");
                     setSearchResults(json);
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    setSearchResults([]);
+                    console.log(err);
+                });
         }
     };
     const inputOnKeydown = (e) => {
         if (e.key === "Enter") {
-            if (searchType === "full") {
+            if (searchType === "all" || searchType === "recents") {
                 fetchResults();
             }
             return;
@@ -84,7 +90,11 @@ export default function FoodSearchPage() {
     let list;
     let placeholderText;
     switch (searchType) {
-        case "full":
+        case "recents":
+            list = [];
+            placeholderText = "Search Recents";
+            break;
+        case "all":
             list = searchResults;
             placeholderText = "Search Foods";
             break;
@@ -111,7 +121,7 @@ export default function FoodSearchPage() {
                     title="Search!"
                     id="food-search-page-searchbox-button"
                     onClick={() => {
-                        if (searchType === "full") {
+                        if (searchType === "all" || searchType === "recents") {
                             fetchResults();
                         }
                     }}
@@ -157,8 +167,18 @@ export default function FoodSearchPage() {
                     <div id="food-search-page-choices">
                         <button
                             id="food-search-page-choice-full"
-                            className={`exercise-search-page-choice-button${searchType === "full" ? "-active" : ""}`}
-                            onClick={() => setSearchType("full")}
+                            className={`exercise-search-page-choice-button${searchType === "recents" ? "-active" : ""}`}
+                            onClick={() => {
+                                fetchResults("recents");
+                                setSearchType("recents");
+                            }}
+                        >
+                            Recents
+                        </button>
+                        <button
+                            id="food-search-page-choice-user"
+                            className={`exercise-search-page-choice-button${searchType === "all" ? "-active" : ""}`}
+                            onClick={() => setSearchType("all")}
                         >
                             All
                         </button>
@@ -233,6 +253,14 @@ function FoodSearchIsland(props) {
                 <h3>You haven't submitted any foods yet!</h3>
             </>
         );
+    } else if (searchType === "recents") {
+        list = <FoodSearchList searchResults={searchResults} />;
+        emptyDefault = (
+            <>
+                <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
+                <h3>You don't have any recent diary entries! (WIP Feature)</h3>
+            </>
+        );
     } else {
         list = <FoodSearchList searchResults={searchResults} />;
         emptyDefault = (
@@ -247,7 +275,7 @@ function FoodSearchIsland(props) {
         <div id="food-search-island">
             <p id="food-search-island-number">{searchResults.length > 0 ? `Results: ${searchResults.length}` : null}</p>
             {searchResults.length > 0 ? list : emptyDefault}
-            {searchStatus !== 200 && searchType === "full" ? <h3>Search came back empty!</h3> : null}
+            {searchStatus !== 200 && searchType === "all" ? <h3>Search came back empty!</h3> : null}
             <button
                 id="food-search-page-submit-food-button"
                 onClick={() => navigate(searchType === "recipe" ? "/recipe-builder" : "/food/createFood")}
