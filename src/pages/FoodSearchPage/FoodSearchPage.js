@@ -73,7 +73,6 @@ export default function FoodSearchPage() {
                 })
                 .catch((err) => {
                     setSearchType("all");
-
                     setSearchResults([]);
                     console.log(err);
                 });
