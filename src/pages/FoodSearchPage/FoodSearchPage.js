@@ -3,7 +3,7 @@ import barcodeScannerIcon from "assets/barcode-scan-icon.svg";
 import clearTextX from "assets/clear-text-x.svg";
 import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import "./FoodSearchPage.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 import { ToTitleCase, ProcessFoodName } from "helpers/fitnessHelpers";
@@ -11,18 +11,18 @@ import { IsUserLogged, authFetch } from "helpers/authHelpers";
 import useLocalStorage from "hooks/useLocalStorage";
 
 export default function FoodSearchPage() {
+    const userIsLoggedIn = IsUserLogged();
+
     const navigate = useNavigate();
     const location = useLocation();
     const [searchText, setSearchText] = useSessionStorage("FoodSearchPageText", "");
     const [searchResults, setSearchResults] = useSessionStorage("FoodSearchPageResults", []);
-    const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", "recents");
+    const [searchType, setSearchType] = useSessionStorage("FoodSearchPageType", userIsLoggedIn ? "recents" : "all");
     const [searchStatus, setSearchStatus] = useSessionStorage("FoodSearchPageStatus", 200);
     const searchBoxRef = useRef(null);
 
     const [myFoods, setMyFoods] = useLocalStorage("MyFoods", []);
     const [recipes, setRecipes] = useLocalStorage("Recipes", []);
-
-    const userIsLoggedIn = IsUserLogged();
 
     const fetchResults = (override) => {
         if (userIsLoggedIn && override === "user") {
@@ -111,6 +111,10 @@ export default function FoodSearchPage() {
             list = searchResults;
             placeholderText = "Search Foods";
     }
+
+    useEffect(() => {
+        setSearchType(userIsLoggedIn ? "recents" : "all");
+    }, [userIsLoggedIn]);
 
     return (
         <div id="food-search-page-body">

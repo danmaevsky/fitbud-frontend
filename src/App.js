@@ -1,5 +1,10 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useLocalStorage from "hooks/useLocalStorage";
+import { IsUserLogged } from "helpers/authHelpers";
+import { fetchDiaryHelper } from "helpers/fitnessHelpers";
+import { getCurrentDate } from "helpers/generalHelpers";
 // components
 import Navbar from "components/Navbar";
 
@@ -31,6 +36,16 @@ import EditExerciseCardioLogPage from "pages/EditExerciseCardioLogPage";
 import CreateFoodPage from "pages/CreateFoodPage";
 
 function App() {
+    // If user is logged in, upon accessing the website we must update the diary once
+    const navigate = useNavigate();
+    const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    useEffect(() => {
+        if (IsUserLogged()) {
+            const currentDate = getCurrentDate();
+            fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
+        }
+    }, []);
+
     return (
         <div className="App">
             <Navbar />
