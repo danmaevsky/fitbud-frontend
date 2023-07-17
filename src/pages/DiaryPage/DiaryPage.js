@@ -377,7 +377,7 @@ function ExerciseSection(props) {
 
     const addExerciseOnClick = (e) => {
         e.stopPropagation();
-        navigate("/exercise");
+        navigate("/exercise", { state: { date: date } });
     };
 
     return (
