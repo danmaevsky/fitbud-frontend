@@ -212,7 +212,7 @@ function AddFood(props) {
             <p>Please enter the Name and Brand Information of the food item. The Barcode is optional</p>
             <FormInput type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
             <FormInput type="text" placeholder="Brand Name" value={brandName} onChange={(e) => setBrandName(e.target.value)} />
-            <FormInput type="text" placeholder="Barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+            <FormInput type="text" inputMode="numeric" placeholder="Barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
             <h3>Serving Information</h3>
             <p>These fields are to enter the serving size information. These fields are required.</p>
             <FormInput
