@@ -6,6 +6,7 @@ import clearTextX from "assets/clear-text-x.svg";
 import foodSearchPlacehoder from "assets/food-search-placeholder.svg";
 import backArrow from "assets/back-arrow.svg";
 import showMoreDownArrow from "assets/show-more-down-arrow.svg";
+import DeleteLogButtonIcon from "components/DeleteLogButtonIcon";
 import DropdownMenu from "components/DropdownMenu";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeBuilderPage.css";
@@ -22,11 +23,28 @@ export default function RecipeBuilderPage() {
     const [foodResponse, setFoodResponse] = useState(null);
     const [responseStatus, setResponseStatus] = useState(200);
 
-    // check if came from barcode scanner page
     let defaultFoodId = "";
+    let editMode = false;
+    let recipeId = null;
+    let defaultRecipeCopy = [];
+    let defaultRecipeName = "";
+    let defaultRecipeNumServings = 1;
+    let defaultNutrientsCopy = [];
+    // checking location.state
     if (location.state) {
         if (location.state.from === "recipe-builder-barcode") {
+            // check if came from barcode scanner page
             defaultFoodId = location.state.barcodeFoodId;
+        } else if (location.state.from === "recipe-page") {
+            // check if came from a specific recipes page for the purpose of editing
+            console.log("came from recipe-page");
+            editMode = true;
+            recipeId = location.state.recipeResponse._id;
+            defaultRecipeCopy = ExtractBuilderCopyFromRecipeResponse(location.state.recipeResponse);
+            defaultNutrientsCopy = ExtractNutrientsFromRecipeResponse(location.state.recipeResponse);
+            defaultRecipeName = location.state.recipeResponse.name;
+            defaultRecipeNumServings = location.state.recipeResponse.numServings;
+            console.log(defaultNutrientsCopy);
         }
     }
     const [foodId, setFoodId] = useState(defaultFoodId);
@@ -42,10 +60,10 @@ export default function RecipeBuilderPage() {
     const [householdServingName, setHouseholdServingName] = useState("");
     const [processedNutrients, setProcessedNutrients] = useState(null);
 
-    const [recipeCopy, setRecipeCopy] = useSessionStorage("recipeCopy-RecipeBuilder", []);
-    const [recipe, recipeMethods] = useArray(recipeCopy);
-    const [nutrientsCopy, setNutrientsCopy] = useSessionStorage("nutrientsCopy-RecipeBuilder", []);
-    const [nutrients, nutrientsMethods] = useArray(nutrientsCopy);
+    const [recipeCopy, setRecipeCopy] = useSessionStorage("recipeCopy-RecipeBuilder", defaultRecipeCopy);
+    const [recipe, recipeMethods] = useArray(defaultRecipeCopy);
+    const [nutrientsCopy, setNutrientsCopy] = useSessionStorage("nutrientsCopy-RecipeBuilder", defaultNutrientsCopy);
+    const [nutrients, nutrientsMethods] = useArray(defaultNutrientsCopy);
 
     useEffect(() => {
         let resStatus;
@@ -154,7 +172,16 @@ export default function RecipeBuilderPage() {
                         <FoodSearchbox foodId={foodId} setFoodId={setFoodId} />
                     )}
                 </div>
-                <RecipeItems recipe={recipe} recipeMethods={recipeMethods} nutrients={nutrients} nutrientsMethods={nutrientsMethods} />
+                <RecipeItems
+                    recipe={recipe}
+                    recipeMethods={recipeMethods}
+                    nutrients={nutrients}
+                    nutrientsMethods={nutrientsMethods}
+                    defaultRecipeName={defaultRecipeName}
+                    defaultRecipeNumServings={defaultRecipeNumServings}
+                    recipeId={recipeId}
+                    editMode={editMode}
+                />
             </div>
         </div>
     );
@@ -236,12 +263,17 @@ function FoodSearchbox(props) {
 }
 
 function RecipeItems(props) {
-    const { recipe, recipeMethods, nutrients, nutrientsMethods } = props;
-    const [recipeName, setRecipeName] = useState("");
-    const [recipeNumServings, setRecipeNumServings] = useState(1);
-    const [recipeNumServingsText, setRecipeNumServingsText] = useState("");
+    const { recipe, recipeMethods, nutrients, nutrientsMethods, defaultRecipeName, defaultRecipeNumServings, recipeId, editMode } = props;
+    const [recipeNameCopy, setRecipeNameCopy] = useSessionStorage("recipeNameCopy-RecipeBuilder", defaultRecipeName);
+    const [recipeName, setRecipeName] = useState(defaultRecipeName);
+
+    const [recipeNumServingsCopy, setRecipeNumServingsCopy] = useSessionStorage("recipeNumServingsCopy-RecipeBuilder", defaultRecipeNumServings);
+    const [recipeNumServings, setRecipeNumServings] = useState(defaultRecipeNumServings);
+    const [recipeNumServingsText, setRecipeNumServingsText] = useState(defaultRecipeNumServings);
+
     const [showMoreInfo, setShowMoreInfo] = useState(false);
     const [recipeError, setRecipeError] = useState("");
+    const navigate = useNavigate();
 
     const saveUserRecipe = () => {
         if (recipe.length < 1) {
@@ -278,29 +310,73 @@ function RecipeItems(props) {
 
         console.log(recipeObject);
 
-        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(recipeObject),
+        if (editMode) {
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/${recipeId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(recipeObject),
+            })
+                .then((res) => {
+                    resStatus = res.status;
+                    return res.json();
+                })
+                .then((res) => {
+                    if (resStatus == 200) {
+                        recipeMethods.clear();
+                        nutrientsMethods.clear();
+                        setRecipeError("");
+                        setRecipeName("");
+                        setRecipeNumServingsText("");
+                        navigate("/food");
+                    } else if (resStatus == 500) {
+                        console.log("Backend Error ", resStatus);
+                    }
+                })
+                .catch((err) => {
+                    console.log("Error in recipe save: ", err.message);
+                });
+        } else {
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(recipeObject),
+            })
+                .then((res) => {
+                    resStatus = res.status;
+                    return res.json();
+                })
+                .then((res) => {
+                    if (resStatus == 201) {
+                        recipeMethods.clear();
+                        nutrientsMethods.clear();
+                        setRecipeError("");
+                        setRecipeName("");
+                        setRecipeNumServingsText("");
+                    } else if (resStatus == 500) {
+                        console.log("Backend Error ", resStatus);
+                    }
+                })
+                .catch((err) => {
+                    console.log("Error in recipe save: ", err.message);
+                });
+        }
+    };
+
+    const deleteRecipe = () => {
+        if (!editMode) {
+            return;
+        }
+        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/${recipeId}`, {
+            method: "DELETE",
         })
             .then((res) => {
-                resStatus = res.status;
-                return res.json();
-            })
-            .then((res) => {
-                if (resStatus == 201) {
-                    recipeMethods.clear();
-                    nutrientsMethods.clear();
-                    setRecipeError("");
-                    setRecipeName("");
-                    setRecipeNumServingsText("");
-                } else if (resStatus == 500) {
-                    console.log("Backend Error ", resStatus);
+                if (res.status === 200) {
+                    navigate("/food");
+                } else {
+                    throw Error(res.status);
                 }
             })
-            .catch((err) => {
-                console.log("Error in recipe save: ", err.message);
-            });
+            .catch((err) => console.log(err));
     };
 
     let totalRecipeNutrients = TallyRecipeNutrients(nutrients, recipeNumServings);
@@ -328,8 +404,19 @@ function RecipeItems(props) {
         setRecipeNumServingsText(n);
     };
 
+    useEffect(() => {
+        setRecipeNameCopy(recipeName);
+        setRecipeNumServingsCopy(recipeNumServings);
+    }, [recipeName, recipeNumServings]);
+
     return (
         <div id="recipe-builder-main-island">
+            {editMode ? (
+                <button id="recipe-island-delete" onClick={deleteRecipe}>
+                    Delete Recipe
+                    <DeleteLogButtonIcon />
+                </button>
+            ) : null}
             <div id="recipe-info">
                 <h3 id="recipe-builder-main-header">Recipe Builder</h3>
                 {totalRecipeNutrients ? (
@@ -997,4 +1084,44 @@ function TallyRecipeNutrients(nutrients, recipeNumServings) {
     }
 
     return totalRecipeNutrients;
+}
+
+// Helper
+function ExtractBuilderCopyFromRecipeResponse(recipeResponse) {
+    let builderCopy = recipeResponse.ingredients.map((ingredient) => {
+        return {
+            foodId: ingredient.food._id,
+            servingName: ingredient.servingName,
+            numServings: ingredient.numServings,
+            quantityMetric: ingredient.quantityMetric,
+            brand: ingredient.brandName ? ToTitleCase(ingredient.brandName) : ingredient.brandOwner ? ToTitleCase(ingredient.brandOwner) : null,
+            foodName: ProcessFoodName(ingredient.food.name),
+            defaultMetricUnit: ingredient.food.servingQuantityUnit,
+            householdServingName: ingredient.food.servingName,
+        };
+    });
+    return builderCopy;
+}
+
+function ExtractNutrientsFromRecipeResponse(recipeResponse) {
+    let nutrientCopy = recipeResponse.ingredients.map((ingredient) => {
+        const defaultMetricQuantity = ingredient.food.servingQuantity ? ingredient.food.servingQuantity.toFixed(2) : 100;
+        const defaultMetricUnit = ingredient.food.servingQuantityUnit ? ingredient.food.servingQuantityUnit : "g";
+        const defaultUnitRounding = defaultMetricQuantity === ingredient.food.servingQuantity;
+
+        let foodName = ProcessFoodName(ingredient.food.name);
+        let brand = ingredient.food.brandName
+            ? ToTitleCase(ingredient.food.brandName)
+            : ingredient.food.brandOwner
+            ? ToTitleCase(ingredient.food.brandOwner)
+            : null;
+        let nutrients = ProcessNutritionalContents(
+            ingredient.food.nutritionalContent,
+            defaultMetricQuantity,
+            ingredient.numServings,
+            defaultUnitRounding
+        );
+        return nutrients;
+    });
+    return nutrientCopy;
 }
