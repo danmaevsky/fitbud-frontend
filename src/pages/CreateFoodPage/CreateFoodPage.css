@@ -31,8 +31,8 @@
     width: 60vw;
     max-width: 30rem;
     min-height: 20rem;
-    height: 70vh;
-    max-height: 35rem;
+    height: 80vh;
+    max-height: 40rem;
     /* max-height: 50vh; */
 }
 
@@ -52,13 +52,13 @@
     margin: 0;
     font-size: 1.5rem;
 }
-#create-food-form-3 h3 {
+#create-food-form h3 {
     padding: 0;
     margin: 0;
     font-size: 1.25rem;
 }
 
-#create-food-form-3 p {
+#create-food-form p {
     padding: 0;
     margin: 0;
     font-size: 1rem;
@@ -110,18 +110,7 @@
     border-radius: 5px;
 }
 
-#create-food-form-1 {
-    margin: 2rem;
-    gap: 1.75rem;
-    height: 60%;
-}
-
-#create-food-form-2 {
-    margin: 1rem;
-    gap: 1.125rem;
-}
-
-#create-food-form-sex-label {
+#create-food-form-unit-label {
     padding: 0;
     margin: 0;
     color: var(--default-secondary-text);
@@ -183,33 +172,14 @@
     color: white;
 }
 
-#create-food-form-sex-choices {
-    margin-top: -0.5rem;
-}
-
-#create-food-form-2 input[type="date"] {
-    color: var(--default-primary-text);
-    display: block;
-    background-color: white;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-#create-food-form-3 {
+#create-food-form {
     margin: 0.1rem;
     gap: 2rem;
+    height: 80%;
 }
 
-#create-food-form-3 .create-food-form-choices {
+#create-food-form .create-food-form-choices {
     margin-top: -1.5rem;
-}
-
-#create-food-form-4 {
-    margin-top: 1rem;
-}
-
-#create-food-form-4 .form-input {
-    margin-top: 2rem;
 }
 
 #create-food-activity-levels-list {
@@ -399,7 +369,7 @@
 
 @media screen and (max-width: 800px) {
     #create-food-island {
-        width: 70vw;
+        width: 75vw;
         max-width: 30rem;
     }
 
