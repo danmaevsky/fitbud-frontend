@@ -431,6 +431,8 @@ export function ProcessFoodName(x) {
 }
 
 function GetPhrases(s, ans, offset) {
+    /* Magical recursive algorithm that works to get all the phrases i.e. subsequent substrings of a string.
+    Necessary ingredient for stripping away some extra information due to the FDA database's naming convention */
     ans = ans ? ans : {};
     let j = offset ? offset : 0;
     let k = offset ? offset : 0;
