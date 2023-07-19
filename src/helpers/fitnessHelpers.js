@@ -394,32 +394,35 @@ export function ToTitleCase(x) {
 }
 
 export function ProcessFoodName(x) {
-    let phrases = GetPhrases(x);
-    // console.log(phrases);
-    let maxKey = "";
-    let keys = Object.keys(phrases);
-    for (let i = 0; i < keys.length; i++) {
-        let key = keys[i];
-        if (key.length > maxKey.length && phrases[key].length > 1) {
-            maxKey = key;
+    const exceptions = ["HALF & HALF", "HALF N HALF", "HALF AND HALF"];
+    if (!exceptions.includes(x)) {
+        let phrases = GetPhrases(x);
+        // console.log(phrases);
+        let maxKey = "";
+        let keys = Object.keys(phrases);
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            if (key.length > maxKey.length && phrases[key].length > 1) {
+                maxKey = key;
+            }
         }
-    }
 
-    if (maxKey !== "") {
-        // console.log(maxKey);
-        phrases[maxKey].sort((a, b) => {
-            if (a[0] < b[0]) {
-                return -1;
+        if (maxKey !== "") {
+            // console.log(maxKey);
+            phrases[maxKey].sort((a, b) => {
+                if (a[0] < b[0]) {
+                    return -1;
+                }
+                if (a[0] > b[0]) {
+                    return 1;
+                }
+                return 0;
+            });
+            x = x.substring(0, phrases[maxKey][phrases[maxKey].length - 1][0]) + x.substring(phrases[maxKey][phrases[maxKey].length - 1][1]);
+            x = x.replace("  ", " ");
+            if (x.substring(x.length - 2) === ", ") {
+                x = x.substring(0, x.length - 2);
             }
-            if (a[0] > b[0]) {
-                return 1;
-            }
-            return 0;
-        });
-        x = x.substring(0, phrases[maxKey][phrases[maxKey].length - 1][0]) + x.substring(phrases[maxKey][phrases[maxKey].length - 1][1]);
-        x = x.replace("  ", " ");
-        if (x.substring(x.length - 2) === ", ") {
-            x = x.substring(0, x.length - 2);
         }
     }
     // to Title Case
