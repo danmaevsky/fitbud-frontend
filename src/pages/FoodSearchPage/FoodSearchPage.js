@@ -23,6 +23,7 @@ export default function FoodSearchPage() {
 
     const [myFoods, setMyFoods] = useLocalStorage("MyFoods", []);
     const [recipes, setRecipes] = useLocalStorage("Recipes", []);
+    const [recents, setRecents] = useLocalStorage("Recents", []);
 
     const fetchResults = (override) => {
         if (userIsLoggedIn && override === "user") {
@@ -57,6 +58,22 @@ export default function FoodSearchPage() {
                 .catch((err) => console.log(err));
         } else if (userIsLoggedIn && override === "recents") {
             // API call to retrieve a user's recently added foods
+            authFetch(`${process.env.REACT_APP_GATEWAY_URI}/profile/users/history`, {
+                method: "GET",
+            })
+                .then((res) => {
+                    if (res.status !== 200) {
+                        throw new Error(res.status);
+                    }
+                    return res.json();
+                })
+                .then((json) => {
+                    setRecents(json);
+                })
+                .catch((err) => {
+                    setRecents([]);
+                    console.log(err);
+                });
         } else {
             // both "recents" and "all" mode
             fetch(`${process.env.REACT_APP_GATEWAY_URI}/food/?search=${encodeURIComponent(searchText)}`)
@@ -92,7 +109,7 @@ export default function FoodSearchPage() {
     let placeholderText;
     switch (searchType) {
         case "recents":
-            list = [];
+            list = recents;
             placeholderText = "Search Recents";
             break;
         case "all":
@@ -115,6 +132,12 @@ export default function FoodSearchPage() {
     useEffect(() => {
         setSearchType(userIsLoggedIn ? "recents" : "all");
     }, [userIsLoggedIn]);
+
+    useEffect(() => {
+        if (searchType === "recents") {
+            fetchResults("recents");
+        }
+    }, []);
 
     return (
         <div id="food-search-page-body">
@@ -243,7 +266,7 @@ function FoodSearchIsland(props) {
     let list;
     let emptyDefault;
     if (searchType === "recipe") {
-        list = <RecipeSearchList searchResults={[...searchResults].sort(sortFunction)} />;
+        list = <RecipeSearchList searchResults={[...searchResults].sort(sortFunction)} myFoods={true} />;
         emptyDefault = (
             <>
                 <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
@@ -259,11 +282,11 @@ function FoodSearchIsland(props) {
             </>
         );
     } else if (searchType === "recents") {
-        list = <FoodSearchList searchResults={searchResults} />;
+        list = <FoodSearchList searchResults={[...searchResults].sort(sortFunction)} myFoods={true} />;
         emptyDefault = (
             <>
                 <img id="food-search-placeholder-icon" src={foodSearchPlacehoder} alt="food search placeholder icon" />
-                <h3>You don't have any recent diary entries! (WIP Feature)</h3>
+                <h3>You don't have any recent diary entries!</h3>
             </>
         );
     } else {
