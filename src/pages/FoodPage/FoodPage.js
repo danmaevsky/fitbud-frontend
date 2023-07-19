@@ -101,7 +101,7 @@ function FoodInfo(props) {
     const [showMoreInfo, setShowMoreInfo] = useState(false);
     const { foodResponse, numServings, setNumServings, setServingName, metricQuantity, setMetricQuantity, mealPosition, setMealPosition } = props;
 
-    const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
+    const defaultMetricQuantity = foodResponse.servingQuantity ? +foodResponse.servingQuantity.toFixed(2) : 100;
     const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
 
     useEffect(() => {
