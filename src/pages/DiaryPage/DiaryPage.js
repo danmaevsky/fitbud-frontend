@@ -3,6 +3,7 @@ import "./DiaryPage.css";
 import addLogPlus from "assets/add-food-plus.svg";
 import useLocalStorage from "hooks/useLocalStorage";
 import { getCurrentDate } from "helpers/generalHelpers";
+import { RoundToNearestN } from "helpers/fitnessHelpers";
 import { useEffect } from "react";
 import {
     CalculateGoal,
@@ -414,21 +415,21 @@ function CreateServingText(foodLog) {
         let householdNumber = Number(servingWords[0]);
         if (Number.isNaN(householdNumber)) {
             // no number
-            return `${numServings} ${ToTitleCase(servingName)}`;
+            return `${RoundToNearestN(numServings, 0.1)} ${ToTitleCase(servingName)}`;
         } else {
             // there is a number
-            return `${numServings * householdNumber} ${ToTitleCase(servingWords.splice(1).join(" "))}`;
+            return `${RoundToNearestN(numServings * householdNumber, 0.1)} ${ToTitleCase(servingWords.splice(1).join(" "))}`;
         }
     } else if (Object.keys(builtInUnits).includes(servingName) || servingName === "g" || servingName === "mL") {
         // Here we simply need to check if it is a metric unit or not
         let servingUnit = servingWords[1];
         if (servingUnit === "g" || servingUnit === "mL" || servingName === "g" || servingName === "mL") {
-            return `${numServings * quantityMetric} ${servingUnit || servingName}`;
+            return `${RoundToNearestN(numServings * quantityMetric, 0.1)} ${servingUnit || servingName}`;
         } else {
-            return `${numServings} ${servingUnit}`;
+            return `${RoundToNearestN(numServings, 0.1)} ${servingUnit}`;
         }
     } else {
-        return `${numServings} servings`;
+        return `${RoundToNearestN(numServings, 0.1)} servings`;
     }
 }
 
