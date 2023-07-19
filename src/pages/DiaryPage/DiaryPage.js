@@ -2,8 +2,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "./DiaryPage.css";
 import addLogPlus from "assets/add-food-plus.svg";
 import useLocalStorage from "hooks/useLocalStorage";
-import { getCurrentDate } from "helpers/generalHelpers";
-import { RoundToNearestN } from "helpers/fitnessHelpers";
+import { getCurrentDate, RoundToNearestN } from "helpers/generalHelpers";
 import { useEffect } from "react";
 import {
     CalculateGoal,

@@ -570,6 +570,3 @@ function RoundToNearestTwenty(x) {
 function RoundToNearestFive(x) {
     return Math.round(x / 5) * 5;
 }
-export function RoundToNearestN(x, n) {
-    return Math.round(x / n) * n;
-}
