@@ -129,11 +129,16 @@ export default function FoodSearchPage() {
             placeholderText = "Search Foods";
     }
 
+    // only run this useEffect if userIsLoggedIn changes, not on first render
+    const firstRender = useRef(true);
     useEffect(() => {
-        setSearchType(userIsLoggedIn ? "recents" : "all");
+        if (!firstRender.current) {
+            setSearchType(userIsLoggedIn ? "recents" : "all");
+        }
     }, [userIsLoggedIn]);
 
     useEffect(() => {
+        firstRender.current = false;
         if (searchType === "recents") {
             fetchResults("recents");
         }
