@@ -39,13 +39,19 @@ function Navbar() {
                 </Link>
                 <ul>
                     <li>
-                        <Link to="/food">Food</Link>
+                        <Link className={topLevelPath === "food" || topLevelPath === "barcode" ? "nav-active" : null} to="/food">
+                            Food
+                        </Link>
                     </li>
                     <li>
-                        <Link to="/exercise">Exercise</Link>
+                        <Link className={topLevelPath === "exercise" ? "nav-active" : null} to="/exercise">
+                            Exercise
+                        </Link>
                     </li>
                     <li>
-                        <Link to="/login">Login</Link>
+                        <Link className={topLevelPath === "login" ? "nav-active" : null} to="/login">
+                            Login
+                        </Link>
                     </li>
                 </ul>
             </nav>
@@ -64,13 +70,17 @@ function Navbar() {
                 </Link>
                 <ul>
                     <li>
-                        <Link to="/food">Food</Link>
+                        <Link className={topLevelPath === "food" || topLevelPath === "barcode" ? "nav-active" : null} to="/food">
+                            Food
+                        </Link>
                     </li>
                     <li>
-                        <Link to="/exercise">Exercise</Link>
+                        <Link className={topLevelPath === "exercise" ? "nav-active" : null} to="/exercise">
+                            Exercise
+                        </Link>
                     </li>
                     <li>
-                        <ProfileIcon profile={profile} navbarClass={navbarClass} />
+                        <ProfileIcon profile={profile} navbarClass={navbarClass} topLevelPath={topLevelPath} />
                     </li>
                 </ul>
             </nav>
@@ -79,7 +89,7 @@ function Navbar() {
 }
 
 function ProfileIcon(props) {
-    const { profile, navbarClass } = props;
+    const { profile, navbarClass, topLevelPath } = props;
     const [showMenu, setShowMenu] = useState(false);
     const [imageURL, setImageURL] = useState("");
     const [hasProfilePicture, setHasProfilePicture] = useState(profile.hasProfilePicture);
@@ -141,7 +151,7 @@ function ProfileIcon(props) {
                 <div id="navbar-profile-icon" onClick={() => setShowMenu(!showMenu)}>
                     <img src={imageURL} />
                 </div>
-                {showMenu ? <ProfileMenu navbarClass={navbarClass} /> : null}
+                {showMenu ? <ProfileMenu navbarClass={navbarClass} topLevelPath={topLevelPath} /> : null}
             </div>
         );
     } else {
@@ -158,14 +168,14 @@ function ProfileIcon(props) {
                 <div id="navbar-profile-icon" onClick={() => setShowMenu(!showMenu)}>
                     {profile.firstName[0].toUpperCase()}
                 </div>
-                {showMenu ? <ProfileMenu navbarClass={navbarClass} /> : null}
+                {showMenu ? <ProfileMenu navbarClass={navbarClass} topLevelPath={topLevelPath} /> : null}
             </div>
         );
     }
 }
 
 function ProfileMenu(props) {
-    const { navbarClass } = props;
+    const { navbarClass, topLevelPath } = props;
     const navigate = useNavigate();
 
     const logoutOnClick = () => {
@@ -181,7 +191,7 @@ function ProfileMenu(props) {
             navigate
         ).then((res) => {
             resStatus = res.status;
-            if (res.status === 200) {
+            if (res.status === 200 || res.status === 404) {
                 window.localStorage.clear();
                 window.sessionStorage.clear();
                 navigate("/");
@@ -191,11 +201,15 @@ function ProfileMenu(props) {
 
     return (
         <div id="navbar-profile-menu" className={navbarClass}>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/diary">Diary</Link>
-            <Link to="/recipes">Recipes</Link>
-            <Link to="/workouts">Workouts</Link>
-            <Link to="/profile">Profile</Link>
+            <Link className={topLevelPath === "dashboard" ? "nav-active" : null} to="/dashboard">
+                Dashboard
+            </Link>
+            <Link className={topLevelPath === "diary" ? "nav-active" : null} to="/diary">
+                Diary
+            </Link>
+            <Link className={topLevelPath === "profile" ? "nav-active" : null} to="/profile">
+                Profile
+            </Link>
             <p onClick={logoutOnClick}>Logout</p>
         </div>
     );
@@ -206,10 +220,11 @@ function clearSearchState(topLevelPath) {
         return;
     }
 
-    if (topLevelPath !== "food") {
+    if (topLevelPath !== "food" && topLevelPath !== "recipes") {
         window.sessionStorage.removeItem("FoodSearchPageText");
         window.sessionStorage.removeItem("FoodSearchPageResults");
         window.sessionStorage.removeItem("FoodSearchPageStatus");
+        window.sessionStorage.removeItem("FoodSearchPageType");
     }
 
     if (topLevelPath !== "exercise") {

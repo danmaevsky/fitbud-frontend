@@ -66,7 +66,7 @@
     align-items: center;
     width: 100%;
     overflow-y: auto;
-    height: 70%;
+    height: 85%;
     padding: 1rem;
     margin: 0.1rem;
     gap: 2rem;
@@ -298,6 +298,7 @@
 
 #save-changes-button,
 #change-password-button {
+    text-decoration: none;
     transition: filter 0.1s;
     cursor: pointer;
     display: inline-flex;
@@ -430,9 +431,9 @@
 
 @media screen and (max-width: 800px) {
     #profile-island {
-        width: 70vw;
+        width: 75vw;
         max-width: 30rem;
-        max-height: 35rem;
+        max-height: 37.5rem;
     }
 
     #profile-island a {

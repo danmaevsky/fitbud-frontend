@@ -2,7 +2,7 @@ import magnifyingGlass from "assets/magnifying-glass.svg";
 import clearTextX from "assets/clear-text-x.svg";
 import "./ExerciseSearchPage.css";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSessionStorage from "hooks/useSessionStorage";
 
 export default function ExerciseSearchPage() {
@@ -112,14 +112,15 @@ function ExerciseSearchList(props) {
 function ExerciseSearchResult(props) {
     let { exerciseType, response } = props;
     let { _id, name, MET } = response;
+    const location = useLocation();
 
     const navigate = useNavigate();
     const resultOnClick = () => {
         if (exerciseType === "strength") {
-            navigate("/exercise/strength/" + _id);
+            navigate("/exercise/strength/" + _id, { state: location.state });
         }
         if (exerciseType === "cardio") {
-            navigate("/exercise/cardio/" + _id);
+            navigate("/exercise/cardio/" + _id, { state: location.state });
         }
     };
     return (

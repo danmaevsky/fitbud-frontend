@@ -31,8 +31,8 @@
     width: 1rem;
 }
 
-#recipe-island-delete {
-    color: var(--exercise-primary-color);
+#recipe-island-edit-recipe {
+    color: var(--default-primary-text);
     align-self: flex-end;
     font-weight: 700;
     margin-left: 1vw;
@@ -45,7 +45,7 @@
     border: none;
 }
 
-#recipe-island-delete .delete-log-button-icon {
-    height: 1.75rem;
-    width: 1.75rem;
+#recipe-island-edit-recipe .edit-button-icon {
+    height: 1.5rem;
+    width: 1.5rem;
 }

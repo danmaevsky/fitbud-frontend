@@ -86,6 +86,10 @@ export default function FoodPage() {
                         quantityMetric={metricQuantity}
                         mealPosition={mealPosition}
                         diaryDate={diaryDate}
+                        name={foodResponse.name}
+                        brandName={foodResponse.brandName}
+                        brandOwner={foodResponse.brandOwner}
+                        isVerified={foodResponse.isVerified}
                     />
                 ) : null}
             </div>
@@ -97,7 +101,7 @@ function FoodInfo(props) {
     const [showMoreInfo, setShowMoreInfo] = useState(false);
     const { foodResponse, numServings, setNumServings, setServingName, metricQuantity, setMetricQuantity, mealPosition, setMealPosition } = props;
 
-    const defaultMetricQuantity = foodResponse.servingQuantity ? Math.round(foodResponse.servingQuantity / 0.01) * 0.01 : 100;
+    const defaultMetricQuantity = foodResponse.servingQuantity ? +foodResponse.servingQuantity.toFixed(2) : 100;
     const defaultMetricUnit = foodResponse.servingQuantityUnit ? foodResponse.servingQuantityUnit : "g";
 
     useEffect(() => {
@@ -320,7 +324,7 @@ function FoodMoreInfo(props) {
 }
 
 function AddFoodLogButton(props) {
-    const { foodId, servingName, numServings, quantityMetric, mealPosition, diaryDate } = props;
+    const { foodId, servingName, numServings, quantityMetric, mealPosition, diaryDate, name, brandName, brandOwner, isVerified } = props;
     const navigate = useNavigate();
 
     const currentDate = getCurrentDate();
@@ -341,6 +345,10 @@ function AddFoodLogButton(props) {
                     servingName: servingName,
                     numServings: numServings,
                     quantityMetric: quantityMetric,
+                    name: name,
+                    brandName: brandName,
+                    brandOwner: brandOwner,
+                    isVerified: isVerified,
                 },
             };
 
@@ -375,6 +383,10 @@ function AddFoodLogButton(props) {
                     servingName: servingName,
                     numServings: numServings,
                     quantityMetric: quantityMetric,
+                    name: name,
+                    brandName: brandName,
+                    brandOwner: brandOwner,
+                    isVerified: isVerified,
                 },
             };
             console.log(postBody);

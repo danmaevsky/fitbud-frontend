@@ -18,6 +18,7 @@ import {
 import { IsUserDiaryReady, IsUserLogged, authFetch } from "helpers/authHelpers";
 import useSessionStorage from "hooks/useSessionStorage";
 import { getCurrentDate } from "helpers/generalHelpers";
+import EditButtonIcon from "components/EditButtonIcon";
 
 export default function RecipePage() {
     const { recipeId } = useParams();
@@ -61,20 +62,16 @@ export default function RecipePage() {
     let renderRecipeInfo = responseStatus === 200; // check if response code is good
     renderRecipeInfo = renderRecipeInfo && recipeResponse && recipeId === recipeResponse._id; // check if there is a response, and if URL param matches the response (prevents re-render with stale information, sometimes fatal)
 
-    const deleteRecipe = () => {
-        authFetch(`${process.env.REACT_APP_GATEWAY_URI}/recipes/${recipeId}`, {
-            method: "DELETE",
-        })
-            .then((res) => {
-                if (res.status === 200) {
-                    navigate(-1);
-                } else {
-                    throw Error(res.status);
-                }
-            })
-            .catch((err) => console.log(err));
+    const editRecipeOnClick = () => {
+        navigate("/recipe-builder", {
+            state: {
+                from: "recipe-page",
+                recipeResponse: recipeResponse,
+            },
+        });
     };
 
+    console.log(recipeResponse);
     return (
         <div id="food-page-body">
             <div className="food-background-round round-background-decoration"></div>
@@ -86,9 +83,9 @@ export default function RecipePage() {
                         <img src={backArrow} alt="back arrow" />
                         Go Back
                     </Link>
-                    <button id="recipe-island-delete" onClick={deleteRecipe}>
-                        Delete Recipe
-                        <DeleteLogButtonIcon />
+                    <button id="recipe-island-edit-recipe" onClick={editRecipeOnClick}>
+                        Edit Recipe
+                        <EditButtonIcon />
                     </button>
                 </div>
                 {renderRecipeInfo ? (

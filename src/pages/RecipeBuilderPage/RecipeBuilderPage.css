@@ -252,8 +252,8 @@
     align-items: center;
     gap: 0rem;
     border-radius: 1rem;
-    padding-left: 3vw;
-    padding-right: 3vw;
+    padding-left: 2.5vw;
+    padding-right: 2.5vw;
     padding-top: 2vh;
     padding-bottom: 2vh;
     background-color: white;
@@ -451,6 +451,26 @@
 #recipe-builder-save-recipe-button:hover {
     filter: brightness(90%);
     cursor: pointer;
+}
+
+#recipe-island-delete {
+    color: var(--exercise-primary-color);
+    align-self: flex-end;
+    font-weight: 700;
+    margin-left: 1vw;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    margin-bottom: 1rem;
+}
+
+#recipe-island-delete .delete-log-button-icon {
+    height: 1.75rem;
+    width: 1.75rem;
 }
 
 #recipe-builder-error {

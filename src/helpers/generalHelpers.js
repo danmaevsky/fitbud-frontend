@@ -15,3 +15,8 @@ function pad(number) {
         return number;
     }
 }
+
+/* Math Helpers */
+export function RoundToNearestN(x, n) {
+    return Math.round(x / n) * n;
+}

@@ -137,7 +137,7 @@ function RecipeInfo(props) {
                     </h5>
                 </div>
             </div>
-            <SelectServingSize setNumServings={setNumServings} />
+            <SelectServingSize numServings={numServings} setNumServings={setNumServings} />
             {showMoreInfo ? (
                 <>
                     <FoodMoreInfo processedNutrients={nutrients} />
@@ -317,9 +317,9 @@ function SelectServingSize(props) {
     // needs to understand if food is measured in grams or milliliters by default
     // needs to preserve the default unit from the database
     // needs to create a range of appropriate units
-    const { setNumServings } = props;
+    const { numServings, setNumServings } = props;
 
-    const [numText, setNumText] = useState(1);
+    const [numText, setNumText] = useState(numServings || 1);
 
     const inputOnChange = (e) => {
         let n = Number(e.target.value);

@@ -111,23 +111,23 @@ function AddFood(props) {
         }
         setIsAttemptingFetch(true);
 
-        if (name === "" || brandName === "") {
-            setMessage("Name and Brand can not be blank!");
+        if (name === "") {
+            setMessage("Name cannot be blank!");
             setIsAttemptingFetch(false);
             return;
         } else if (kcal === "" || totalCarb === "" || totalFat === "" || protein === "") {
-            setMessage("Major Macro Fields can not be blank!");
+            setMessage("Major Macro Fields cannot be blank!");
             setIsAttemptingFetch(false);
             return;
         } else if (servingQuantity === "" || servingQuantityUnit === "" || servingName === "") {
-            setMessage("Serving Information can not be blank!");
+            setMessage("Serving Information cannot be blank!");
             setIsAttemptingFetch(false);
             return;
         }
 
         const newFood = {
             name: name,
-            brandName: brandName,
+            brandName: brandName ? brandName : null,
             brandOwner: null,
             barcode: barcode !== "" ? barcode : null,
             userId: profile._id,
@@ -207,12 +207,12 @@ function AddFood(props) {
     };
 
     return (
-        <div id="create-food-form-3" className="create-food-island-form">
+        <div id="create-food-form" className="create-food-island-form">
             <h3>General Information</h3>
-            <p>Please enter the Name and Brand Information of the food item. The Barcode is optional</p>
+            <p>Please enter the name of the food. Brand information and barcode are optional.</p>
             <FormInput type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
             <FormInput type="text" placeholder="Brand Name" value={brandName} onChange={(e) => setBrandName(e.target.value)} />
-            <FormInput type="text" placeholder="Barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
+            <FormInput type="text" inputMode="numeric" placeholder="Barcode" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
             <h3>Serving Information</h3>
             <p>These fields are to enter the serving size information. These fields are required.</p>
             <FormInput
@@ -223,7 +223,7 @@ function AddFood(props) {
                 onChange={(e) => setServingQuantity(e.target.value)}
                 onBlur={inputOnBlurDecorator(setServingQuantity, 1)}
             />
-            <label id="create-food-form-sex-label">Serving Quantity Unit (Metric)</label>
+            <label id="create-food-form-unit-label">Serving Quantity Unit (Metric)</label>
             <div className="create-food-form-choices">
                 <button
                     id="create-food-form-unit-choice-imperial"

@@ -84,6 +84,14 @@
     border: 0.2rem solid var(--default-primary-color);
 }
 
+#barcode-desktop-not-supported-message {
+    align-self: center;
+}
+
+#barcode-desktop-not-supported-message {
+    margin-top: 30%;
+}
+
 @media screen and (max-width: 800px) {
     #barcode-scanner-container {
         width: 80vw;

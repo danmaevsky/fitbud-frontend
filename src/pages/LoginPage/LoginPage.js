@@ -10,6 +10,7 @@ export default function LoginPage() {
     const [title, setTitle] = useState(null);
     const [message, setMessage] = useState("Login or Sign Up to get started!");
     const [loginError, setLoginError] = useState(false);
+    console.log("loginError:", loginError);
     return (
         <div id="login-page-body">
             <div className="default-background-round round-background-decoration"></div>
@@ -44,12 +45,12 @@ function Login(props) {
         }
 
         // best way to cancel a Promise chain is to throw an error
-        if (res.status === 400) {
-            setMessage("Enter a valid email and password!");
-            throw new Error(400);
-        }
+        // if (res.status === 400) {
+        //     setMessage("Enter a valid email and password!");
+        //     throw new Error(400);
+        // }
 
-        if (res.status === 401) {
+        if (res.status === 400) {
             setMessage("Email and/or password is wrong!");
             throw new Error(401);
         }

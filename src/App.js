@@ -1,5 +1,10 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useLocalStorage from "hooks/useLocalStorage";
+import { IsUserLogged } from "helpers/authHelpers";
+import { fetchDiaryHelper } from "helpers/fitnessHelpers";
+import { getCurrentDate } from "helpers/generalHelpers";
 // components
 import Navbar from "components/Navbar";
 
@@ -20,10 +25,8 @@ import ExerciseStrengthPage from "pages/ExerciseStrengthPage";
 import DashboardPage from "pages/DashboardPage";
 import DiaryPage from "pages/DiaryPage";
 import ProfilePage from "pages/ProfilePage";
-import RecipeSearchPage from "pages/RecipeSearchPage";
 import RecipeBuilderPage from "pages/RecipeBuilderPage";
 import RecipePage from "pages/RecipePage";
-import WorkoutSearchPage from "pages/WorkoutSearchPage";
 import ChangePasswordPage from "pages/ChangePasswordPage";
 import ExerciseCardioPage from "pages/ExerciseCardioPage";
 import EditFoodLogPage from "pages/EditFoodLogPage";
@@ -33,6 +36,16 @@ import EditExerciseCardioLogPage from "pages/EditExerciseCardioLogPage";
 import CreateFoodPage from "pages/CreateFoodPage";
 
 function App() {
+    // If user is logged in, upon accessing the website we must update the diary once
+    const navigate = useNavigate();
+    const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    useEffect(() => {
+        if (IsUserLogged()) {
+            const currentDate = getCurrentDate();
+            fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
+        }
+    }, []);
+
     return (
         <div className="App">
             <Navbar />
@@ -59,10 +72,8 @@ function App() {
                         <Route path="/profile/changePassword" element={<ChangePasswordPage />} />
                         <Route path="/exercise/strength/:exerciseId" element={<ExerciseStrengthPage />} />
                         <Route path="/exercise/cardio/:exerciseId" element={<ExerciseCardioPage />} />
-                        <Route path="/recipes" element={<RecipeSearchPage />} />
                         <Route path="/recipe-builder" element={<RecipeBuilderPage />} />
                         <Route path="/recipes/:recipeId" element={<RecipePage />} />
-                        <Route path="/workouts" element={<WorkoutSearchPage />} />
                         <Route path="/food/createFood" element={<CreateFoodPage />} />
                     </Route>
                 </Routes>

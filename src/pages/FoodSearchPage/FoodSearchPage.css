@@ -80,14 +80,15 @@
 #food-search-page-choices button {
     color: var(--default-primary-text);
     font-weight: 700;
+    font-size: 0.95rem;
     display: inline-flex;
     align-items: center;
     justify-content: space-evenly;
     cursor: pointer;
-    min-width: 6rem;
-    width: 7rem;
+    min-width: 4.75rem;
+    /* width: 5rem; */
     max-width: 10rem;
-    height: 3rem;
+    padding: 0.4rem;
     background-color: white;
     transition: filter 0.1s;
 }
@@ -97,7 +98,7 @@
     border-bottom-left-radius: 5px;
 }
 
-#food-search-page-choice-user {
+#food-search-page-choice-recipe {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -106,13 +107,14 @@
     transition: background-color 0.1s;
     cursor: pointer;
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     box-sizing: content-box;
     padding: 1rem;
-    /* margin-top: -10%; */
-    width: 5rem;
-    height: 2rem;
+    margin-top: 2rem;
+    width: 50%;
+    height: 1.75rem;
     max-width: 12rem;
     border: solid 2px;
     border-color: white;
@@ -140,7 +142,7 @@
     max-width: 40rem;
     min-height: 20vh;
     height: 35rem;
-    max-height: 45vh;
+    max-height: 50vh;
 }
 
 #food-search-island ul {
