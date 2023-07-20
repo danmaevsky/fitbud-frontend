@@ -34,11 +34,12 @@ import EditRecipeLogPage from "pages/EditRecipeLogPage";
 import EditExerciseStrengthLogPage from "pages/EditExerciseStrengthLogPage";
 import EditExerciseCardioLogPage from "pages/EditExerciseCardioLogPage";
 import CreateFoodPage from "pages/CreateFoodPage";
+import useSessionStorage from "hooks/useSessionStorage";
 
 function App() {
     /* Effects that I would like to run globally across the whole application */
-    // If user is logged in, upon first accessing the website we must update the diary once
     const navigate = useNavigate();
+    // If user is logged in, upon first accessing the website we must update the diary once
     const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
     const userIsLoggedIn = IsUserLogged();
     useEffect(() => {
@@ -49,8 +50,11 @@ function App() {
     }, []);
 
     // If user is logged in, upon first accessing the website we want to navigate them to the dashboard page
+    const [isFirstAccess, setIsFirstAccess] = useSessionStorage("IsFirstAccess", true);
     useEffect(() => {
-        if (userIsLoggedIn) {
+        console.log("isFirst", isFirstAccess);
+        if (userIsLoggedIn && isFirstAccess) {
+            setIsFirstAccess(false);
             navigate("/dashboard");
         }
     }, []);
