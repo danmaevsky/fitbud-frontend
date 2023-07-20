@@ -36,13 +36,22 @@ import EditExerciseCardioLogPage from "pages/EditExerciseCardioLogPage";
 import CreateFoodPage from "pages/CreateFoodPage";
 
 function App() {
-    // If user is logged in, upon accessing the website we must update the diary once
+    /* Effects that I would like to run globally across the whole application */
+    // If user is logged in, upon first accessing the website we must update the diary once
     const navigate = useNavigate();
     const [currentDiary, setCurrentDiary] = useLocalStorage("CurrentDiary", null);
+    const userIsLoggedIn = IsUserLogged();
     useEffect(() => {
-        if (IsUserLogged()) {
+        if (userIsLoggedIn) {
             const currentDate = getCurrentDate();
             fetchDiaryHelper(currentDate, setCurrentDiary, navigate);
+        }
+    }, []);
+
+    // If user is logged in, upon first accessing the website we want to navigate them to the dashboard page
+    useEffect(() => {
+        if (userIsLoggedIn) {
+            navigate("/dashboard");
         }
     }, []);
 
