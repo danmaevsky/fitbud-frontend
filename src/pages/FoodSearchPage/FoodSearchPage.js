@@ -251,13 +251,21 @@ function FoodSearchIsland(props) {
     const sortFunction = (recipeA, recipeB) => {
         /* Constructing a good search algorithm is very interesting. This sort has gone through many
         iterations already:
-        Version 1: Simply sort by Levenshtein Distance
+        Version 1.0: Simply sort by Levenshtein Distance
             Notes: this worked well but it became clear that smaller strings were favored over longer
                 strings. This is because a user typically builds a search query out of an empty string.
                 Smaller strings have a smaller Levenshtein Distance to other small strings since there
                 is less to mutate to get from one string to the other. This meant that until you typed
                 the exact name of the food as a query (and sometimes not even then), the result you
                 were looking for did not come up to the top. This inspired Version 1.1.
+
+            Code:
+                // sort by Levenshtein Distance
+                const searchTextLower = searchText.toLowerCase();
+                const recipeANameLower = recipeA.name.toLowerCase();
+                const recipeBNameLower = recipeB.name.toLowerCase();
+                let LevA = LevenshteinDistance(searchTextLower, recipeANameLower);
+                let LevB = LevenshteinDistance(searchTextLower, recipeBNameLower);
         
         Version 1.1: Sort by Normalized Levenshtein Distance
             Notes: this version worked a lot better. Small strings did not automatically shoot up to
@@ -312,30 +320,20 @@ function FoodSearchIsland(props) {
                         LevB -= beta * (searchText.length / recipeB.name.length) * beta;
                     }
 
+        Version 2.0: Scanning Levenshtein Distance
+                Notes: The time complexity of this algorithm is a bit worse, O(m * n^2), but this version of
+                the string similarity essentially scans through all consecutive substrings and finds the
+                minimum distance it takes string A to become a substring of string B. This fixes the earlier
+                issue where adding a "." breaks Version 1.2 of the search.
+
         */
         if (searchText) {
             // sort by Levenshtein Distance
             const searchTextLower = searchText.toLowerCase();
             const recipeANameLower = recipeA.name.toLowerCase();
             const recipeBNameLower = recipeB.name.toLowerCase();
-            let LevA = LevenshteinDistance(searchTextLower, recipeANameLower);
-            let LevB = LevenshteinDistance(searchTextLower, recipeBNameLower);
-
-            // normalizing the Levenshtein Distance so that smaller strings are not given advantage
-            if (recipeANameLower.length > recipeBNameLower.length) {
-                LevA -= recipeANameLower.length - recipeBNameLower.length;
-            } else {
-                LevB -= recipeBNameLower.length - recipeANameLower.length;
-            }
-
-            // giving result a bonus if it actually contains the search query
-            const beta = 1;
-            if (recipeANameLower.includes(searchTextLower)) {
-                LevA -= beta * (searchText.length / recipeA.name.length);
-            }
-            if (recipeBNameLower.includes(searchTextLower)) {
-                LevB -= beta * (searchText.length / recipeB.name.length);
-            }
+            let LevA = ScanningLevenshteinDistance(searchTextLower, recipeANameLower);
+            let LevB = ScanningLevenshteinDistance(searchTextLower, recipeBNameLower);
 
             return LevA - LevB;
         } else {
@@ -490,6 +488,22 @@ function LevenshteinDistance(str1 = "", str2 = "") {
     }
     // console.log(str2, ":", track[str2.length][str1.length]);
     return track[str2.length][str1.length];
+}
+
+function ScanningLevenshteinDistance(query = "", str2 = "") {
+    if (query.length > str2.length) {
+        return LevenshteinDistance(query, str2);
+    }
+
+    let min = Infinity;
+    for (let i = 0; i <= str2.length - query.length; i++) {
+        let Lev = LevenshteinDistance(query, str2.substring(i, i + query.length));
+        if (Lev < min) {
+            min = Lev;
+        }
+    }
+
+    return min;
 }
 
 function ConvertTimestampToDate(timestamp) {
