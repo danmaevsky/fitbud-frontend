@@ -249,17 +249,89 @@ function FoodSearchIsland(props) {
     const navigate = useNavigate();
 
     const sortFunction = (recipeA, recipeB) => {
+        /* Constructing a good search algorithm is very interesting. This sort has gone through many
+        iterations already:
+        Version 1: Simply sort by Levenshtein Distance
+            Notes: this worked well but it became clear that smaller strings were favored over longer
+                strings. This is because a user typically builds a search query out of an empty string.
+                Smaller strings have a smaller Levenshtein Distance to other small strings since there
+                is less to mutate to get from one string to the other. This meant that until you typed
+                the exact name of the food as a query (and sometimes not even then), the result you
+                were looking for did not come up to the top. This inspired Version 1.1.
+        
+        Version 1.1: Sort by Normalized Levenshtein Distance
+            Notes: this version worked a lot better. Small strings did not automatically shoot up to
+                to the top anymore. This made the search fit the query much better, and meant that
+                the correct result would end up at the top much sooner in typing than in Version 1.
+                There are still problems, however, and they come from the fact that Levenshtein 
+                Distance does not necessarily mean matching. There are many coincidences where
+                the Normalized Levenshtein Distance is the same, even when one string "looks" like the
+                query much more than the other.
+                For example, "cinnamon toast crunch coffee creamer, cinnamon toast" and "carrots, raw"
+                have the same Normalized Levenshtein Distance to the query "carrots". How does that
+                make sense...? Originally "cinnamon toast..." had a LevD of around 52. The reason
+                it ended up showing up above "carrots, raw" is because after normalizing for distance,
+                they became equal. Essentially, normalizing it made it so that in the most optimal form,
+                if all else were equal, these two strings are identical. To fix this, we need some way to
+                weigh the successful continuity of characters together. Maybe having 2 or more characters
+                in a row matching should result in a multiplier to lower the score. This inspired
+                Version 1.2.
+
+            Code:
+                // normalizing the Levenshtein Distance so that smaller strings are not given advantage
+                if (recipeA.name.length > recipeB.name.length) {
+                    LevA -= recipeA.name.length - recipeB.name.length;
+                } else {
+                    LevB -= recipeB.name.length - recipeA.name.length;
+                }
+
+        Version 1.2: Normalized Levenshtein Distance with Bonus for Containing Substring
+                Notes: this version works better than the last by providing the result that contains
+                    the search query with a bonus, scaled by the percentage of the string that matches.
+                    If the entire result matches the query, it gets 100% of the bonus, etc. The idea was
+                    to give strings a bonus for each consecutive character that matched, scaling up somehow
+                    with the more letters that matched. The insight that enabled this version was to realize 
+                    that doing that means to simply check for if it contains substring and assigning a bonus
+                    based on how big that substring was as a percentage of the total string. One potential
+                    improvement would be to use my GetPhrases algorithm and match against every phrase.
+                    The issue here is that we are starting to make this client-side search really inefficient
+                    if we do that.
+
+                Code:
+                    // giving result a bonus if it actually contains the search query
+                    const beta = 1;
+                    if (recipeA.name.toLowerCase().includes(searchText.toLowerCase())) {
+                        LevA -= beta * (searchText.length / recipeA.name.length);
+                    }
+                    if (recipeB.name.toLowerCase().includes(searchText.toLowerCase())) {
+                        LevB -= beta * (searchText.length / recipeB.name.length) * beta;
+                    }
+
+        */
         if (searchText) {
             // sort by Levenshtein Distance
-            let LevA = LevenshteinDistance(searchText, recipeA.name.toLowerCase());
-            let LevB = LevenshteinDistance(searchText, recipeB.name.toLowerCase());
+            const searchTextLower = searchText.toLowerCase();
+            const recipeANameLower = recipeA.name.toLowerCase();
+            const recipeBNameLower = recipeB.name.toLowerCase();
+            let LevA = LevenshteinDistance(searchTextLower, recipeANameLower);
+            let LevB = LevenshteinDistance(searchTextLower, recipeBNameLower);
 
             // normalizing the Levenshtein Distance so that smaller strings are not given advantage
-            if (recipeA.name.length > recipeB.name.length) {
-                LevA -= recipeA.name.length - recipeB.name.length;
+            if (recipeANameLower.length > recipeBNameLower.length) {
+                LevA -= recipeANameLower.length - recipeBNameLower.length;
             } else {
-                LevB -= recipeB.name.length - recipeA.name.length;
+                LevB -= recipeBNameLower.length - recipeANameLower.length;
             }
+
+            // giving result a bonus if it actually contains the search query
+            const beta = 1;
+            if (recipeANameLower.includes(searchTextLower)) {
+                LevA -= beta * (searchText.length / recipeA.name.length);
+            }
+            if (recipeBNameLower.includes(searchTextLower)) {
+                LevB -= beta * (searchText.length / recipeB.name.length);
+            }
+
             return LevA - LevB;
         } else {
             // otherwise just sort by timestamp
