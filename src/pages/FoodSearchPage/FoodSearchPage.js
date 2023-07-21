@@ -294,8 +294,13 @@ function FoodSearchIsland(props) {
                     that doing that means to simply check for if it contains substring and assigning a bonus
                     based on how big that substring was as a percentage of the total string. One potential
                     improvement would be to use my GetPhrases algorithm and match against every phrase.
-                    The issue here is that we are starting to make this client-side search really inefficient
-                    if we do that.
+                    For example, this solves the problem with "carrots, raw" and "cinnamon toast crunch
+                    coffee creamer, cinnamon toast" with the query "carrots", but I change the query to
+                    "carrots.", the bonus is taken away from "carrots, raw" because it does not technically
+                    contain the full substring "carrots.". It only contains part of the substring; the "."
+                    broke the result. Maybe I could write a version of the Levenshtein Distance that computes
+                    the distance it would take for the query to become a substring of the result and assign
+                    the bonus based off that.
 
                 Code:
                     // giving result a bonus if it actually contains the search query
