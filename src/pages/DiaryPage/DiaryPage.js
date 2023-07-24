@@ -414,21 +414,21 @@ function CreateServingText(foodLog) {
         let householdNumber = Number(servingWords[0]);
         if (Number.isNaN(householdNumber)) {
             // no number
-            return `${RoundToNearestN(numServings, 0.1)} ${ToTitleCase(servingName)}`;
+            return `${+numServings.toFixed(1)} ${ToTitleCase(servingName)}`;
         } else {
             // there is a number
-            return `${RoundToNearestN(numServings * householdNumber, 0.1)} ${ToTitleCase(servingWords.splice(1).join(" "))}`;
+            return `${+(numServings * householdNumber).toFixed(1)} ${ToTitleCase(servingWords.splice(1).join(" "))}`;
         }
     } else if (Object.keys(builtInUnits).includes(servingName) || servingName === "g" || servingName === "mL") {
         // Here we simply need to check if it is a metric unit or not
         let servingUnit = servingWords[1];
         if (servingUnit === "g" || servingUnit === "mL" || servingName === "g" || servingName === "mL") {
-            return `${RoundToNearestN(numServings * quantityMetric, 0.1)} ${servingUnit || servingName}`;
+            return `${+(numServings * quantityMetric).toFixed(1)} ${servingUnit || servingName}`;
         } else {
-            return `${RoundToNearestN(numServings, 0.1)} ${servingUnit}`;
+            return `${+numServings.toFixed(1)} ${servingUnit}`;
         }
     } else {
-        return `${RoundToNearestN(numServings, 0.1)} servings`;
+        return `${+numServings.toFixed(1)} servings`;
     }
 }
 

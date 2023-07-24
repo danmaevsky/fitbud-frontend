@@ -5,7 +5,7 @@ import { authFetch, IsUserLogged } from "helpers/authHelpers";
 import { Link, useNavigate } from "react-router-dom";
 import useLocalStorage from "hooks/useLocalStorage";
 import UpdateFormInput from "components/UpdateFormInput";
-import { getCurrentDate } from "helpers/generalHelpers";
+import { RoundToNearestN, getCurrentDate } from "helpers/generalHelpers";
 import { CalculateGoal } from "helpers/fitnessHelpers";
 import DropdownMenu from "components/DropdownMenu";
 
@@ -46,7 +46,7 @@ function Settings(props) {
     const [currentWeight, setCurrentWeight] = useState("");
     const defaultPercentBodyFat =
         profile.currentPercentBodyFat.value || profile.currentPercentBodyFat.value === 0
-            ? (Math.round(profile.currentPercentBodyFat.value * 10) / 10) * 100
+            ? RoundToNearestN(profile.currentPercentBodyFat.value, 0.001) * 100
             : "";
     const [percentBodyFat, setPercentBodyFat] = useState(defaultPercentBodyFat);
     const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
