@@ -45,9 +45,7 @@ function Settings(props) {
     const [height, setHeight] = useState("");
     const [currentWeight, setCurrentWeight] = useState("");
     const defaultPercentBodyFat =
-        profile.currentPercentBodyFat.value || profile.currentPercentBodyFat.value === 0
-            ? RoundToNearestN(profile.currentPercentBodyFat.value, 0.001) * 100
-            : "";
+        profile.currentPercentBodyFat.value || profile.currentPercentBodyFat.value === 0 ? +profile.currentPercentBodyFat.value.toFixed(4) * 100 : "";
     const [percentBodyFat, setPercentBodyFat] = useState(defaultPercentBodyFat);
     const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
 
