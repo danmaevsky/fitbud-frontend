@@ -94,6 +94,7 @@ function Login(props) {
                 if (location.state && location.state.from) {
                     navigate(location.state.from.pathname, { replace: true });
                 } else {
+                    window.sessionStorage.IsFirstAccess = false;
                     navigate("/dashboard");
                 }
             })

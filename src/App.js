@@ -50,14 +50,17 @@ function App() {
     }, []);
 
     // If user is logged in, upon first accessing the website we want to navigate them to the dashboard page
-    const [isFirstAccess, setIsFirstAccess] = useSessionStorage("IsFirstAccess", true);
+    const [IsFirstAccess, setIsFirstAccess] = useSessionStorage("IsFirstAccess", true);
     useEffect(() => {
-        console.log("isFirst", isFirstAccess);
-        if (userIsLoggedIn && isFirstAccess) {
+        console.log("isFirstAccess", IsFirstAccess);
+        if (userIsLoggedIn && IsFirstAccess) {
             setIsFirstAccess(false);
             navigate("/dashboard");
         }
     }, []);
+    if (userIsLoggedIn && IsFirstAccess) {
+        return null;
+    }
 
     return (
         <div className="App">
